@@ -1,0 +1,53 @@
+# ── Insumos del cliente ───────────────────────────────────────────────
+# Material del cliente: dump de base, manual de marca, uploads, notas.
+# NO va al repo. Solo se versionan los LEEME.md que explican qué va en cada carpeta.
+_insumos/*
+!_insumos/LEEME.md
+!_insumos/*/
+_insumos/*/*
+!_insumos/*/LEEME.md
+!_insumos/*/*/
+_insumos/*/*/*
+!_insumos/*/*/LEEME.md
+
+# ── Salidas de inventario (pueden contener datos del cliente) ─────────
+docs/inventario-crudo.txt
+docs/*.csv
+
+# ── Laravel (aparece en la Fase 3, dentro de app/) ────────────────────
+app/vendor/
+app/node_modules/
+app/.env
+app/.env.*
+!app/.env.example
+app/public/build/
+app/public/hot
+app/public/storage
+app/storage/*.key
+app/storage/app/public/
+app/storage/framework/cache/
+app/storage/framework/sessions/
+app/storage/framework/views/
+app/storage/logs/
+app/.phpunit.result.cache
+app/.phpunit.cache/
+
+# ── Genérico ──────────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+*.sql
+*.sql.gz
+*.zip
+*.tar.gz
+!scripts/*.sql
+
+# ── Claude Code ───────────────────────────────────────────────────────
+.claude/settings.local.json
