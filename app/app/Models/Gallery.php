@@ -26,6 +26,9 @@ class Gallery extends Model
         ];
     }
 
+    /**
+     * @return BelongsToMany<Media, $this>
+     */
     public function media(): BelongsToMany
     {
         return $this->belongsToMany(Media::class, 'gallery_media')

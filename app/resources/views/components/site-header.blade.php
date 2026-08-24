@@ -1,0 +1,122 @@
+@php
+    $primaryNav = config('navigation.primary');
+    $italianEnabled = \App\Models\SiteSetting::italianEnabled();
+@endphp
+<div
+    x-data="{
+        mobileOpen: false,
+        scrolled: false,
+        open() {
+            this.mobileOpen = true;
+            this.$nextTick(() => this.$refs.mobileNav.querySelector('a, button')?.focus());
+        },
+        close() {
+            this.mobileOpen = false;
+            this.$refs.mobileToggle?.focus();
+        },
+        trapTab(event) {
+            const focusables = this.$refs.mobileNav.querySelectorAll('a, button');
+            if (!focusables.length) return;
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        },
+    }"
+    @scroll.window="scrolled = window.scrollY > 80"
+>
+    @if($italianEnabled)
+        <div class="util-bar">
+            <div class="container util-bar-inner">
+                <div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio">
+                    <button type="button" aria-pressed="{{ app()->getLocale() === 'es' ? 'true' : 'false' }}">ES</button>
+                    <button type="button" aria-pressed="{{ app()->getLocale() === 'it' ? 'true' : 'false' }}">IT</button>
+                </div>
+                <a class="icon-btn" href="{{ route('search.index') }}" aria-label="Buscar en el sitio">
+                    <x-icon.search />
+                </a>
+            </div>
+        </div>
+    @endif
+
+    <header class="site-header" :class="{ 'is-scrolled': scrolled }">
+        <div class="container site-header-inner">
+            <a class="logo" href="{{ url('/') }}">
+                <span class="seal" aria-hidden="true"></span>DANTE
+            </a>
+
+            <nav aria-label="Principal">
+                <ul class="desktop-nav">
+                    @foreach($primaryNav as $item)
+                        <li>
+                            <a href="{{ url($item['url']) }}" @if(request()->is(ltrim($item['url'], '/')) || request()->is(ltrim($item['url'], '/').'/*')) aria-current="page" @endif>
+                                {{ $item['label'] }}
+                            </a>
+                            @if(!empty($item['children']))
+                                <ul class="submenu">
+                                    @foreach($item['children'] as $child)
+                                        <li><a href="{{ url($child['url']) }}">{{ $child['label'] }}</a></li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </li>
+                    @endforeach
+                </ul>
+            </nav>
+
+            @unless($italianEnabled)
+                <a class="icon-btn" href="{{ route('search.index') }}" aria-label="Buscar en el sitio" style="margin-left:auto">
+                    <x-icon.search />
+                </a>
+            @endunless
+
+            <button type="button" class="icon-btn mobile-nav-toggle" aria-label="Abrir menú de navegación"
+                    x-ref="mobileToggle"
+                    :aria-expanded="mobileOpen.toString()" aria-controls="mobile-nav"
+                    @click="open()">
+                <x-icon.menu />
+            </button>
+        </div>
+    </header>
+
+    <nav id="mobile-nav" class="mobile-nav" :class="{ 'is-open': mobileOpen }" aria-label="Principal"
+         x-ref="mobileNav"
+         @keydown.escape.window="close()"
+         @keydown.tab="trapTab($event)">
+        <div class="mobile-nav-header">
+            <strong>DANTE</strong>
+            <button type="button" class="icon-btn" aria-label="Cerrar menú de navegación" @click="close()">
+                <x-icon.close />
+            </button>
+        </div>
+        <ul class="mobile-nav-list">
+            @foreach($primaryNav as $index => $item)
+                @if(empty($item['children']))
+                    <li><a href="{{ url($item['url']) }}">{{ $item['label'] }}</a></li>
+                @else
+                    <li x-data="{ open: false }">
+                        <button type="button" class="mobile-submenu-toggle" :aria-expanded="open.toString()"
+                                aria-controls="mobile-submenu-{{ $index }}" @click="open = !open">
+                            {{ $item['label'] }}
+                            <span class="chev" aria-hidden="true">
+                                <x-icon.chevron-down />
+                            </span>
+                        </button>
+                        <ul class="mobile-submenu" :class="{ 'is-open': open }" id="mobile-submenu-{{ $index }}">
+                            @foreach($item['children'] as $child)
+                                <li><a href="{{ url($child['url']) }}">{{ $child['label'] }}</a></li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endif
+            @endforeach
+        </ul>
+        <div class="mobile-nav-footer">
+            <a class="btn btn-primary" href="{{ url('/admisiones') }}" style="width:100%">Quiero inscribir a mi hijo/a</a>
+        </div>
+    </nav>
+
+    <div class="sticky-cta">
+        <a class="btn btn-primary" href="{{ url('/admisiones') }}">Admisiones →</a>
+    </div>
+</div>

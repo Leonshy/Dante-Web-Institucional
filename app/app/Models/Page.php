@@ -49,22 +49,36 @@ class Page extends Model
         $locale ??= app()->getLocale();
 
         return collect($this->blocks ?? [])
-            ->map(function (array $block) use ($locale): array {
-                $resolved = [];
-
-                foreach ($block as $field => $value) {
-                    if ($field === 'type') {
-                        continue;
-                    }
-
-                    $resolved[$field] = is_array($value) && (array_key_exists('es', $value) || array_key_exists('it', $value))
-                        ? ($value[$locale] ?? $value['es'] ?? null)
-                        : $value;
-                }
-
-                return ['type' => $block['type'], 'data' => $resolved];
-            })
+            ->map(fn (array $block): array => [
+                'type' => $block['type'],
+                'data' => self::resolveBlockLocale(is_array($block['data'] ?? null) ? $block['data'] : [], $locale),
+            ])
             ->all();
+    }
+
+    /**
+     * Resuelve recursivamente los campos bilingües (`{"es": "...", "it": "..."}`)
+     * de los datos de un bloque, incluidos los que están dentro de repetidores
+     * (ej. `faq`/`testimonios`), al idioma pedido.
+     *
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>
+     */
+    private static function resolveBlockLocale(array $data, string $locale): array
+    {
+        return collect($data)->map(function ($value) use ($locale) {
+            if (! is_array($value)) {
+                return $value;
+            }
+
+            if (array_key_exists('es', $value) || array_key_exists('it', $value)) {
+                return $value[$locale] ?? $value['es'] ?? null;
+            }
+
+            return array_is_list($value)
+                ? collect($value)->map(fn ($item) => is_array($item) ? self::resolveBlockLocale($item, $locale) : $item)->all()
+                : self::resolveBlockLocale($value, $locale);
+        })->all();
     }
 
     public function parent(): BelongsTo
@@ -96,5 +110,23 @@ class Page extends Model
     {
         return $this->getTranslation('seo_title', $locale ?? app()->getLocale())
             ?: $this->getTranslation('title', $locale ?? app()->getLocale());
+    }
+
+    /**
+     * Ruta pública completa de la página, construida a partir de la cadena de
+     * padres (ej. `institucion/historia`) — `slug` es único mundialmente pero
+     * guarda un solo segmento por nivel (docs/06-frontend.md).
+     */
+    public function urlPath(): string
+    {
+        $segments = [];
+        $node = $this;
+
+        while ($node !== null) {
+            array_unshift($segments, $node->slug);
+            $node = $node->parent;
+        }
+
+        return implode('/', $segments);
     }
 }

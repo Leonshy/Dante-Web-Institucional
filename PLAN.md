@@ -234,19 +234,31 @@ seguridad — 2FA ya es obligatorio).
 **Estimado:** 32–44 h
 **Herramienta:** `emil-design-eng` para el motion
 
-- [ ] Layout base Blade + componentes Blade reutilizables espejo de la biblioteca de la Fase 2
-- [ ] Maquetar cada plantilla, mobile-first
-- [ ] Renderizado de bloques de contenido del constructor de páginas
-- [ ] Imágenes responsivas (`srcset`, `sizes`), `loading="lazy"`, dimensiones explícitas para
+- [x] Layout base Blade + componentes Blade reutilizables espejo de la biblioteca de la Fase 2
+      — ver `docs/06-frontend.md` §1
+- [x] Maquetar cada plantilla, mobile-first — 9 plantillas de `docs/alta-fidelidad/` + 3 bonus
+      (comunicados/calendario/galería), ver `docs/06-frontend.md` §2. Verificado en navegador
+- [x] Renderizado de bloques de contenido del constructor de páginas — 16/16, con un bug real
+      de forma de datos encontrado y corregido en el cierre (`docs/06-frontend.md` §8 #5)
+- [x] Imágenes responsivas (`srcset`, `sizes`), `loading="lazy"`, dimensiones explícitas para
       no generar CLS
-- [ ] **Motion**: transiciones de entrada, scroll reveal, micro-interacciones, transiciones de
-      página. Respetar `prefers-reduced-motion`. Nada que bloquee el hilo principal
-- [ ] Estados vacíos, de carga y de error del lado público
-- [ ] Navegación por teclado completa y `:focus-visible` en todo lo interactivo
-- [ ] Páginas 404 y 500 con la identidad de la marca
-- [ ] Verificación cruzada de navegadores y en dispositivos reales
+- [x] **Motion**: scroll reveal (IntersectionObserver + clase `.js` de progressive enhancement,
+      ver `docs/06-frontend.md` §4), feedback de presión en botones, acordeón con
+      `grid-template-rows` (rehecho — antes usaba `x-show` sin transición), carga de imagen con
+      `@starting-style`, contador de cifras. Menú móvil y header al scrollear ya venían
+      correctos de la base. `prefers-reduced-motion` respetado globalmente (verificado por
+      código; falta la prueba manual en dispositivo físico, Fase 9)
+- [x] Estados vacíos, de carga y de error del lado público
+- [~] Navegación por teclado completa y `:focus-visible` en todo lo interactivo — armado en los
+      componentes base, falta la pasada de verificación explícita ítem por ítem
+- [x] Páginas 404 y 500 con la identidad de la marca
+- [ ] Verificación cruzada de navegadores y en dispositivos reales — no aplica al entorno de
+      desarrollo, requiere dispositivos físicos
 
-**DoD:** el sitio se ve y se comporta como el diseño aprobado, en móvil y escritorio.
+**DoD:** el sitio se ve y se comporta como el diseño aprobado, en móvil y escritorio. **Casi
+cumplido** — motion ya implementado y verificado en navegador (scroll real, no solo captura de
+pantalla). Queda la pasada de accesibilidad ítem por ítem y la verificación cruzada en
+dispositivos reales, que no bloquean el uso del sitio pero sí el cierre formal de la fase.
 
 ---
 
