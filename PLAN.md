@@ -91,7 +91,7 @@ antes de cerrarla (ver `docs/02-ux-arquitectura-informacion.md` §12).
 
 ---
 
-## Fase 2 — Copywriting y sistema de diseño (UI)
+## Fase 2 — Copywriting y sistema de diseño (UI) ✅ cerrada 2026-08-24
 **Objetivo:** el texto real y el lenguaje visual, listos para maquetar.
 **Entregables:** `docs/03-copywriting.md` + `docs/04-ui-design-system.md`
 **Estimado:** 24–32 h
@@ -139,7 +139,10 @@ antes de cerrarla (ver `docs/02-ux-arquitectura-informacion.md` §12).
 - [x] Iconografía y tratamiento fotográfico coherentes con la marca — Lucide + criterio
       fotográfico documental en `docs/04-ui-design-system.md` §6
 
-**DoD:** el diseño está aprobado por el cliente y no queda ninguna pantalla por definir.
+**DoD:** el diseño está aprobado por el cliente y no queda ninguna pantalla por definir. ✅
+Cumplido 2026-08-24 — incluye la aprobación de la tipografía propuesta (pregunta #6 resuelta).
+Quedan datos puntuales marcados `[PENDIENTE]` en los propios mockups (aranceles vigentes,
+contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la Fase 3.
 
 ---
 
@@ -148,32 +151,54 @@ antes de cerrarla (ver `docs/02-ux-arquitectura-informacion.md` §12).
 **Entregable:** `docs/05-backend-modelo-datos.md` + código funcionando
 **Estimado:** 48–64 h — **la fase más pesada**
 
-- [ ] Instalar Laravel 13 en `app/`, configurar Pint, Larastan, Pest
-- [ ] Implementar el patrón de panel decidido en ADR-001, **replicando IPG**
-- [ ] **Modelo de datos** a partir de los tipos de contenido de la Fase 1: páginas, bloques
-      de contenido, noticias/entradas, categorías, medios, menús, usuarios, configuración
-      global, formularios y sus envíos, redirecciones
-- [ ] **Constructor de páginas por bloques** si IPG lo tiene: que el cliente arme una página
-      combinando secciones, no editando un campo HTML gigante
-- [ ] **Editor de texto enriquecido** — el mismo de IPG. Sanitización del HTML en el servidor
-      (lista blanca de etiquetas y atributos), nunca confiar en el editor del cliente
-- [ ] **Gestión de medios**: subida, recorte, conversiones automáticas (WebP/AVIF, tamaños
-      responsivos), alt text obligatorio, biblioteca reutilizable
-- [ ] **Gestión de menús** desde el panel (arrastrar y soltar, jerarquía)
-- [ ] **Campos SEO por página**: título, meta descripción, imagen OG, canonical, índice/noindex,
-      slug editable
-- [ ] **Gestión de redirecciones** desde el panel, precargada con el mapa 301 de la Fase 1
-- [ ] **Configuración global** editable: datos de contacto, redes, horarios, IDs de analytics,
-      textos del pie
-- [ ] **Formularios**: contacto y los que releve la Fase 0. Envío por mail + almacenamiento en
-      base + exportación a CSV. Honeypot + captcha + rate limit
-- [ ] **Usuarios y roles** del panel: al menos administrador y editor
-- [ ] **Auth del panel**: Fortify con 2FA, política de contraseñas, bloqueo por intentos
-- [ ] **Registro de auditoría**: quién cambió qué y cuándo (indispensable después de un
-      compromiso — el cliente tiene que poder ver el historial)
-- [ ] **Buscador interno** del sitio
-- [ ] Tests de Pest para cada CRUD del panel
-- [ ] **Seeders** con la estructura base (páginas fijas, configuración, usuario admin inicial)
+- [x] Instalar Laravel 13 en `app/`, configurar Pint, Larastan, Pest
+- [x] Implementar el patrón de panel decidido en **ADR-001: Filament 5** (reutilizando el
+      modelo de datos de IPG — `media`, `site_settings`, `categories`, roles — no su capa
+      Blade/controllers)
+- [x] **Modelo de datos** a partir de los tipos de contenido de la Fase 1 (`docs/02-ux-arquitectura-informacion.md`
+      §7), con soporte **multiidioma ES/IT** (ADR-002): páginas, bloques de contenido,
+      noticias/entradas, categorías, medios, menús, usuarios, configuración global (con el
+      toggle de italiano), formularios y sus envíos, redirecciones — todas las tablas creadas;
+      recursos de panel de Documentos/Comunicados/Calendario/Galería/Menús pendientes (ver
+      `docs/05-backend-modelo-datos.md` §9)
+- [~] **Constructor de páginas por bloques** — implementado como columna `blocks` (JSON) en
+      `pages` con `Filament\Forms\Components\Builder`. 7 de 16 bloques del catálogo de
+      `docs/02-ux-arquitectura-informacion.md` §8 construidos; el resto queda documentado como
+      pendiente
+- [x] **Editor de texto enriquecido** — `Filament\Forms\Components\RichEditor` (se aparta de
+      TinyMCE de IPG, ver `docs/05` §1). Sanitización server-side con lista blanca real
+      (HTMLPurifier) antes de guardar, nunca se confía en el HTML del editor
+- [x] **Gestión de medios**: subida con MIME real (`finfo`), nombre aleatorio, SVG sanitizado,
+      conversión WebP + tamaños responsivos, alt text obligatorio en la UI, biblioteca
+      reutilizable — recorte manual pendiente
+- [ ] **Gestión de menús** desde el panel — modelo de datos (`menus`/`menu_items`, jerárquico)
+      listo, recurso de Filament pendiente
+- [x] **Campos SEO por página**: título, meta descripción, imagen OG, canonical, índice/noindex,
+      slug editable — implementado en Páginas; en Noticias los campos existen en el modelo pero
+      faltan en el formulario del panel
+- [x] **Gestión de redirecciones** desde el panel, precargada con las 39 filas reales del mapa
+      301 de la Fase 1 (`dante:import-redirects`) + middleware público que las aplica
+- [x] **Configuración global** editable: datos de contacto, redes, horarios, IDs de analytics,
+      toggle de italiano — vía `SiteSettingResource`
+- [~] **Formularios**: contacto y pre-inscripción. Envío por mail + almacenamiento en base.
+      Honeypot + rate limit implementados y probados. Exportación a CSV y captcha real
+      (Turnstile, Fase 6) pendientes
+- [x] **Usuarios y roles** del panel: 4 roles reales — administrador, editor general, editor de
+      noticias/banners + marketing (Google Ads/Analytics/Meta), editor académico
+      (`docs/01-analisis-descubrimiento.md` §E #2) — permisos granulares por módulo, no roles
+      binarios
+- [x] **Auth del panel**: 2FA (TOTP) obligatorio nativo de Filament 5 en vez de Fortify (ver
+      `docs/05` §1 por qué). Política de contraseñas y bloqueo por intentos: por definir
+      explícitamente (hoy usa los defaults de Laravel/Filament, no configurados a medida)
+- [x] **Registro de auditoría**: `spatie/laravel-activitylog` activo en todos los modelos
+      editoriales vía trait `HasAuditing` — falta el recurso de solo lectura en el panel para
+      consultarlo desde la UI
+- [ ] **Buscador interno** del sitio — no implementado
+- [x] Tests de Pest para los CRUD entregados (Páginas, Redirecciones, sanitización HTML, subida
+      de medios, formularios públicos, middleware de redirecciones) — 22/22 en verde. Post,
+      Category, User y SiteSetting sin test propio todavía
+- [x] **Seeders** con la estructura base (páginas fijas del mapa del sitio, configuración
+      inicial, usuario admin inicial con contraseña generada, roles y permisos)
 
 **DoD:** una persona no técnica puede crear, editar, despublicar y borrar cualquier contenido
 del sitio desde el panel, sin ayuda.
@@ -361,7 +386,7 @@ usar su panel.
 |---|---|---|---|
 | 0 | 2026-08-24 | — (sesión de IA) | Casi cerrada — quedan abiertas #6 (tipografía) y #13 (acceso Plesk), no bloqueantes |
 | 1 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente. Preguntas #14–20 agregadas, no bloquean Fase 2 |
-| 2 | | | |
+| 2 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente, incluida la tipografía (Barlow Condensed + Barlow) |
 | 3 | | | |
 | 4 | | | |
 | 5 | | | |

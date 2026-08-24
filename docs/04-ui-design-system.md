@@ -327,8 +327,8 @@ ajuste menor — se trataría como tal.
 
 ## 8. Cierre de la Fase 2
 
-**Diseño aprobado por el cliente:** ☐ — fecha: (pendiente — incluye la aprobación de la
-tipografía propuesta, pregunta abierta #6)
+**Diseño aprobado por el cliente:** ☑ — fecha: 2026-08-24 (incluye la tipografía propuesta,
+Barlow Condensed + Barlow — pregunta abierta #6 queda resuelta)
 **Tokens volcados a `tailwind.config.js`:** ☐ — se hace en la Fase 3 al instalar Laravel/Vite,
 no antes (no hay proyecto Node corriendo todavía en `app/`)
 **Luz verde para Fase 3:** ☑ con reserva — el sistema de diseño, la biblioteca de componentes
