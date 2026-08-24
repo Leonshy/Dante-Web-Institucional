@@ -212,17 +212,33 @@ Con **contenido real** de `docs/03-copywriting.md`. Nada de Lorem ipsum.
 
 | Plantilla | Escritorio | Móvil | Aprobada |
 |---|---|---|---|
-| Inicio | ☐ | ☐ | ☐ |
-| Página institucional | ☐ | ☐ | ☐ |
-| Nivel educativo | ☐ | ☐ | ☐ |
-| Listado de noticias | ☐ | ☐ | ☐ |
-| Detalle de noticia | ☐ | ☐ | ☐ |
-| Contacto | ☐ | ☐ | ☐ |
-| Búsqueda | ☐ | ☐ | ☐ |
-| 404 | ☐ | ☐ | ☐ |
-| Descargas | ☐ | ☐ | ☐ |
+| Inicio | ☑ | ☑ | ☐ |
+| Página institucional | ☑ | ☑ | ☐ |
+| Nivel educativo | ☑ | ☑ | ☐ |
+| Listado de noticias | ☑ | ☑ | ☐ |
+| Detalle de noticia | ☑ | ☑ | ☐ |
+| Contacto | ☑ | ☑ | ☐ |
+| Búsqueda | ☑ | ☑ | ☐ |
+| 404 | ☑ | ☑ | ☐ |
+| Descargas | ☑ | ☑ | ☐ |
 
-Ubicación de los archivos:
+> "Aprobada" queda sin marcar a propósito — la aprobación la da el cliente, no el equipo de
+> diseño. Cada archivo incluye la versión escritorio y, debajo, la versión móvil (marco de
+> teléfono con scroll real), siguiendo el mismo patrón de los wireframes de la Fase 1. HTML/CSS
+> estático con JS vanilla mínimo (sin Blade/Livewire, eso es Fase 4): menú móvil con trampa de
+> foco y cierre con `Esc`, acordeones, filtros por categoría con estado vacío real y funcional,
+> scroll reveal respetando `prefers-reduced-motion`. Contenido real de `docs/03-copywriting.md`
+> — los `[PENDIENTE: pregunta #N]` y `[COMPLETAR CON CONTENIDO MIGRADO]` quedan visibles tal
+> cual en el mockup, no se inventó ningún texto.
+>
+> **Nota de arquitectura aplicada:** el menú principal usa los 6 ítems de
+> `docs/02-ux-arquitectura-informacion.md` §5 (Institución, Oferta educativa, Admisiones, Vida
+> escolar, Noticias, Contacto) — "Documentos" vive en el pie de página como acceso secundario,
+> según la decisión explícita de esa sección, no en el header.
+
+Ubicación de los archivos: **`docs/alta-fidelidad/`** — `inicio.html`, `pagina-institucional.html`,
+`landing-seccion.html`, `listado-noticias.html`, `detalle-noticia.html`, `contacto.html`,
+`busqueda.html`, `404.html`, `listado-documentos.html`.
 
 ---
 

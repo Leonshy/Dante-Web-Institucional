@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Documentos — Colegio Dante Alighieri</title>
+<meta name="description" content="Descargue estatutos, circulares y formularios del Colegio Dante Alighieri.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand-black:#191919; --brand-sky:#A6E4F8; --brand-yellow:#FFED4E;
+  --brand-gray-light:#F1F1F1; --brand-gray-mid:#B2B2B2;
+  --neutral-50:#FAFAFA; --neutral-100:#F1F1F1; --neutral-200:#E4E4E4; --neutral-300:#CACACA;
+  --neutral-400:#B2B2B2; --neutral-500:#8C8C8C; --neutral-600:#666666; --neutral-700:#464646;
+  --neutral-800:#2E2E2E; --neutral-900:#191919;
+  --success:#15803D; --success-bg:#DCFCE7; --danger:#B91C1C; --danger-bg:#FEE2E2;
+  --warning-text:#92400E; --warning-bg:#FEF3C7; --info:#1D4ED8; --info-bg:#DBEAFE;
+  --font-display:'Barlow Condensed',Arial,sans-serif; --font-body:'Barlow',Arial,sans-serif;
+  --radius-sm:4px; --radius-md:8px; --radius-lg:16px; --radius-full:9999px;
+  --shadow-sm:0 1px 2px rgba(25,25,25,.06); --shadow-md:0 4px 12px rgba(25,25,25,.10); --shadow-lg:0 12px 32px rgba(25,25,25,.14);
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;--space-24:96px;
+  --container-max:1280px; --ease-out:cubic-bezier(0,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--font-body);font-size:16px;line-height:1.6;color:var(--neutral-900);background:#fff}
+img{max-width:100%;display:block} a{color:inherit} ul{margin:0}
+h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.15;color:var(--neutral-900)}
+h1{font-weight:800;font-size:32px} h2{font-weight:700;font-size:22px} h3{font-weight:700;font-size:18px}
+.viewport-desktop h1{font-size:44px}
+.body-lg{font-size:17px} .body-sm{font-size:14px}
+.container{max-width:var(--container-max);margin:0 auto;padding:0 var(--space-4)} .viewport-desktop .container{padding:0 var(--space-8)}
+.skip-link{position:absolute;left:-999px;top:0;background:#fff;color:var(--brand-black);border:2px solid var(--brand-black);padding:10px 16px;z-index:1000;border-radius:0 0 var(--radius-sm) 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0;top:0}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--info);outline-offset:2px;border-radius:2px}
+@media(prefers-reduced-motion:no-preference){ .reveal{opacity:0;transform:translateY(12px);transition:opacity .35s var(--ease-out),transform .35s var(--ease-out)} .reveal.is-visible{opacity:1;transform:translateY(0)} }
+@media(prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none} *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important} }
+.util-bar{border-bottom:1px solid var(--neutral-200);background:var(--neutral-50)}
+.util-bar-inner{display:flex;justify-content:flex-end;align-items:center;gap:var(--space-4);padding:var(--space-2) 0;font-size:13px}
+.lang-toggle{display:flex;border:1px solid var(--neutral-300);border-radius:var(--radius-sm);overflow:hidden}
+.lang-toggle button{font-family:var(--font-body);font-size:13px;font-weight:600;background:#fff;color:var(--neutral-700);border:none;padding:6px 10px;cursor:pointer;min-height:32px}
+.lang-toggle button[aria-pressed="true"]{background:var(--brand-black);color:#fff}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--neutral-800);display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-width:44px;min-height:44px;border-radius:var(--radius-sm)}
+.icon-btn:hover{background:var(--neutral-100)}
+.site-header{border-bottom:1px solid var(--neutral-200);background:#fff;position:sticky;top:0;z-index:100;transition:box-shadow .2s var(--ease-out)}
+.site-header.is-scrolled{box-shadow:var(--shadow-sm)}
+.site-header-inner{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;gap:var(--space-4)}
+.logo{font-family:var(--font-display);font-weight:900;font-size:24px;text-decoration:none;color:var(--brand-black);display:flex;align-items:center;gap:var(--space-2)}
+.logo .seal{width:14px;height:14px;border-radius:var(--radius-full);background:var(--brand-sky)}
+.desktop-nav{display:flex;gap:var(--space-6);list-style:none;margin:0;padding:0}
+.desktop-nav a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-weight:600;font-size:15px;color:var(--neutral-900);border-bottom:2px solid transparent}
+.desktop-nav a:hover{color:var(--neutral-700)}
+.mobile-nav-toggle{display:none} .viewport-mobile .desktop-nav{display:none} .viewport-mobile .mobile-nav-toggle{display:inline-flex}
+.mobile-nav{position:fixed;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s var(--ease-out)}
+.mobile-nav.is-open{transform:translateX(0)} @media(prefers-reduced-motion:reduce){.mobile-nav{transition:none}}
+.mobile-nav-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-4);border-bottom:1px solid var(--neutral-200)}
+.mobile-nav-header strong{font-family:var(--font-display);font-size:20px;font-weight:900}
+.mobile-nav-list{list-style:none;margin:0;padding:var(--space-2) 0;overflow-y:auto;flex:1} .mobile-nav-list>li{border-bottom:1px solid var(--neutral-200)}
+.mobile-nav-list>li>a{display:flex;width:100%;font-size:17px;font-weight:600;padding:var(--space-4);min-height:44px;color:var(--neutral-900);text-decoration:none}
+.mobile-nav-footer{padding:var(--space-4);border-top:1px solid var(--neutral-200)}
+.btn{font-family:var(--font-body);font-weight:600;font-size:16px;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);border:2px solid var(--brand-black);cursor:pointer;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);text-decoration:none}
+.btn-primary{background:var(--brand-black);color:#fff} .btn-primary:hover{background:#000}
+.breadcrumbs{font-size:13px;color:var(--neutral-600);padding:var(--space-3) 0}
+.breadcrumbs ol{list-style:none;display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:0}
+.breadcrumbs li:not(:last-child)::after{content:"/";margin-left:6px;color:var(--neutral-400)}
+.breadcrumbs a{color:var(--neutral-600);text-decoration:underline} .breadcrumbs [aria-current]{color:var(--neutral-900);font-weight:600}
+.section{padding:var(--space-8) 0} .viewport-desktop .section{padding:var(--space-12) 0}
+.filters{display:flex;flex-wrap:wrap;gap:var(--space-6);margin:var(--space-6) 0;align-items:flex-end}
+.filters .field{min-width:200px}
+.filters label{display:block;font-weight:600;font-size:13px;margin-bottom:var(--space-1);color:var(--neutral-700)}
+.filters select{width:100%;font-family:var(--font-body);font-size:15px;padding:9px 10px;border:1px solid var(--neutral-300);border-radius:var(--radius-sm);background:#fff}
+.filters select:focus{outline:none;border-color:var(--neutral-400);box-shadow:0 0 0 2px var(--info)}
+.filter-tabs{display:flex;flex-wrap:wrap;gap:var(--space-2)}
+.filter-tabs button{font-family:var(--font-body);font-size:14px;font-weight:600;padding:8px 16px;border-radius:var(--radius-full);border:1px solid var(--neutral-300);background:#fff;color:var(--neutral-700);cursor:pointer;min-height:40px}
+.filter-tabs button[aria-pressed="true"]{background:var(--brand-black);border-color:var(--brand-black);color:#fff}
+.doc-table{width:100%;border-collapse:collapse;font-size:14px;margin-top:var(--space-6)}
+.doc-table th,.doc-table td{text-align:left;padding:var(--space-3);border-bottom:1px solid var(--neutral-200)}
+.doc-table th{font-weight:600;color:var(--neutral-700);border-bottom:2px solid var(--neutral-900)}
+.doc-table a{color:var(--brand-black);font-weight:600;text-decoration:underline;display:inline-flex;align-items:center;min-height:44px}
+.doc-table caption{text-align:left;font-size:13px;color:var(--neutral-600);margin-bottom:6px}
+.tag-vencido{background:var(--warning-bg);color:var(--warning-text);font-size:12px;font-weight:600;padding:2px 8px;border-radius:var(--radius-sm)}
+.viewport-mobile .doc-table{display:none}
+.doc-cards{display:none} .viewport-mobile .doc-cards{display:block;margin-top:var(--space-6)}
+.doc-card{border:1px solid var(--neutral-200);border-radius:var(--radius-md);padding:var(--space-4);margin-bottom:var(--space-3)}
+.doc-card h3{font-size:17px} .doc-card .meta{color:var(--neutral-600);font-size:13px;margin:4px 0 var(--space-3)}
+.doc-card a{font-weight:600;text-decoration:underline;color:var(--brand-black)}
+.empty-state{text-align:center;padding:var(--space-12) var(--space-4);color:var(--neutral-700);border:1px dashed var(--neutral-300);border-radius:var(--radius-md);margin-top:var(--space-6)}
+.empty-state .icon{font-size:32px;margin-bottom:var(--space-3)}
+.pending{background:var(--warning-bg);color:var(--warning-text);padding:2px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;display:inline-block}
+.site-footer{background:var(--neutral-900);color:var(--neutral-100);margin-top:var(--space-16)} .site-footer .container{padding-top:var(--space-12);padding-bottom:var(--space-8)}
+.footer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-8)} .viewport-mobile .footer-grid{grid-template-columns:1fr;gap:var(--space-6)}
+.footer-grid h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--neutral-400);margin-bottom:var(--space-3)}
+.footer-grid ul{list-style:none;margin:0;padding:0} .footer-grid li{margin-bottom:var(--space-2)} .footer-grid a{color:var(--neutral-100);text-decoration:none;font-size:14px}
+.footer-logo{font-family:var(--font-display);font-weight:900;font-size:28px;color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.15);margin-top:var(--space-8);padding-top:var(--space-4);display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);font-size:13px;color:var(--neutral-400)}
+.viewport-mobile .footer-bottom{flex-direction:column}
+.social-links{display:flex;gap:var(--space-3)} .social-links a{width:44px;height:44px;border-radius:var(--radius-full);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none}
+.demo-label{font-size:13px;color:var(--neutral-600);font-style:italic;margin:0 0 var(--space-4)}
+.viewport{margin-bottom:var(--space-16)}
+.phone-frame{width:375px;max-width:100%;height:780px;overflow-y:auto;margin:0 auto;border:8px solid var(--neutral-900);border-radius:36px;box-shadow:var(--shadow-lg);position:relative;background:#fff;transform:translateZ(0)}
+</style>
+</head>
+<body>
+
+<p class="demo-label container" style="margin-top:var(--space-4)">Alta fidelidad — Fase 2. Plantilla: Listado de documentos (fusión de "Descarga de Documentos" + sede Fernando de la Mora). El filtro por sede está condicionado a <code>[PENDIENTE: pregunta #14]</code>. El filtro "Formularios" no tiene documentos cargados — demuestra el estado vacío real, funcional.</p>
+
+<h2 class="container">Versión escritorio</h2>
+<div class="viewport viewport-desktop">
+<a class="skip-link" href="#contenido-desktop">Saltar al contenido principal</a>
+<div class="util-bar"><div class="container util-bar-inner"><div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio"><button type="button" aria-pressed="true">ES</button><button type="button" aria-pressed="false">IT</button></div><button type="button" class="icon-btn" aria-label="Buscar en el sitio">🔍</button></div></div>
+<header class="site-header" data-header><div class="container site-header-inner">
+  <a class="logo" href="/"><span class="seal" aria-hidden="true"></span>DANTE</a>
+  <nav aria-label="Principal"><ul class="desktop-nav">
+    <li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto">Contacto</a></li>
+  </ul></nav>
+</div></header>
+<nav class="breadcrumbs container" aria-label="Ruta de navegación"><ol><li><a href="/">Inicio</a></li><li aria-current="page">Documentos</li></ol></nav>
+<main id="contenido-desktop" class="container section">
+  <h1>Documentos</h1>
+  <p class="body-lg" style="color:var(--neutral-700);margin-top:var(--space-2)">Estatutos, circulares y formularios del colegio, para descargar.</p>
+
+  <div class="filters">
+    <div>
+      <p style="font-weight:600;font-size:13px;color:var(--neutral-700);margin-bottom:var(--space-1)">Categoría</p>
+      <div class="filter-tabs" role="group" aria-label="Filtrar documentos por categoría" data-filter-group="#doc-table-desktop, #doc-cards-desktop">
+        <button type="button" data-filter="todos" aria-pressed="true">Todos</button>
+        <button type="button" data-filter="estatutos" aria-pressed="false">Estatutos</button>
+        <button type="button" data-filter="circulares" aria-pressed="false">Circulares</button>
+        <button type="button" data-filter="formularios" aria-pressed="false">Formularios</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="d-sede">Sede <span class="caption" style="font-weight:400">(sujeto a confirmación, pregunta #14)</span></label>
+      <select id="d-sede">
+        <option>Todas las sedes</option>
+        <option>Asunción</option>
+        <option>Fernando de la Mora</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="empty-state reveal" data-empty-state hidden>
+    <p class="icon" aria-hidden="true">📄</p>
+    <p>No hay documentos publicados en esta categoría todavía.</p>
+  </div>
+
+  <table class="doc-table reveal" id="doc-table-desktop">
+    <caption>Documentos disponibles</caption>
+    <thead><tr><th>Documento</th><th>Categoría</th><th>Sede</th><th>Fecha</th><th>Acción</th></tr></thead>
+    <tbody>
+      <tr data-item data-category="estatutos"><td>Estatutos sociales</td><td>Estatutos</td><td>Ambas</td><td>12/12/2023</td><td><a href="#" aria-label="Descargar Estatutos sociales en PDF">Descargar (PDF)</a></td></tr>
+      <tr data-item data-category="circulares"><td>Circular de inscripciones 2026 <span class="tag-vencido" style="display:none">Vencido</span></td><td>Circulares</td><td>Asunción</td><td>03/2025</td><td><a href="#" aria-label="Descargar Circular de inscripciones 2026 en PDF">Descargar (PDF)</a></td></tr>
+      <tr data-item data-category="estatutos"><td>Reglamento interno</td><td>Estatutos</td><td>Ambas</td><td>12/12/2023</td><td><a href="#" aria-label="Descargar Reglamento interno en PDF">Descargar (PDF)</a></td></tr>
+    </tbody>
+  </table>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="footer-grid">
+    <div><p class="footer-logo">DANTE</p><p class="body-sm" style="color:var(--neutral-400)">Afiliados a la Società Dante Alighieri (versión completa del logo, con banderas Paraguay/Italia)</p></div>
+    <div><h2>Navegación</h2><ul><li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto">Contacto</a></li></ul></div>
+    <div><h2>Accesos secundarios</h2><ul><li><a href="/documentos">Documentos</a></li><li><a href="/institucion/estatutos-sociales">Estatutos sociales</a></li><li><a href="/buscar">Buscar en el sitio</a></li></ul></div>
+    <div><h2>Contacto</h2><p class="body-sm"><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></p></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Colegio Dante Alighieri. Aviso legal / Privacidad.</p><div class="social-links"><a href="#" aria-label="Facebook del Colegio Dante Alighieri">f</a><a href="#" aria-label="Instagram del Colegio Dante Alighieri">ig</a></div></div>
+</div></footer>
+</div>
+
+<h2 class="container">Versión móvil</h2>
+<div class="viewport viewport-mobile container" style="padding-bottom:var(--space-16)">
+<div class="phone-frame">
+<a class="skip-link" href="#contenido-mobile">Saltar al contenido principal</a>
+<div class="util-bar"><div class="util-bar-inner" style="padding-left:var(--space-4);padding-right:var(--space-4);justify-content:space-between"><div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio"><button type="button" aria-pressed="true">ES</button><button type="button" aria-pressed="false">IT</button></div><button type="button" class="icon-btn" aria-label="Buscar en el sitio">🔍</button></div></div>
+<header class="site-header" data-header><div class="site-header-inner" style="padding-left:var(--space-4);padding-right:var(--space-4)">
+  <a class="logo" href="/"><span class="seal" aria-hidden="true"></span>DANTE</a>
+  <button type="button" class="icon-btn mobile-nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mnav-ld" data-nav-toggle>☰</button>
+</div></header>
+<nav id="mnav-ld" class="mobile-nav" aria-label="Principal">
+  <div class="mobile-nav-header"><strong>DANTE</strong><button type="button" class="icon-btn" aria-label="Cerrar menú de navegación" data-nav-close>✕</button></div>
+  <ul class="mobile-nav-list"><li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto">Contacto</a></li></ul>
+  <div class="mobile-nav-footer"><a class="btn btn-primary" href="/admisiones" style="width:100%">Quiero inscribir a mi hijo/a</a></div>
+</nav>
+<nav class="breadcrumbs" aria-label="Ruta de navegación" style="padding-left:var(--space-4)"><ol><li><a href="/">Inicio</a></li><li aria-current="page">Documentos</li></ol></nav>
+<main id="contenido-mobile" style="padding:0 var(--space-4) var(--space-8)">
+  <h1>Documentos</h1>
+  <p class="body-lg" style="color:var(--neutral-700)">Estatutos, circulares y formularios del colegio, para descargar.</p>
+
+  <div class="filters" style="flex-direction:column;align-items:stretch;gap:var(--space-3)">
+    <div class="filter-tabs" role="group" aria-label="Filtrar documentos por categoría" data-filter-group="#doc-table-mobile, #doc-cards-mobile">
+      <button type="button" data-filter="todos" aria-pressed="true">Todos</button>
+      <button type="button" data-filter="estatutos" aria-pressed="false">Estatutos</button>
+      <button type="button" data-filter="formularios" aria-pressed="false">Formularios</button>
+    </div>
+    <div class="field"><label for="m-sede">Sede</label><select id="m-sede"><option>Todas las sedes</option><option>Asunción</option><option>Fernando de la Mora</option></select></div>
+  </div>
+
+  <div class="empty-state reveal" data-empty-state hidden><p class="icon" aria-hidden="true">📄</p><p>No hay documentos publicados en esta categoría todavía.</p></div>
+
+  <table class="doc-table" id="doc-table-mobile" style="display:none"><tbody></tbody></table>
+  <div class="doc-cards reveal" id="doc-cards-mobile">
+    <div class="doc-card" data-item data-category="estatutos"><h3>Estatutos sociales</h3><p class="meta">Estatutos · Ambas sedes · 12/12/2023</p><a href="#" aria-label="Descargar Estatutos sociales en PDF">Descargar (PDF)</a></div>
+    <div class="doc-card" data-item data-category="circulares"><h3>Circular de inscripciones 2026</h3><p class="meta">Circulares · Asunción · 03/2025</p><a href="#" aria-label="Descargar Circular de inscripciones 2026 en PDF">Descargar (PDF)</a></div>
+    <div class="doc-card" data-item data-category="estatutos"><h3>Reglamento interno</h3><p class="meta">Estatutos · Ambas sedes · 12/12/2023</p><a href="#" aria-label="Descargar Reglamento interno en PDF">Descargar (PDF)</a></div>
+  </div>
+</main>
+<footer class="site-footer"><div style="padding:var(--space-8) var(--space-4)">
+  <p class="footer-logo">DANTE</p>
+  <p class="body-sm" style="margin-top:var(--space-4)"><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></p>
+  <div class="footer-bottom" style="margin-top:var(--space-6)"><p>© 2026 Colegio Dante Alighieri.</p></div>
+</div></footer>
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-header]').forEach(function (header) { var frame = header.closest('.phone-frame'); var sc = frame || window; function onScroll () { var y = frame ? frame.scrollTop : window.scrollY; header.classList.toggle('is-scrolled', y > 80); } sc.addEventListener('scroll', onScroll); });
+  document.querySelectorAll('[data-nav-toggle]').forEach(function (btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls')); if (!panel) return;
+    function onKeydown (e) { if (e.key === 'Escape') close(); if (e.key === 'Tab') { var f = panel.querySelectorAll('a,button'); if (!f.length) return; var first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } } }
+    function open () { panel.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Cerrar menú de navegación'); var f = panel.querySelector('a,button'); if (f) f.focus(); document.addEventListener('keydown', onKeydown); }
+    function close () { panel.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Abrir menú de navegación'); btn.focus(); document.removeEventListener('keydown', onKeydown); }
+    btn.addEventListener('click', function () { panel.classList.contains('is-open') ? close() : open(); });
+    var closeBtn = panel.querySelector('[data-nav-close]'); if (closeBtn) closeBtn.addEventListener('click', close);
+  });
+  document.querySelectorAll('.lang-toggle').forEach(function (group) { group.querySelectorAll('button').forEach(function (btn) { btn.addEventListener('click', function () { group.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); }); btn.setAttribute('aria-pressed', 'true'); }); }); });
+  document.querySelectorAll('[data-filter-group]').forEach(function (group) {
+    var selectors = group.getAttribute('data-filter-group').split(',').map(function (s) { return s.trim(); });
+    var targets = selectors.map(function (s) { return document.querySelector(s); }).filter(Boolean);
+    group.querySelectorAll('button').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        group.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+        btn.setAttribute('aria-pressed', 'true');
+        var cat = btn.getAttribute('data-filter'); var visible = 0;
+        targets.forEach(function (target) {
+          target.querySelectorAll('[data-item]').forEach(function (item) { var show = cat === 'todos' || item.getAttribute('data-category') === cat; item.hidden = !show; if (show) visible++; });
+        });
+        var container = group.closest('main');
+        var empty = container ? container.querySelector('[data-empty-state]') : null;
+        if (empty) empty.hidden = visible !== 0;
+      });
+    });
+  });
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); } }); }, { threshold: .2 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else { document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); }); }
+});
+</script>
+</body>
+</html>

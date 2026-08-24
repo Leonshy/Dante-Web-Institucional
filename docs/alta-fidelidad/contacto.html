@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contacto — Colegio Dante Alighieri</title>
+<meta name="description" content="Dirección, teléfono y formulario de contacto del Colegio Dante Alighieri en Asunción.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --brand-black:#191919; --brand-sky:#A6E4F8; --brand-yellow:#FFED4E;
+  --brand-gray-light:#F1F1F1; --brand-gray-mid:#B2B2B2;
+  --neutral-50:#FAFAFA; --neutral-100:#F1F1F1; --neutral-200:#E4E4E4; --neutral-300:#CACACA;
+  --neutral-400:#B2B2B2; --neutral-500:#8C8C8C; --neutral-600:#666666; --neutral-700:#464646;
+  --neutral-800:#2E2E2E; --neutral-900:#191919;
+  --success:#15803D; --success-bg:#DCFCE7; --danger:#B91C1C; --danger-bg:#FEE2E2;
+  --warning-text:#92400E; --warning-bg:#FEF3C7; --info:#1D4ED8; --info-bg:#DBEAFE;
+  --font-display:'Barlow Condensed',Arial,sans-serif; --font-body:'Barlow',Arial,sans-serif;
+  --radius-sm:4px; --radius-md:8px; --radius-lg:16px; --radius-full:9999px;
+  --shadow-sm:0 1px 2px rgba(25,25,25,.06); --shadow-md:0 4px 12px rgba(25,25,25,.10); --shadow-lg:0 12px 32px rgba(25,25,25,.14);
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;--space-24:96px;--space-32:128px;
+  --container-max:1280px; --ease-out:cubic-bezier(0,0,.2,1); --ease-in-out:cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;font-family:var(--font-body);font-size:16px;line-height:1.6;color:var(--neutral-900);background:#fff}
+img{max-width:100%;display:block} a{color:inherit} ul{margin:0}
+h1,h2,h3{font-family:var(--font-display);margin:0;line-height:1.15;color:var(--neutral-900)}
+h1{font-weight:800;font-size:32px} h2{font-weight:700;font-size:26px} h3{font-weight:700;font-size:20px}
+.viewport-desktop h1{font-size:44px} .viewport-desktop h2{font-size:32px}
+.body-lg{font-size:17px} .viewport-desktop .body-lg{font-size:18px} .body-sm{font-size:14px}
+.container{max-width:var(--container-max);margin:0 auto;padding:0 var(--space-4)} .viewport-desktop .container{padding:0 var(--space-8)}
+.skip-link{position:absolute;left:-999px;top:0;background:#fff;color:var(--brand-black);border:2px solid var(--brand-black);padding:10px 16px;z-index:1000;border-radius:0 0 var(--radius-sm) 0;font-weight:600;text-decoration:none}
+.skip-link:focus{left:0;top:0}
+a:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--info);outline-offset:2px;border-radius:2px}
+@media(prefers-reduced-motion:no-preference){ .reveal{opacity:0;transform:translateY(12px);transition:opacity .35s var(--ease-out),transform .35s var(--ease-out)} .reveal.is-visible{opacity:1;transform:translateY(0)} }
+@media(prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none} *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important;scroll-behavior:auto!important} }
+.util-bar{border-bottom:1px solid var(--neutral-200);background:var(--neutral-50)}
+.util-bar-inner{display:flex;justify-content:flex-end;align-items:center;gap:var(--space-4);padding:var(--space-2) 0;font-size:13px}
+.lang-toggle{display:flex;border:1px solid var(--neutral-300);border-radius:var(--radius-sm);overflow:hidden}
+.lang-toggle button{font-family:var(--font-body);font-size:13px;font-weight:600;background:#fff;color:var(--neutral-700);border:none;padding:6px 10px;cursor:pointer;min-height:32px}
+.lang-toggle button[aria-pressed="true"]{background:var(--brand-black);color:#fff}
+.icon-btn{background:none;border:none;cursor:pointer;color:var(--neutral-800);display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;min-width:44px;min-height:44px;border-radius:var(--radius-sm)}
+.icon-btn:hover{background:var(--neutral-100)}
+.site-header{border-bottom:1px solid var(--neutral-200);background:#fff;position:sticky;top:0;z-index:100;transition:box-shadow .2s var(--ease-out)}
+.site-header.is-scrolled{box-shadow:var(--shadow-sm)}
+.site-header-inner{display:flex;align-items:center;justify-content:space-between;padding:var(--space-4) 0;gap:var(--space-4)}
+.logo{font-family:var(--font-display);font-weight:900;font-size:24px;text-decoration:none;color:var(--brand-black);display:flex;align-items:center;gap:var(--space-2)}
+.logo .seal{width:14px;height:14px;border-radius:var(--radius-full);background:var(--brand-sky)}
+.desktop-nav{display:flex;gap:var(--space-6);list-style:none;margin:0;padding:0}
+.desktop-nav a{display:inline-flex;align-items:center;min-height:44px;text-decoration:none;font-weight:600;font-size:15px;color:var(--neutral-900);border-bottom:2px solid transparent}
+.desktop-nav a:hover{color:var(--neutral-700)} .desktop-nav a[aria-current="page"]{border-bottom-color:var(--brand-black)}
+.mobile-nav-toggle{display:none} .viewport-mobile .desktop-nav{display:none} .viewport-mobile .mobile-nav-toggle{display:inline-flex}
+.mobile-nav{position:fixed;inset:0;background:#fff;z-index:200;display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s var(--ease-out)}
+.mobile-nav.is-open{transform:translateX(0)} @media(prefers-reduced-motion:reduce){.mobile-nav{transition:none}}
+.mobile-nav-header{display:flex;justify-content:space-between;align-items:center;padding:var(--space-4);border-bottom:1px solid var(--neutral-200)}
+.mobile-nav-header strong{font-family:var(--font-display);font-size:20px;font-weight:900}
+.mobile-nav-list{list-style:none;margin:0;padding:var(--space-2) 0;overflow-y:auto;flex:1} .mobile-nav-list>li{border-bottom:1px solid var(--neutral-200)}
+.mobile-nav-list>li>a{display:flex;width:100%;font-size:17px;font-weight:600;padding:var(--space-4);min-height:44px;color:var(--neutral-900);text-decoration:none}
+.mobile-nav-footer{padding:var(--space-4);border-top:1px solid var(--neutral-200)}
+.btn{font-family:var(--font-body);font-weight:600;font-size:16px;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);border:2px solid var(--brand-black);cursor:pointer;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);text-decoration:none;transition:background-color .15s var(--ease-out)}
+.btn-primary{background:var(--brand-black);color:#fff} .btn-primary:hover{background:#000}
+.btn-secondary{background:transparent;color:var(--brand-black)} .btn-secondary:hover{background:var(--neutral-100)}
+.btn[disabled]{background:var(--neutral-300);color:var(--neutral-500);border-color:var(--neutral-300);cursor:not-allowed}
+.btn[aria-busy="true"]{position:relative;color:transparent}
+.btn .spinner{position:absolute;width:18px;height:18px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%}
+@media(prefers-reduced-motion:no-preference){.btn .spinner{animation:spin .6s linear infinite}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.breadcrumbs{font-size:13px;color:var(--neutral-600);padding:var(--space-3) 0}
+.breadcrumbs ol{list-style:none;display:flex;flex-wrap:wrap;gap:4px;margin:0;padding:0}
+.breadcrumbs li:not(:last-child)::after{content:"/";margin-left:6px;color:var(--neutral-400)}
+.breadcrumbs a{color:var(--neutral-600);text-decoration:underline} .breadcrumbs [aria-current]{color:var(--neutral-900);font-weight:600}
+.section{padding:var(--space-8) 0} .viewport-desktop .section{padding:var(--space-12) 0}
+.contact-layout{display:grid;grid-template-columns:320px 1fr;gap:var(--space-8)} .viewport-mobile .contact-layout{grid-template-columns:1fr}
+.contact-info{border:1px solid var(--neutral-200);border-radius:var(--radius-md);padding:var(--space-6);align-self:start}
+.contact-info dt{font-weight:600;font-size:13px;color:var(--neutral-600);margin-top:var(--space-4)}
+.contact-info dt:first-child{margin-top:0}
+.contact-info dd{margin:2px 0 0}
+.map-embed{aspect-ratio:4/3;background:var(--neutral-100);border:1px dashed var(--neutral-400);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--neutral-600);font-size:13px;margin-top:var(--space-4);text-align:center;padding:var(--space-4)}
+form{border:1px solid var(--neutral-200);border-radius:var(--radius-md);padding:var(--space-6)}
+.field{margin-bottom:var(--space-4)}
+.field label{display:block;font-weight:600;font-size:14px;margin-bottom:var(--space-1);color:var(--neutral-900)}
+.field .hint{font-size:13px;color:var(--neutral-600);margin-top:var(--space-1)}
+.field input,.field textarea{width:100%;font-family:var(--font-body);font-size:16px;padding:10px 12px;border:1px solid var(--neutral-300);border-radius:var(--radius-sm);background:#fff;color:var(--neutral-900)}
+.field input:hover,.field textarea:hover{border-color:var(--neutral-400)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--neutral-400);box-shadow:0 0 0 2px var(--info)}
+.field.has-error input,.field.has-error textarea{border-color:var(--danger)}
+.field .msg-error{display:flex;align-items:center;gap:6px;color:var(--danger);font-size:13px;margin-top:var(--space-1);font-weight:500}
+.field input:disabled{background:var(--neutral-100);color:var(--neutral-500);cursor:not-allowed}
+.alert{display:flex;gap:10px;align-items:flex-start;padding:var(--space-3) var(--space-4);border-radius:var(--radius-md);font-size:14px;margin-bottom:var(--space-4)}
+.alert-success{background:var(--success-bg);color:var(--success)}
+.alert-danger{background:var(--danger-bg);color:var(--danger)}
+.alert-info{background:var(--info-bg);color:var(--info)}
+.state-demo{display:flex;flex-wrap:wrap;gap:var(--space-3);margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px dashed var(--neutral-300)}
+.state-demo .caption{width:100%;color:var(--neutral-600)}
+.pending{background:var(--warning-bg);color:var(--warning-text);padding:2px 8px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;display:inline-block}
+.caption{font-size:13px;font-weight:500;color:var(--neutral-600)}
+.site-footer{background:var(--neutral-900);color:var(--neutral-100);margin-top:var(--space-16)} .site-footer .container{padding-top:var(--space-12);padding-bottom:var(--space-8)}
+.footer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--space-8)} .viewport-mobile .footer-grid{grid-template-columns:1fr;gap:var(--space-6)}
+.footer-grid h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--neutral-400);margin-bottom:var(--space-3)}
+.footer-grid ul{list-style:none;margin:0;padding:0} .footer-grid li{margin-bottom:var(--space-2)} .footer-grid a{color:var(--neutral-100);text-decoration:none;font-size:14px}
+.footer-logo{font-family:var(--font-display);font-weight:900;font-size:28px;color:#fff}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.15);margin-top:var(--space-8);padding-top:var(--space-4);display:flex;justify-content:space-between;flex-wrap:wrap;gap:var(--space-3);font-size:13px;color:var(--neutral-400)}
+.viewport-mobile .footer-bottom{flex-direction:column}
+.social-links{display:flex;gap:var(--space-3)} .social-links a{width:44px;height:44px;border-radius:var(--radius-full);border:1px solid rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none}
+.demo-label{font-size:13px;color:var(--neutral-600);font-style:italic;margin:0 0 var(--space-4)}
+.viewport{margin-bottom:var(--space-16)}
+.phone-frame{width:375px;max-width:100%;height:780px;overflow-y:auto;margin:0 auto;border:8px solid var(--neutral-900);border-radius:36px;box-shadow:var(--shadow-lg);position:relative;background:#fff;transform:translateZ(0)}
+</style>
+</head>
+<body>
+
+<p class="demo-label container" style="margin-top:var(--space-4)">Alta fidelidad — Fase 2. Plantilla: Contacto, acotada a datos de contacto, mapa y formulario (la página vieja tenía 4661 palabras, revisión pendiente por <code>[PENDIENTE: pregunta #19]</code>). Se muestran los estados reposo, error, éxito, deshabilitado y cargando del formulario.</p>
+
+<h2 class="container">Versión escritorio</h2>
+<div class="viewport viewport-desktop">
+<a class="skip-link" href="#contenido-desktop">Saltar al contenido principal</a>
+<div class="util-bar"><div class="container util-bar-inner"><div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio"><button type="button" aria-pressed="true">ES</button><button type="button" aria-pressed="false">IT</button></div><button type="button" class="icon-btn" aria-label="Buscar en el sitio">🔍</button></div></div>
+<header class="site-header" data-header><div class="container site-header-inner">
+  <a class="logo" href="/"><span class="seal" aria-hidden="true"></span>DANTE</a>
+  <nav aria-label="Principal"><ul class="desktop-nav">
+    <li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto" aria-current="page">Contacto</a></li>
+  </ul></nav>
+</div></header>
+<nav class="breadcrumbs container" aria-label="Ruta de navegación"><ol><li><a href="/">Inicio</a></li><li aria-current="page">Contacto</li></ol></nav>
+<main id="contenido-desktop" class="container section">
+  <h1>Contacto</h1>
+  <p class="body-lg" style="color:var(--neutral-700);margin:var(--space-2) 0 var(--space-8)">Escríbanos o comuníquese directamente con la secretaría.</p>
+
+  <div class="contact-layout reveal">
+    <div class="contact-info">
+      <h2 style="font-size:20px">Datos de contacto</h2>
+      <dl>
+        <dt>Dirección</dt><dd><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></dd>
+        <dt>Teléfono</dt><dd><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></dd>
+        <dt>Email</dt><dd><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></dd>
+        <dt>Horario de atención</dt><dd><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></dd>
+      </dl>
+      <div class="map-embed" role="img" aria-label="Ubicación del Colegio Dante Alighieri en el mapa — mapa embebido pendiente de dirección real">[Mapa embebido]</div>
+    </div>
+
+    <form aria-label="Formulario de contacto" novalidate>
+      <h2 style="font-size:20px;margin-bottom:var(--space-4)">Escríbanos</h2>
+
+      <div class="alert alert-success" role="status">Recibimos su mensaje. Le respondemos a la brevedad.</div>
+
+      <div class="field">
+        <label for="d-nombre">Nombre completo</label>
+        <input id="d-nombre" name="nombre" type="text" autocomplete="name">
+      </div>
+      <div class="field">
+        <label for="d-telefono">Teléfono</label>
+        <input id="d-telefono" name="telefono" type="tel" autocomplete="tel">
+      </div>
+      <div class="field has-error">
+        <label for="d-email">Email</label>
+        <input id="d-email" name="email" type="email" value="correo-invalido" aria-invalid="true" aria-describedby="d-email-error">
+        <p class="msg-error" id="d-email-error" role="alert">Escriba un email válido, por ejemplo nombre@dominio.com.</p>
+      </div>
+      <div class="field">
+        <label for="d-mensaje">Mensaje</label>
+        <textarea id="d-mensaje" name="mensaje" rows="5"></textarea>
+      </div>
+      <p class="caption">Protegido con verificación anti-robots (Cloudflare Turnstile). Al enviar, acepta el tratamiento de sus datos según el aviso de privacidad.</p>
+      <button class="btn btn-primary" type="submit" style="margin-top:var(--space-4)">Enviar mensaje</button>
+
+      <div class="state-demo">
+        <p class="caption">Estados del botón de envío (referencia de sistema de diseño):</p>
+        <button class="btn btn-primary" type="button" aria-busy="true">Enviar mensaje<span class="spinner" aria-hidden="true"></span></button>
+        <button class="btn btn-primary" type="button" disabled>Enviar mensaje</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="alert alert-danger reveal" style="margin-top:var(--space-8);max-width:640px" role="alert">No pudimos enviar el formulario. Intente de nuevo en unos minutos o escríbanos a <span class="pending" style="margin-left:4px">[email institucional]</span>.</div>
+</main>
+<footer class="site-footer"><div class="container">
+  <div class="footer-grid">
+    <div><p class="footer-logo">DANTE</p><p class="body-sm" style="color:var(--neutral-400)">Afiliados a la Società Dante Alighieri (versión completa del logo, con banderas Paraguay/Italia)</p></div>
+    <div><h2>Navegación</h2><ul><li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto">Contacto</a></li></ul></div>
+    <div><h2>Accesos secundarios</h2><ul><li><a href="/documentos">Documentos</a></li><li><a href="/buscar">Buscar en el sitio</a></li></ul></div>
+    <div><h2>Contacto</h2><p class="body-sm"><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></p></div>
+  </div>
+  <div class="footer-bottom"><p>© 2026 Colegio Dante Alighieri. Aviso legal / Privacidad.</p><div class="social-links"><a href="#" aria-label="Facebook del Colegio Dante Alighieri">f</a><a href="#" aria-label="Instagram del Colegio Dante Alighieri">ig</a></div></div>
+</div></footer>
+</div>
+
+<h2 class="container">Versión móvil</h2>
+<div class="viewport viewport-mobile container" style="padding-bottom:var(--space-16)">
+<div class="phone-frame">
+<a class="skip-link" href="#contenido-mobile">Saltar al contenido principal</a>
+<div class="util-bar"><div class="util-bar-inner" style="padding-left:var(--space-4);padding-right:var(--space-4);justify-content:space-between"><div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio"><button type="button" aria-pressed="true">ES</button><button type="button" aria-pressed="false">IT</button></div><button type="button" class="icon-btn" aria-label="Buscar en el sitio">🔍</button></div></div>
+<header class="site-header" data-header><div class="site-header-inner" style="padding-left:var(--space-4);padding-right:var(--space-4)">
+  <a class="logo" href="/"><span class="seal" aria-hidden="true"></span>DANTE</a>
+  <button type="button" class="icon-btn mobile-nav-toggle" aria-label="Abrir menú de navegación" aria-expanded="false" aria-controls="mnav-ct" data-nav-toggle>☰</button>
+</div></header>
+<nav id="mnav-ct" class="mobile-nav" aria-label="Principal">
+  <div class="mobile-nav-header"><strong>DANTE</strong><button type="button" class="icon-btn" aria-label="Cerrar menú de navegación" data-nav-close>✕</button></div>
+  <ul class="mobile-nav-list"><li><a href="/institucion">Institución</a></li><li><a href="/oferta-educativa">Oferta educativa</a></li><li><a href="/admisiones">Admisiones</a></li><li><a href="/vida-escolar">Vida escolar</a></li><li><a href="/noticias">Noticias</a></li><li><a href="/contacto">Contacto</a></li></ul>
+  <div class="mobile-nav-footer"><a class="btn btn-primary" href="/admisiones" style="width:100%">Quiero inscribir a mi hijo/a</a></div>
+</nav>
+<nav class="breadcrumbs" aria-label="Ruta de navegación" style="padding-left:var(--space-4)"><ol><li><a href="/">Inicio</a></li><li aria-current="page">Contacto</li></ol></nav>
+<main id="contenido-mobile" style="padding:0 var(--space-4) var(--space-8)">
+  <h1>Contacto</h1>
+  <p class="body-lg" style="color:var(--neutral-700)">Escríbanos o comuníquese directamente con la secretaría.</p>
+
+  <div class="contact-info reveal" style="margin-top:var(--space-4)">
+    <h2 style="font-size:18px">Datos de contacto</h2>
+    <dl><dt>Dirección / Teléfono / Email</dt><dd><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></dd></dl>
+    <div class="map-embed" role="img" aria-label="Ubicación del Colegio Dante Alighieri en el mapa">[Mapa]</div>
+  </div>
+
+  <form aria-label="Formulario de contacto" novalidate style="margin-top:var(--space-6)">
+    <h2 style="font-size:18px;margin-bottom:var(--space-4)">Escríbanos</h2>
+    <div class="field"><label for="m-nombre">Nombre completo</label><input id="m-nombre" type="text" autocomplete="name"></div>
+    <div class="field"><label for="m-telefono">Teléfono</label><input id="m-telefono" type="tel" autocomplete="tel"></div>
+    <div class="field has-error">
+      <label for="m-email">Email</label>
+      <input id="m-email" type="email" value="correo-invalido" aria-invalid="true" aria-describedby="m-email-error">
+      <p class="msg-error" id="m-email-error" role="alert">Escriba un email válido, por ejemplo nombre@dominio.com.</p>
+    </div>
+    <div class="field"><label for="m-mensaje">Mensaje</label><textarea id="m-mensaje" rows="4"></textarea></div>
+    <p class="caption">Protegido con verificación anti-robots.</p>
+    <button class="btn btn-primary" type="submit" style="width:100%;margin-top:var(--space-4)">Enviar mensaje</button>
+  </form>
+</main>
+<footer class="site-footer"><div style="padding:var(--space-8) var(--space-4)">
+  <p class="footer-logo">DANTE</p>
+  <p class="body-sm" style="margin-top:var(--space-4)"><span class="pending">[COMPLETAR CON DATO REAL DE MIGRACIÓN]</span></p>
+  <div class="footer-bottom" style="margin-top:var(--space-6)"><p>© 2026 Colegio Dante Alighieri.</p></div>
+</div></footer>
+</div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-header]').forEach(function (header) { var frame = header.closest('.phone-frame'); var sc = frame || window; function onScroll () { var y = frame ? frame.scrollTop : window.scrollY; header.classList.toggle('is-scrolled', y > 80); } sc.addEventListener('scroll', onScroll); });
+  document.querySelectorAll('[data-nav-toggle]').forEach(function (btn) {
+    var panel = document.getElementById(btn.getAttribute('aria-controls')); if (!panel) return;
+    function onKeydown (e) { if (e.key === 'Escape') close(); if (e.key === 'Tab') { var f = panel.querySelectorAll('a,button'); if (!f.length) return; var first = f[0], last = f[f.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } } }
+    function open () { panel.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true'); btn.setAttribute('aria-label', 'Cerrar menú de navegación'); var f = panel.querySelector('a,button'); if (f) f.focus(); document.addEventListener('keydown', onKeydown); }
+    function close () { panel.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Abrir menú de navegación'); btn.focus(); document.removeEventListener('keydown', onKeydown); }
+    btn.addEventListener('click', function () { panel.classList.contains('is-open') ? close() : open(); });
+    var closeBtn = panel.querySelector('[data-nav-close]'); if (closeBtn) closeBtn.addEventListener('click', close);
+  });
+  document.querySelectorAll('.lang-toggle').forEach(function (group) { group.querySelectorAll('button').forEach(function (btn) { btn.addEventListener('click', function () { group.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', 'false'); }); btn.setAttribute('aria-pressed', 'true'); }); }); });
+  if ('IntersectionObserver' in window && !reduceMotion) {
+    var io = new IntersectionObserver(function (entries) { entries.forEach(function (entry) { if (entry.isIntersecting) { entry.target.classList.add('is-visible'); io.unobserve(entry.target); } }); }, { threshold: .2 });
+    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
+  } else { document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('is-visible'); }); }
+});
+</script>
+</body>
+</html>

@@ -127,8 +127,10 @@ antes de cerrarla (ver `docs/02-ux-arquitectura-informacion.md` §12).
 - [x] **Biblioteca de componentes**: botones, campos, cards, acordeón, tabs, breadcrumb,
       paginación, modal, alertas, navegación, pie, hero, galería, tabla de datos — 21
       componentes con todos sus estados especificados en `docs/04-ui-design-system.md` §3
-- [ ] **Diseño de alta fidelidad** de cada plantilla de la Fase 1, con contenido real
-- [ ] Versión **móvil** de cada plantilla (el tráfico institucional es mayoritariamente móvil)
+- [x] **Diseño de alta fidelidad** de cada plantilla de la Fase 1, con contenido real —
+      `docs/alta-fidelidad/` (9 archivos, ver tabla en `docs/04-ui-design-system.md` §4)
+- [x] Versión **móvil** de cada plantilla (el tráfico institucional es mayoritariamente móvil) —
+      incluida en el mismo archivo que la versión escritorio, mismo patrón que los wireframes
 - [x] Estados: hover, focus visible, activo, deshabilitado, cargando, error, vacío — definidos
       por componente en `docs/04` §3
 - [x] **Plan de motion**: qué se anima, con qué duración y curva, y qué respeta
