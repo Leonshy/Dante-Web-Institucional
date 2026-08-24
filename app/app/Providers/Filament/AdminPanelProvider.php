@@ -36,7 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->multiFactorAuthentication([
                 AppAuthentication::make()
                     ->recoverable(),
-            ], isRequired: ! app()->environment('testing'))
+            ], isRequired: config('dante.require_2fa') && ! app()->environment('testing'))
             ->passwordReset()
             ->profile()
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')

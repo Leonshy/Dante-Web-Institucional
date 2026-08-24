@@ -15,6 +15,20 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | 2FA obligatorio en el panel
+    |--------------------------------------------------------------------------
+    |
+    | Definido como requisito no negociable en la Fase 3 (docs/05-backend-modelo-datos.md
+    | §4, antecedente de seguridad en docs/01-analisis-descubrimiento.md §C.6). Default
+    | `true` — se apaga solo con esta variable de entorno, nunca editando código, así
+    | queda un rastro explícito de que alguien lo desactivó a propósito y dónde.
+    | **Nunca debe quedar en `false` en producción.**
+    |
+    */
+    'require_2fa' => env('DANTE_REQUIRE_2FA', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Idiomas soportados
     |--------------------------------------------------------------------------
     */
