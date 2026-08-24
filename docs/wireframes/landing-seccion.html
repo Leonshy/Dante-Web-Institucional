@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Landing de sección (Oferta educativa)</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .crumbs{padding:8px 20px;font-size:12px;border-bottom:1px solid #ccc}
+  .hero{border:2px solid #000;margin:16px 20px;padding:24px;text-align:center}
+  .cards{display:flex;gap:12px;margin:16px 20px}
+  .card{border:1px solid #000;flex:1;padding:14px}
+  .cta{display:inline-block;border:2px solid #000;padding:8px 16px;min-height:44px}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+  .mobile-frame .cards{flex-direction:column;margin:10px}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Landing de sección (ej. Oferta educativa)</h1>
+<p class="note" style="margin:0 20px 20px">Equivale a "sección de nivel educativo" del checklist. Agrupa páginas hijas reales (Instituto de Lengua y Cultura, Cursos de Italiano). Mismo patrón sirve para las landings de Institución, Admisiones y Vida escolar.</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header><strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li><strong>Oferta educativa</strong></li><li>Admisiones</li><li>Vida escolar</li><li>Noticias</li><li>Contacto</li></ul></nav>
+  </header>
+  <p class="crumbs">Inicio &gt; <strong>Oferta educativa</strong></p>
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Oferta educativa</h1>
+    <div class="hero">
+      <p>Educación bilingüe español-italiano, afiliada a la Società Dante Alighieri. Desde el nivel inicial hasta cursos de idioma para toda la comunidad.</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <h2>Instituto de Lengua y Cultura</h2>
+        <p>Enseñanza del idioma y la cultura italiana, abierta a alumnos y a la comunidad.</p>
+        <a class="cta" href="#">Ver más →</a>
+      </div>
+      <div class="card">
+        <h2>Cursos de Italiano</h2>
+        <p>Cursos por niveles, con certificación internacional.</p>
+        <a class="cta" href="#">Ver más →</a>
+      </div>
+    </div>
+  </main>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <p class="crumbs">Inicio &gt; Oferta educativa</p>
+  <main>
+    <h1 style="font-size:20px;margin:10px">Oferta educativa</h1>
+    <div class="hero" style="margin:10px">Educación bilingüe español-italiano</div>
+    <div class="cards">
+      <div class="card">Instituto de Lengua y Cultura</div>
+      <div class="card">Cursos de Italiano</div>
+    </div>
+  </main>
+  <footer><p>DANTE — contacto, enlaces</p></footer>
+</div>
+</body>
+</html>

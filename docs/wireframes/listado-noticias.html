@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Listado de noticias</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .crumbs{padding:8px 20px;font-size:12px;border-bottom:1px solid #ccc}
+  .filters{padding:10px 20px;border-bottom:1px solid #ccc;font-size:13px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:16px 20px}
+  .item{border:1px solid #000;padding:12px;min-height:150px}
+  .pagination{padding:16px 20px;font-size:13px}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+  .mobile-frame .grid{grid-template-columns:1fr;padding:10px}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Listado de noticias</h1>
+<p class="note" style="margin:0 20px 20px">Fusión de las viejas "Noticias" y "Novedades" (§3). Incluye noticias reales del inventario y filtro por categoría.</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header><strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li>Oferta educativa</li><li>Admisiones</li><li>Vida escolar</li><li><strong>Noticias</strong></li><li>Contacto</li></ul></nav>
+  </header>
+  <p class="crumbs">Inicio &gt; <strong>Noticias</strong></p>
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Noticias</h1>
+    <div class="filters">Filtrar por categoría: [Todas] [Institucional] [Cultural]</div>
+    <div class="grid">
+      <div class="item"><strong>Histórico: presidente de Italia, Sergio Mattarella, visita el colegio Dante Alighieri</strong><p>2024 · Institucional</p></div>
+      <div class="item"><strong>La Scuola Dante Alighieri celebra su 129° aniversario con música y arte</strong><p>2024 · Institucional</p></div>
+      <div class="item"><strong>Mercado navideño a la italiana en Asunción</strong><p>2024 · Cultural</p></div>
+    </div>
+    <nav class="pagination" aria-label="Paginación de noticias">« Anterior — Página 1 de 2 — Siguiente »</nav>
+  </main>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <p class="crumbs">Inicio &gt; Noticias</p>
+  <main>
+    <h1 style="font-size:20px;margin:10px">Noticias</h1>
+    <div class="filters">Filtrar: [Todas ▾]</div>
+    <div class="grid">
+      <div class="item">Visita del presidente de Italia</div>
+      <div class="item">129° aniversario</div>
+    </div>
+    <nav class="pagination">« 1 de 2 »</nav>
+  </main>
+  <footer><p>DANTE — contacto, enlaces</p></footer>
+</div>
+</body>
+</html>

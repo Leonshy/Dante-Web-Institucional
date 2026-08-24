@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Listado de documentos</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .crumbs{padding:8px 20px;font-size:12px;border-bottom:1px solid #ccc}
+  .filters{padding:10px 20px;border-bottom:1px solid #ccc;font-size:13px}
+  table{width:calc(100% - 40px);margin:16px 20px;border-collapse:collapse;font-size:13px}
+  th,td{border:1px solid #999;padding:8px;text-align:left}
+  th{border-bottom:2px solid #000}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+  .mcard{border:1px solid #000;margin:10px;padding:10px;font-size:13px}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Listado de documentos / descargas</h1>
+<p class="note" style="margin:0 20px 20px">Fusión de "Descarga de Documentos" + "Descarga documentos Fdo. de la Mora" (§3). El filtro por sede está condicionado a la pregunta #14 de `docs/01` §E.</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header><strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li>Oferta educativa</li><li>Admisiones</li><li>Vida escolar</li><li>Noticias</li><li>Contacto</li></ul></nav>
+  </header>
+  <p class="crumbs">Inicio &gt; <strong>Documentos</strong></p>
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Documentos</h1>
+    <div class="filters">Filtrar por categoría: [Todos] [Estatutos] [Circulares] [Formularios] — por sede: [Asunción] [Fernando de la Mora] [Ambas]*<br><span style="font-size:11px">*sujeto a confirmación del cliente, pregunta #14</span></div>
+    <table>
+      <caption style="text-align:left;font-size:12px;margin-bottom:6px">Documentos disponibles</caption>
+      <thead><tr><th>Documento</th><th>Categoría</th><th>Sede</th><th>Fecha</th><th>Acción</th></tr></thead>
+      <tbody>
+        <tr><td>Estatutos sociales</td><td>Estatutos</td><td>Ambas</td><td>2023</td><td><a href="#">Descargar PDF</a></td></tr>
+        <tr><td>Circular de inscripciones 2026</td><td>Circulares</td><td>Asunción</td><td>2025</td><td><a href="#">Descargar PDF</a></td></tr>
+        <tr><td>Reglamento interno</td><td>Estatutos</td><td>Ambas</td><td>2023</td><td><a href="#">Descargar PDF</a></td></tr>
+      </tbody>
+    </table>
+  </main>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <p class="crumbs">Inicio &gt; Documentos</p>
+  <main>
+    <h1 style="font-size:20px;margin:10px">Documentos</h1>
+    <div class="filters">Filtrar: [Categoría ▾] [Sede ▾]</div>
+    <div class="mcard"><strong>Estatutos sociales</strong><br>Estatutos · Ambas sedes · 2023<br><a href="#">Descargar PDF</a></div>
+    <div class="mcard"><strong>Circular de inscripciones 2026</strong><br>Circulares · Asunción · 2025<br><a href="#">Descargar PDF</a></div>
+  </main>
+  <footer><p>DANTE — contacto, enlaces</p></footer>
+</div>
+</body>
+</html>

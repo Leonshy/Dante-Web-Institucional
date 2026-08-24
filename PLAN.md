@@ -1,15 +1,16 @@
 # PLAN.md — Plan de ejecución por fases
 
-Estado global: **Fase 0 — no iniciada**
-Última actualización: (completar al cerrar cada fase)
+Estado global: **Fase 0 — casi cerrada** (falta confirmar entorno Plesk, pregunta abierta #13)
+Última actualización: 2026-08-24
 
 > **Cómo se usa:** cada fase tiene un objetivo, un entregable escrito y una condición de
 > cierre (*Definition of Done*). No se pasa de fase sin el entregable en `docs/` y el
 > checklist tildado acá. Si una fase revela algo que invalida una decisión anterior, se
 > escribe un ADR y se vuelve atrás — eso es normal y barato ahora, caro en producción.
 
-Estimación total de referencia: **~180–240 h** de ingeniería para el equipo de 3.
-Se ajusta al cerrar la Fase 0, cuando se sepa el volumen real de contenido del WordPress.
+Estimación total de referencia: ~~180–240 h~~ **238–328 h** de ingeniería para el equipo de 3
+(ajustada al cerrar la Fase 0: volumen real de contenido + multiidioma español/italiano pedido
+por el cliente, ver ADR-002 — ver `docs/00-legajo-tecnico.md` §7 para el detalle por fase).
 
 ---
 
@@ -18,63 +19,75 @@ Se ajusta al cerrar la Fase 0, cuando se sepa el volumen real de contenido del W
 **Entregable:** `docs/01-analisis-descubrimiento.md` + `docs/00-legajo-tecnico.md` completado
 **Estimado:** 16–24 h
 
-- [ ] Confirmar que los tres insumos están en `_insumos/` (ver `_insumos/LEEME.md`)
-- [ ] **Leer el repo de IPG completo**: estructura de carpetas, modelo de datos, cómo resuelve
+- [x] Confirmar que los tres insumos están en `_insumos/` (ver `_insumos/LEEME.md`) — cargados
+      y saneados (ver hallazgos de seguridad en `docs/01-analisis-descubrimiento.md` §C.6)
+- [x] **Leer el repo de IPG completo**: estructura de carpetas, modelo de datos, cómo resuelve
       el panel admin, el editor enriquecido, la gestión de medios, los menús, el SEO por página,
       las integraciones. Escribir el mapa en `docs/01-analisis-descubrimiento.md`
-- [ ] Listar qué de IPG se **copia tal cual**, qué se **adapta** y qué **no aplica**
-- [ ] **Leer el manual de marca**: paleta, tipografías, logotipo y sus usos, grilla, tono
-      de voz, aplicaciones. Extraer los tokens a `docs/04-ui-design-system.md`
-- [ ] **Importar el dump del WordPress** a una base separada `dante_wp_legacy` (solo lectura).
+- [x] Listar qué de IPG se **copia tal cual**, qué se **adapta** y qué **no aplica**
+- [x] **Leer el manual de marca**: paleta, tipografías, logotipo y sus usos, grilla, tono
+      de voz, aplicaciones. Extraer los tokens a `docs/04-ui-design-system.md` — tipografía
+      bloqueada, ver pregunta abierta #6
+- [x] **Importar el dump del WordPress** a una base separada `dante_wp_legacy` (solo lectura).
       Correr `scripts/wp-inventario.sql` y volcar el resultado
-- [ ] **Inventario de contenido**: cada página, entrada, categoría, menú, formulario, archivo
+- [x] **Inventario de contenido**: cada página, entrada, categoría, menú, formulario, archivo
       adjunto y URL pública del sitio actual, con su estado (se migra / se reescribe / se
-      descarta / se fusiona). Tabla en `docs/01-analisis-descubrimiento.md`
-- [ ] Capturar el sitio actual (screenshots de cada plantilla + `sitemap.xml` + `robots.txt`)
-      **sin ejecutar su código**
-- [ ] Inventario de **integraciones vigentes**: qué IDs de GA4/GTM/Meta Pixel usa hoy, qué
+      descarta / se fusiona). Tabla en `docs/01-analisis-descubrimiento.md` — falta cruzar con
+      tráfico real (pregunta abierta #8)
+- [x] Capturar el sitio actual (screenshots de cada plantilla + `sitemap.xml` + `robots.txt`)
+      **sin ejecutar su código** — 5 capturas en `_insumos/03-wordpress-actual/export/screenshots/`,
+      sitemap y robots.txt confirman el sitio en línea al 2026-08-24
+- [x] Inventario de **integraciones vigentes**: qué IDs de GA4/GTM/Meta Pixel usa hoy, qué
       formularios existen y a dónde envían, qué captcha usa, qué plugins tienen función
-      visible para el usuario final
+      visible para el usuario final — ninguna integración de analytics/pixel/captcha configurada hoy
 - [ ] Relevar **SEO actual**: posiciones y páginas con tráfico (Search Console / Analytics del
-      cliente), para no matar URLs que rinden
+      cliente), para no matar URLs que rinden — bloqueado, requiere accesos del cliente (pregunta #8)
 - [ ] Confirmar entorno de destino: versión de PHP del Plesk, si hay Redis, si hay Node para
-      el build, límites de memoria y de subida
-- [ ] Listar **preguntas abiertas para el cliente** (idioma, formularios con datos de menores,
-      quién administra, cuántos usuarios del panel, calendario académico, etc.)
-- [ ] **ADR-001**: enfoque del panel de administración (replicar IPG vs. Filament 5)
-- [ ] Ajustar la estimación total con el volumen real de contenido
+      el build, límites de memoria y de subida — bloqueado, requiere acceso al Plesk
+- [x] Listar **preguntas abiertas para el cliente** (idioma, formularios con datos de menores,
+      quién administra, cuántos usuarios del panel, calendario académico, etc.) — 13 preguntas
+      en `docs/01-analisis-descubrimiento.md` §E, **11 respondidas el 2026-08-24** (produjo
+      ADR-002 multiidioma). Quedan abiertas #6 (tipografía) y #13 (acceso Plesk)
+- [x] **ADR-001**: enfoque del panel de administración (replicar IPG vs. Filament 5) — se eligió
+      Filament 5, ver `docs/decisiones/ADR-001-panel-admin.md`
+- [x] Ajustar la estimación total con el volumen real de contenido — 204–278 h (antes 214–298 h),
+      ver `docs/00-legajo-tecnico.md` §7 y `docs/01-analisis-descubrimiento.md` §F
 
 **DoD:** se puede responder sin abrir nada más — cuántas páginas se migran, qué patrón de
 panel se usa, y cuáles son los colores y tipografías oficiales.
 
 ---
 
-## Fase 1 — UX y arquitectura de información
+## Fase 1 — UX y arquitectura de información ✅ cerrada 2026-08-24
 **Objetivo:** la estructura nueva del sitio, no un calco del WordPress.
 **Entregable:** `docs/02-ux-arquitectura-informacion.md` + wireframes
 **Estimado:** 20–28 h
 **Herramienta:** `ux-flow-designer`
 
-- [ ] Definir **audiencias** y qué viene a buscar cada una (padres que evalúan el colegio,
+- [x] Definir **audiencias** y qué viene a buscar cada una (padres que evalúan el colegio,
       padres actuales, alumnos, docentes, aspirantes, ex-alumnos, prensa)
-- [ ] **Tareas principales** por audiencia, ordenadas por frecuencia e importancia
-- [ ] **Card sorting** del inventario de contenido de la Fase 0 → nueva arquitectura de información
-- [ ] **Mapa del sitio nuevo** con jerarquía y profundidad máxima 3 clics
-- [ ] **Estructura de navegación**: menú principal, menú de pie, navegación contextual, buscador
-- [ ] **Flujos de usuario** de las 5 tareas críticas (ej.: "quiero saber cómo inscribir a mi
+- [x] **Tareas principales** por audiencia, ordenadas por frecuencia e importancia
+- [x] **Card sorting** del inventario de contenido de la Fase 0 → nueva arquitectura de información
+- [x] **Mapa del sitio nuevo** con jerarquía y profundidad máxima 3 clics
+- [x] **Estructura de navegación**: menú principal, menú de pie, navegación contextual, buscador
+- [x] **Flujos de usuario** de las 5 tareas críticas (ej.: "quiero saber cómo inscribir a mi
       hijo", "quiero ver el calendario", "quiero contactar a la secretaría")
-- [ ] **Wireframes** (baja fidelidad) de cada plantilla única: home, página institucional,
+- [x] **Wireframes** (baja fidelidad) de cada plantilla única: home, página institucional,
       listado de noticias, detalle de noticia, sección de nivel educativo, contacto,
-      resultados de búsqueda, 404
-- [ ] Definir los **tipos de contenido** que van a existir en el panel y sus campos
+      resultados de búsqueda, 404 — en `docs/wireframes/`
+- [x] Definir los **tipos de contenido** que van a existir en el panel y sus campos
       (esto alimenta directo el modelo de datos de la Fase 3)
-- [ ] **Mapa de redirecciones 301**: URL vieja → URL nueva, para cada URL del inventario.
-      Este archivo es crítico para no perder SEO
-- [ ] Revisión de accesibilidad en wireframes (jerarquía de encabezados, orden de foco,
+- [x] **Mapa de redirecciones 301**: URL vieja → URL nueva, para cada URL del inventario.
+      Este archivo es crítico para no perder SEO — `docs/redirecciones-301.csv` (39 filas)
+- [x] Revisión de accesibilidad en wireframes (jerarquía de encabezados, orden de foco,
       objetivo mínimo 44×44 px en táctil)
 
 **DoD:** cualquiera del equipo puede dibujar el sitio nuevo de memoria y sabe dónde cae cada
-contenido viejo.
+contenido viejo. **Cumplido con reserva:** las 39 piezas del inventario tienen destino explícito
+en el mapa 301, pero 3 de ellas (sede Fernando de la Mora, convenio ex-alumnos, contenido real
+de Contacto) dependen de las preguntas nuevas #14, #17 y #19 en `docs/01-analisis-descubrimiento.md`
+§E para fijarse en forma definitiva — no bloquean el inicio de la Fase 2, sí conviene resolverlas
+antes de cerrarla (ver `docs/02-ux-arquitectura-informacion.md` §12).
 
 ---
 
@@ -85,27 +98,44 @@ contenido viejo.
 **Herramienta:** `impeccable` (correr `/impeccable init` en la carpeta antes de empezar)
 
 ### Copywriting
-- [ ] Definir **tono de voz** a partir del manual de marca (¿formal institucional? ¿cercano?)
-- [ ] Reescribir el contenido migrado: títulos, bajadas, cuerpos, CTAs, microcopy de
-      formularios, mensajes de error, textos de estados vacíos
-- [ ] **Títulos y meta descripciones SEO** de cada página (esto se carga después en el panel)
-- [ ] Textos legales: política de privacidad, cookies, aviso legal. Si el sitio recibe datos
-      de menores, esto no es opcional
-- [ ] Alt text de todas las imágenes que se migran
+- [x] Definir **tono de voz** a partir del manual de marca (¿formal institucional? ¿cercano?)
+      — `docs/03-copywriting.md` §1 (usted, dato en vez de adjetivo, 5 principios con ejemplos)
+- [x] Reescribir el contenido migrado: títulos, bajadas, cuerpos, CTAs, microcopy de
+      formularios, mensajes de error, textos de estados vacíos — `docs/03-copywriting.md` §2–§4.
+      Cuerpo completo con contenido real (Autoridades, Administración, Biblioteca, Enlaces de
+      interés, FAQ de Admisiones) extraído de `dante_wp_legacy` y reescrito en el tono definido
+      — pregunta nueva #21 (aranceles vigentes) agregada a `docs/01` §E
+- [x] **Títulos y meta descripciones SEO** de cada página (esto se carga después en el panel)
+      — `docs/03-copywriting.md` §3, las 39 piezas reales del inventario
+- [x] Textos legales: política de privacidad, cookies, aviso legal. Si el sitio recibe datos
+      de menores, esto no es opcional — `docs/03-copywriting.md` §5. El sitio no procesa datos de
+      menores online (confirmado en `docs/01` §E #3); los 3 textos son borrador de trabajo, **no
+      publicables sin revisión legal y aprobación del cliente**
+- [x] Alt text de todas las imágenes que se migran — `docs/03-copywriting.md` §6, como criterio
+      (sin acceso visual a los 128 medios en esta sesión, se completa al cargar cada imagen real
+      en el panel)
 
 ### UI / Sistema de diseño
-- [ ] **Tokens** extraídos del manual de marca: color (con sus variantes y estados), tipografía
+- [x] **Tokens** extraídos del manual de marca: color (con sus variantes y estados), tipografía
       (escala modular), espaciado, radios, sombras, breakpoints → volcados a `tailwind.config.js`
-- [ ] Verificar **contraste AA** de cada combinación de color de la marca. Si el manual propone
-      una combinación que no pasa, documentarlo y proponer la variante accesible
-- [ ] **Biblioteca de componentes**: botones, campos, cards, acordeón, tabs, breadcrumb,
-      paginación, modal, alertas, navegación, pie, hero, galería, tabla de datos
+      — `docs/04-ui-design-system.md` §1. Tipografía es propuesta (Barlow/Barlow Condensed),
+      pendiente de aprobación del cliente (pregunta #6). El volcado real a `tailwind.config.js`
+      se hace en Fase 3 (no hay proyecto Node corriendo todavía)
+- [x] Verificar **contraste AA** de cada combinación de color de la marca. Si el manual propone
+      una combinación que no pasa, documentarlo y proponer la variante accesible — resuelto por
+      restricción de uso (celeste/amarillo nunca como texto), tabla completa en `docs/04` §1
+- [x] **Biblioteca de componentes**: botones, campos, cards, acordeón, tabs, breadcrumb,
+      paginación, modal, alertas, navegación, pie, hero, galería, tabla de datos — 21
+      componentes con todos sus estados especificados en `docs/04-ui-design-system.md` §3
 - [ ] **Diseño de alta fidelidad** de cada plantilla de la Fase 1, con contenido real
 - [ ] Versión **móvil** de cada plantilla (el tráfico institucional es mayoritariamente móvil)
-- [ ] Estados: hover, focus visible, activo, deshabilitado, cargando, error, vacío
-- [ ] **Plan de motion**: qué se anima, con qué duración y curva, y qué respeta
-      `prefers-reduced-motion` (la implementación es Fase 4, acá se define el criterio)
-- [ ] Iconografía y tratamiento fotográfico coherentes con la marca
+- [x] Estados: hover, focus visible, activo, deshabilitado, cargando, error, vacío — definidos
+      por componente en `docs/04` §3
+- [x] **Plan de motion**: qué se anima, con qué duración y curva, y qué respeta
+      `prefers-reduced-motion` (la implementación es Fase 4, acá se define el criterio) —
+      `docs/04-ui-design-system.md` §5
+- [x] Iconografía y tratamiento fotográfico coherentes con la marca — Lucide + criterio
+      fotográfico documental en `docs/04-ui-design-system.md` §6
 
 **DoD:** el diseño está aprobado por el cliente y no queda ninguna pantalla por definir.
 
@@ -327,8 +357,8 @@ usar su panel.
 
 | Fase | Cerrada el | Horas reales | Notas |
 |---|---|---|---|
-| 0 | | | |
-| 1 | | | |
+| 0 | 2026-08-24 | — (sesión de IA) | Casi cerrada — quedan abiertas #6 (tipografía) y #13 (acceso Plesk), no bloqueantes |
+| 1 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente. Preguntas #14–20 agregadas, no bloquean Fase 2 |
 | 2 | | | |
 | 3 | | | |
 | 4 | | | |

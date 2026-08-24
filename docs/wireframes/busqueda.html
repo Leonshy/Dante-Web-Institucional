@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Resultados de búsqueda</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .searchbar{padding:14px 20px;border-bottom:1px solid #ccc}
+  .searchbar label{font-weight:bold;font-size:13px;display:block;margin-bottom:6px}
+  .searchbar input{width:400px;max-width:80%;border:1px solid #666;padding:8px}
+  .filters{padding:10px 20px;font-size:13px;border-bottom:1px solid #ccc}
+  .results{padding:16px 20px}
+  .result{border-bottom:1px solid #ccc;padding:12px 0}
+  .tag{border:1px solid #000;font-size:11px;padding:2px 6px;margin-right:6px}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Resultados de búsqueda</h1>
+<p class="note" style="margin:0 20px 20px">Busca sobre Página, Noticia, Documento y Comunicado (§5 de este documento). Ejemplo con búsqueda real: "italiano".</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header><strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li>Oferta educativa</li><li>Admisiones</li><li>Vida escolar</li><li>Noticias</li><li>Contacto</li></ul></nav>
+  </header>
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Resultados de búsqueda</h1>
+    <div class="searchbar">
+      <label for="q">Buscar en el sitio</label>
+      <input id="q" type="search" value="italiano">
+    </div>
+    <div class="filters">Filtrar por tipo: [Todos] [Páginas] [Noticias] [Documentos] [Comunicados] — 6 resultados para "italiano"</div>
+    <div class="results">
+      <div class="result"><span class="tag">Página</span><strong>Cursos de Italiano</strong><p>/oferta-educativa/cursos-de-italiano</p></div>
+      <div class="result"><span class="tag">Página</span><strong>Instituto de Lengua y Cultura</strong><p>/oferta-educativa/instituto-de-lengua-y-cultura</p></div>
+      <div class="result"><span class="tag">Noticia</span><strong>Mercado navideño a la italiana en Asunción</strong><p>/noticias/mercado-navideno-a-la-italiana-en-asuncion</p></div>
+      <div class="result"><span class="tag">Documento</span><strong>Programa de cursos de italiano 2026 (PDF)</strong><p>/documentos</p></div>
+    </div>
+  </main>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <main>
+    <h1 style="font-size:20px;margin:10px">Resultados de búsqueda</h1>
+    <div class="searchbar"><label for="mq">Buscar</label><input id="mq" type="search" value="italiano" style="width:90%"></div>
+    <div class="filters">Filtrar: [Todos ▾] — 6 resultados</div>
+    <div class="results">
+      <div class="result"><span class="tag">Página</span> Cursos de Italiano</div>
+      <div class="result"><span class="tag">Noticia</span> Mercado navideño a la italiana</div>
+    </div>
+  </main>
+  <footer><p>DANTE — contacto, enlaces</p></footer>
+</div>
+</body>
+</html>

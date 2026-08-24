@@ -77,7 +77,7 @@ Estándar de webparaguay, con las versiones vigentes a agosto 2026:
 | Vistas | **Blade** | |
 | Interactividad | **Livewire 4** + Alpine.js | |
 | CSS | **Tailwind CSS** + Vite | Tokens del manual de marca en `tailwind.config` |
-| Panel admin | **Replicar el enfoque del repo IPG** | Si IPG usa panel a medida en Blade/Livewire, se replica. Si no hay patrón reutilizable, fallback: **Filament 5**. Decidir en Fase 0 y registrar como ADR-001 |
+| Panel admin | **Filament 5** | Decidido en ADR-001 (`docs/decisiones/ADR-001-panel-admin.md`): IPG tiene panel a medida sin bloques, menús, 2FA, auditoría, buscador ni redirecciones — se reutiliza su modelo de datos, no su capa Blade/controllers |
 | Despliegue | Servidor **Plesk** de webparaguay | Sin Docker en producción, sin acceso root garantizado |
 | Testing | Pest 3 (unit/feature) + Playwright (E2E) | |
 
@@ -185,4 +185,5 @@ Están instaladas globalmente en `~/.claude/`. Usalas — están para eso:
 - **Hosting destino:** servidor Plesk de webparaguay (`177.251.252.12`)
 - **Mail:** queda en HostGator (`192.185.52.135`) — **el DNS de correo no se toca en el cutover**
 - **SSL:** Let's Encrypt vía Plesk
-- **Mercado/idioma del contenido:** español paraguayo. Confirmar en Fase 0 si se requiere italiano
+- **Mercado/idioma del contenido:** español paraguayo **+ italiano**, multiidioma real con
+  toggle de habilitación — confirmado en Fase 0, ver ADR-002

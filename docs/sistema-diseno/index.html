@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de diseño — DANTE (referencia visual, Fase 2)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --brand-black:#191919; --brand-sky:#A6E4F8; --brand-yellow:#FFED4E;
+    --brand-gray-light:#F1F1F1; --brand-gray-mid:#B2B2B2;
+    --brand-green:#04884E; --brand-red:#C41536; --brand-blue:#26378C;
+    --neutral-50:#FAFAFA; --neutral-100:#F1F1F1; --neutral-200:#E4E4E4; --neutral-300:#CACACA;
+    --neutral-400:#B2B2B2; --neutral-500:#8C8C8C; --neutral-600:#666666; --neutral-700:#464646;
+    --neutral-800:#2E2E2E; --neutral-900:#191919;
+    --success:#15803D; --danger:#B91C1C; --warning:#92400E; --warning-bg:#FEF3C7; --info:#1D4ED8;
+    --font-display:'Barlow Condensed',Arial,sans-serif;
+    --font-body:'Barlow',Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{font-family:var(--font-body);color:var(--neutral-900);background:#fff;margin:0;line-height:1.6}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 32px}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:800;line-height:1.15;margin:0}
+  section{padding:48px 0;border-bottom:1px solid var(--neutral-200)}
+  .swatches{display:flex;flex-wrap:wrap;gap:16px;margin-top:24px}
+  .swatch{width:160px}
+  .swatch .box{height:80px;border-radius:8px;border:1px solid var(--neutral-200);display:flex;align-items:flex-end;padding:8px}
+  .swatch .box span{background:rgba(255,255,255,.85);font-size:11px;padding:2px 6px;border-radius:4px}
+  .swatch p{margin:6px 0 0;font-size:13px}
+  .type-row{display:flex;align-items:baseline;gap:24px;padding:12px 0;border-bottom:1px dashed var(--neutral-200)}
+  .type-row .tag{font-family:var(--font-body);font-size:12px;color:var(--neutral-600);width:110px;flex-shrink:0}
+  .btn{font-family:var(--font-body);font-weight:600;font-size:16px;padding:12px 22px;border-radius:8px;border:2px solid var(--brand-black);cursor:pointer;min-height:44px}
+  .btn-primary{background:var(--brand-black);color:#fff}
+  .btn-primary:hover{background:#000}
+  .btn-secondary{background:transparent;color:var(--brand-black)}
+  .btn-ghost{background:transparent;color:var(--brand-black);border-color:transparent}
+  .btn-danger{background:var(--danger);color:#fff;border-color:var(--danger)}
+  .btn:disabled{background:var(--neutral-300);color:var(--neutral-500);border-color:var(--neutral-300);cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--info);outline-offset:2px}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .card{border:1px solid var(--neutral-200);border-radius:8px;padding:24px;max-width:320px;transition:transform .15s ease-out, box-shadow .15s ease-out}
+  .card:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(25,25,25,.10)}
+  .card h3{font-size:24px;margin-bottom:8px}
+  .card p{color:var(--neutral-700);font-size:15px;margin:0}
+  .field{max-width:360px;margin-top:16px}
+  .field label{display:block;font-size:14px;font-weight:600;margin-bottom:6px}
+  .field input, .field textarea{width:100%;font-family:var(--font-body);font-size:16px;padding:10px 12px;border:1px solid var(--neutral-300);border-radius:4px}
+  .field input:focus, .field textarea:focus{outline:none;border-color:var(--neutral-400);box-shadow:0 0 0 2px var(--info)}
+  .field.error input{border-color:var(--danger)}
+  .field .msg-error{color:var(--danger);font-size:13px;margin-top:4px}
+  .alert{padding:14px 16px;border-radius:8px;font-size:14px;max-width:420px;margin-top:12px;display:flex;gap:10px}
+  .alert-success{background:#DCFCE7;color:var(--success)}
+  .alert-danger{background:#FEE2E2;color:var(--danger)}
+  .alert-info{background:#DBEAFE;color:var(--info)}
+  .alert-warning{background:var(--warning-bg);color:var(--warning)}
+  .chip{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--neutral-700);background:var(--neutral-100);padding:4px 10px;border-radius:9999px}
+  .note{font-size:13px;color:var(--neutral-600);font-style:italic;margin-top:8px}
+  .prohibited{border:2px dashed var(--danger);padding:16px;border-radius:8px;display:flex;gap:16px;align-items:center;margin-top:16px}
+  .prohibited .yellow-circle{width:48px;height:48px;border-radius:50%;background:var(--brand-yellow)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="padding:48px 0 24px">
+    <span class="chip">Fase 2 — referencia visual, no es la web final</span>
+    <h1 style="font-size:44px;margin-top:12px">Sistema de diseño — DANTE</h1>
+    <p style="max-width:640px;color:var(--neutral-700)">Muestra los tokens y componentes de <code>docs/04-ui-design-system.md</code> aplicados en vivo, para revisar antes de construir las pantallas de alta fidelidad. Tipografía propuesta pendiente de aprobación del cliente (pregunta abierta #6).</p>
+  </header>
+
+  <section>
+    <h2 style="font-size:28px">Color</h2>
+    <p class="note">Los colores de marca (celeste, amarillo, verdes/rojo/azul secundarios) NUNCA se usan como texto — ver docs/04 §1.</p>
+    <div class="swatches">
+      <div class="swatch"><div class="box" style="background:var(--brand-black)"><span>#191919</span></div><p>brand-black (texto)</p></div>
+      <div class="swatch"><div class="box" style="background:var(--brand-sky)"><span>#A6E4F8</span></div><p>brand-sky (fondo)</p></div>
+      <div class="swatch"><div class="box" style="background:var(--brand-yellow)"><span>#FFED4E</span></div><p>brand-yellow (acento)</p></div>
+      <div class="swatch"><div class="box" style="background:var(--brand-gray-light)"><span>#F1F1F1</span></div><p>gray-light</p></div>
+      <div class="swatch"><div class="box" style="background:var(--brand-gray-mid)"><span>#B2B2B2</span></div><p>gray-mid</p></div>
+      <div class="swatch"><div class="box" style="background:var(--success);color:#fff"><span style="background:transparent;color:#fff">#15803D</span></div><p>success</p></div>
+      <div class="swatch"><div class="box" style="background:var(--danger);color:#fff"><span style="background:transparent;color:#fff">#B91C1C</span></div><p>danger</p></div>
+      <div class="swatch"><div class="box" style="background:var(--info);color:#fff"><span style="background:transparent;color:#fff">#1D4ED8</span></div><p>info</p></div>
+    </div>
+    <div class="prohibited">
+      <div class="yellow-circle"></div>
+      <p style="margin:0"><strong>Prohibido por el manual de marca:</strong> nunca combinar el amarillo con la forma circular del isotipo (ver <code>docs/01-analisis-descubrimiento.md</code> §B.2). Este círculo amarillo es un ejemplo de lo que NO se hace.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:28px">Tipografía — Barlow Condensed + Barlow</h2>
+    <div class="type-row"><span class="tag">display 60px</span><span style="font-family:var(--font-display);font-weight:900;font-size:60px">Educación bilingüe</span></div>
+    <div class="type-row"><span class="tag">h1 44px</span><span style="font-family:var(--font-display);font-weight:800;font-size:44px">Colegio Dante Alighieri</span></div>
+    <div class="type-row"><span class="tag">h2 32px</span><span style="font-family:var(--font-display);font-weight:700;font-size:32px">Oferta educativa</span></div>
+    <div class="type-row"><span class="tag">h3 24px</span><span style="font-family:var(--font-display);font-weight:700;font-size:24px">Instituto de Lengua y Cultura</span></div>
+    <div class="type-row"><span class="tag">body 16px</span><span style="font-family:var(--font-body);font-size:16px">Afiliados a la Società Dante Alighieri de Roma, ofrecemos educación bilingüe español-italiano desde el nivel inicial hasta el nivel medio.</span></div>
+    <div class="type-row"><span class="tag">overline 12px</span><span style="font-family:var(--font-body);font-weight:600;font-size:12px;letter-spacing:.08em;text-transform:uppercase">Admisiones 2026</span></div>
+  </section>
+
+  <section>
+    <h2 style="font-size:28px">Botones</h2>
+    <div class="row">
+      <button class="btn btn-primary">Quiero inscribir a mi hijo/a</button>
+      <button class="btn btn-secondary">Ver más</button>
+      <button class="btn btn-ghost">Cancelar</button>
+      <button class="btn btn-danger">Eliminar</button>
+      <button class="btn btn-primary" disabled>Deshabilitado</button>
+    </div>
+    <p class="note">Probá tabular con el teclado — el anillo de foco es visible en todos.</p>
+  </section>
+
+  <section>
+    <h2 style="font-size:28px">Tarjetas</h2>
+    <div class="row">
+      <div class="card">
+        <h3>Instituto de Lengua y Cultura</h3>
+        <p>Cursos de italiano para todas las edades, con certificación internacional PLIDA.</p>
+      </div>
+      <div class="card">
+        <h3>Certificación internacional</h3>
+        <p>Programas reconocidos por la Società Dante Alighieri de Roma.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:28px">Formularios</h2>
+    <div class="field">
+      <label for="nombre">Nombre completo</label>
+      <input id="nombre" type="text" placeholder="Tu nombre">
+    </div>
+    <div class="field error">
+      <label for="email">Correo electrónico</label>
+      <input id="email" type="email" value="correo-invalido">
+      <p class="msg-error">Ingresá un correo electrónico válido.</p>
+    </div>
+  </section>
+
+  <section>
+    <h2 style="font-size:28px">Alertas</h2>
+    <div class="alert alert-success">Tu mensaje fue enviado correctamente.</div>
+    <div class="alert alert-danger">Hubo un error al enviar el formulario. Intentá de nuevo.</div>
+    <div class="alert alert-info">Este formulario no reemplaza la inscripción presencial.</div>
+    <div class="alert alert-warning">La sede Fernando de la Mora está pendiente de confirmación.</div>
+  </section>
+
+  <footer style="padding:32px 0;color:var(--neutral-600);font-size:13px">
+    Referencia visual generada en la Fase 2 — no es código de producción. Fuentes cargadas vía Google Fonts CDN solo para esta previsualización; en producción van autoalojadas (ver docs/04-ui-design-system.md).
+  </footer>
+</div>
+</body>
+</html>

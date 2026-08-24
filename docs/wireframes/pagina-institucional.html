@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Página institucional</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .crumbs{padding:8px 20px;font-size:12px;border-bottom:1px solid #ccc}
+  .layout{display:flex;gap:20px;padding:16px 20px}
+  aside{border:1px solid #999;width:220px;padding:10px;font-size:13px}
+  aside ul{list-style:none;padding:0;margin:0}
+  aside li{padding:6px 0;border-bottom:1px solid #eee}
+  main{flex:1}
+  .block{border:1px dashed #666;padding:14px;margin-bottom:14px}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+  .mobile-frame .layout{flex-direction:column;padding:10px}
+  .mobile-frame aside{width:auto}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Página institucional (con bloques)</h1>
+<p class="note" style="margin:0 20px 20px">Ejemplo con contenido real: "Historia" (/institucion/historia). Un solo &lt;h1&gt; visible en el contenido (el título de la página).</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header>
+    <strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li>Oferta educativa</li><li>Admisiones</li><li>Vida escolar</li><li>Noticias</li><li>Contacto</li></ul></nav>
+  </header>
+  <p class="crumbs">Inicio &gt; Institución &gt; <strong>Historia</strong></p>
+  <div class="layout">
+    <aside aria-label="Secciones de Institución">
+      <p><strong>Institución</strong></p>
+      <ul>
+        <li>Quiénes somos</li>
+        <li><strong>Historia</strong> (actual)</li>
+        <li>Misión, visión y valores</li>
+        <li>Autoridades</li>
+        <li>Acerca de la Sociedad Dante Alighieri</li>
+        <li>Certificación internacional</li>
+        <li>Estatutos sociales</li>
+        <li>Administración</li>
+      </ul>
+    </aside>
+    <main id="contenido">
+      <h1>Historia del Colegio Dante Alighieri</h1>
+      <div class="block">
+        <p><em>Bloque: Hero</em></p>
+        <p>[Imagen de archivo institucional] — Más de 129 años de trayectoria educativa en Asunción, como comitato afiliado a la Società Dante Alighieri de Roma.</p>
+      </div>
+      <div class="block">
+        <p><em>Bloque: Texto enriquecido</em></p>
+        <p>Fundación del colegio, primeras décadas, crecimiento de la institución y su rol en la comunidad ítalo-paraguaya. [contenido migrado íntegro de /historia/]</p>
+      </div>
+      <div class="block">
+        <p><em>Bloque: Cifras / hitos institucionales</em></p>
+        <p>129° aniversario · Visita del presidente de Italia, Sergio Mattarella (2024) · Certificación internacional vigente</p>
+      </div>
+      <div class="block">
+        <p><em>Bloque: Imagen + texto</em></p>
+        <p>[Fotografía histórica] + texto sobre un hito puntual de la historia institucional.</p>
+      </div>
+      <div class="block">
+        <p><em>Bloque: Documentos descargables</em></p>
+        <p>📄 Estatutos sociales (PDF) — 📄 Reseña institucional (PDF)</p>
+      </div>
+    </main>
+  </div>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <p class="crumbs">Inicio &gt; Institución &gt; Historia</p>
+  <div class="layout">
+    <aside><p><strong>Institución ▾</strong> (acordeón colapsado, expandible)</p></aside>
+    <main>
+      <h1 style="font-size:20px">Historia del Colegio Dante Alighieri</h1>
+      <div class="block">Hero: 129 años de trayectoria</div>
+      <div class="block">Texto enriquecido (fundación, crecimiento)</div>
+      <div class="block">Cifras / hitos</div>
+      <div class="block">Documentos descargables</div>
+    </main>
+  </div>
+  <footer><p>DANTE — contacto, enlaces</p></footer>
+</div>
+</body>
+</html>

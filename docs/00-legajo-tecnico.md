@@ -107,9 +107,13 @@ particular en lugar de un `wp-admin` genérico.
 - Análisis, arquitectura de información nueva y wireframes
 - Copywriting completo del sitio, con textos reales
 - Sistema de diseño derivado del manual de marca + diseño de alta fidelidad de cada plantilla
-- Backend Laravel 13 con panel de administración autoadministrable completo:
-  páginas con constructor de bloques, noticias, categorías, medios, menús, configuración global,
-  formularios, usuarios y roles, redirecciones, campos SEO por página, registro de auditoría
+- Backend Laravel 13 con panel de administración autoadministrable completo (**Filament 5**,
+  ver ADR-001): páginas con constructor de bloques, noticias, categorías, medios, menús,
+  configuración global, formularios, **4 roles de usuario** (administrador, editor general,
+  editor de noticias/banners + marketing, editor académico — ver pregunta abierta #2),
+  redirecciones, campos SEO por página, registro de auditoría
+- **Sitio multiidioma español/italiano con toggle de habilitación** (ver ADR-002 — cambio de
+  alcance agregado en Fase 0, no estaba en la cotización original)
 - Frontend Blade + Livewire, responsivo, con motion
 - Migración completa del contenido del WordPress
 - SEO técnico + redirecciones 301 + schema.org + sitemap
@@ -122,10 +126,10 @@ particular en lugar de un `wp-admin` genérico.
 **NO entra en el MVP:**
 
 - Área privada de alumnos, padres o docentes
-- Inscripciones o matriculación en línea
+- Inscripciones o matriculación en línea (el sitio actual tampoco las tiene — la inscripción es
+  presencial con documentación física, ver `docs/01-analisis-descubrimiento.md` §E pregunta #3)
 - Pasarela de pagos
 - Integración con sistema de gestión académica
-- Multiidioma (a confirmar en Fase 0 — si el cliente lo pide, es un cambio de alcance)
 - Blog con comentarios
 - Newsletter con gestión de suscriptores
 
@@ -254,16 +258,25 @@ No se factura pero baja el costo del siguiente proyecto del mismo tipo.
 |---|---|---|---|
 | 0 | Descubrimiento e inventario | 16–24 | Senior |
 | 1 | UX y arquitectura de información | 20–28 | Senior + UX |
-| 2 | Copywriting y sistema de diseño | 24–32 | Senior + diseño |
-| 3 | Backend y panel admin | 48–64 | Senior + junior |
-| 4 | Frontend | 32–44 | Senior + junior |
-| 5 | Migración de contenido | 16–24 | Junior + senior |
-| 6 | SEO e integraciones | 12–16 | Senior |
+| 2 | Copywriting y sistema de diseño | ~~24–32~~ **32–42** (×2 idiomas) | Senior + diseño |
+| 3 | Backend y panel admin | ~~48–64~~ **58–76** (modelo de datos multiidioma + 4 roles) | Senior + junior |
+| 4 | Frontend | ~~32–44~~ **38–52** (routing e interfaz por idioma) | Senior + junior |
+| 5 | Migración de contenido | ~~16–24~~ **10–16** | Junior + senior |
+| 6 | SEO e integraciones | ~~12–16~~ **14–20** (hreflang, sitemap por idioma) | Senior |
 | 7 | Rendimiento | 10–14 | Senior |
-| 8 | Seguridad | 12–18 | Senior |
+| 8 | Seguridad | ~~12–18~~ **16–22** | Senior |
 | 9 | QA y testing | 14–20 | Junior + senior |
 | 10 | Despliegue y producción | 10–14 | Senior |
-| | **Total** | **214–298 h** | |
+| | **Total** | ~~214–298 h~~ **238–328 h** | |
+
+**Ajustado al cierre de la Fase 0** (`docs/01-analisis-descubrimiento.md` §F +
+`docs/decisiones/ADR-002-multiidioma.md`, 2026-08-24): volumen real de contenido chico (39
+piezas, ~30 tras descartar duplicados/pruebas) baja la Fase 5; sanitización HTML/SVG propia
+(no la resuelve Filament), el peso de explicarle al cliente el hallazgo de seguridad, y **el
+multiidioma pedido por el cliente** (ADR-002, no estaba en la cotización original) suben las
+Fases 2, 3, 4, 6 y 8. Este último es un rango grueso — se afina en la Fase 3 cuando se defina
+la estrategia técnica de traducción del modelo de datos. Pendiente además un ajuste cuando se
+confirme el entorno de Plesk (pregunta abierta #13).
 
 **Rango calendario:** 8 a 12 semanas con el equipo trabajando en paralelo con otros proyectos.
 
@@ -301,6 +314,9 @@ que es la variable con mayor incertidumbre.
 | R8 | El Plesk destino tiene limitaciones (PHP viejo, sin Node, sin Redis) | Media | Medio | Relevar en Fase 0. El diseño ya asume el escenario pesimista |
 | R9 | El cliente pide alcance del v1 (portal privado) durante el MVP | Media | Alto | El "NO entra" de la sección 4 está escrito para eso. Cambio de alcance = nuevo legajo |
 | R10 | El correo se rompe durante el cutover | Baja | Crítico | En el cutover se cambia **solo el registro A/web**. MX y registros de correo no se tocan |
+| R11 | El WordPress actual tiene una webshell con ejecución remota de comandos **activa** (confirmado 2026-08-24, ver `docs/01-analisis-descubrimiento.md` §C.6) — riesgo operativo inmediato para el cliente, no solo histórico | Confirmada | Crítico | Fuera del cronograma de fases: avisar al cliente/hosting para sacar el sitio de línea o bloquear el acceso ya. Ningún dato de usuario/código del WP se migra (ya cubierto por R2) |
+| R12 | El manual de marca no define ninguna tipografía ni entrega el logo en vectorial | Confirmada | Medio | Preguntas abiertas #6 y #12. Bloquea el cierre de la Fase 2, no el inicio de la Fase 1 |
+| R13 | Contenido de una posible sede secundaria ("Fernando de la Mora") sin editar desde 2016 — no está claro si sigue operando | Media | Bajo | Confirmar con el cliente antes de decidir si se migra, se archiva o se descarta (`docs/01-analisis-descubrimiento.md` §C.2) |
 
 **Supuestos:**
 

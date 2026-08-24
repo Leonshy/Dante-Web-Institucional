@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Contacto</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px}
+  nav ul{list-style:none;display:flex;gap:16px;margin:0;padding:0;font-size:13px}
+  .crumbs{padding:8px 20px;font-size:12px;border-bottom:1px solid #ccc}
+  .layout{display:flex;gap:20px;padding:16px 20px}
+  .info{border:1px solid #999;width:280px;padding:14px;font-size:13px}
+  form{flex:1;border:1px solid #000;padding:16px}
+  .field{margin-bottom:14px}
+  label{display:block;font-size:13px;margin-bottom:4px;font-weight:bold}
+  input,textarea{width:100%;box-sizing:border-box;border:1px solid #666;padding:8px;font-size:14px}
+  .cta{display:inline-block;border:2px solid #000;padding:10px 20px;min-height:44px;font-weight:bold}
+  .map{border:1px dashed #666;height:160px;display:flex;align-items:center;justify-content:center;margin-top:10px}
+  footer{border-top:2px solid #000;margin-top:20px;padding:16px 20px;font-size:12px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto}
+  .mobile-frame .layout{flex-direction:column;padding:10px}
+  .mobile-frame .info{width:auto}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Contacto</h1>
+<p class="note" style="margin:0 20px 20px">Nota de arquitectura: la página actual tiene 4661 palabras (atípico) — se rediseña acotada a datos de contacto, mapa y formulario. El resto del contenido migrado se revisa en Fase 2 (pregunta #19 de `docs/01` §E).</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <header><strong>DANTE</strong>
+    <nav aria-label="Principal"><ul><li>Institución</li><li>Oferta educativa</li><li>Admisiones</li><li>Vida escolar</li><li>Noticias</li><li><strong>Contacto</strong></li></ul></nav>
+  </header>
+  <p class="crumbs">Inicio &gt; <strong>Contacto</strong></p>
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Contacto</h1>
+    <div class="layout">
+      <div class="info">
+        <h2>Datos de contacto</h2>
+        <p><strong>Dirección:</strong> [dirección sede Asunción]</p>
+        <p><strong>Teléfono:</strong> [teléfono]</p>
+        <p><strong>Email:</strong> [email institucional]</p>
+        <p><strong>Horario de atención:</strong> [horario]</p>
+        <div class="map">[Mapa embebido — bloque Mapa]</div>
+      </div>
+      <form aria-label="Formulario de contacto">
+        <h2>Escribinos</h2>
+        <div class="field"><label for="nombre">Nombre completo</label><input id="nombre" type="text"></div>
+        <div class="field"><label for="telefono">Teléfono</label><input id="telefono" type="tel"></div>
+        <div class="field"><label for="email">Email</label><input id="email" type="email"></div>
+        <div class="field"><label for="mensaje">Mensaje</label><textarea id="mensaje" rows="5"></textarea></div>
+        <p style="font-size:11px">[Captcha — Cloudflare Turnstile]</p>
+        <button class="cta" type="submit">Enviar mensaje</button>
+      </form>
+    </div>
+  </main>
+  <footer><p>DANTE — mapa, enlaces, redes</p></footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <header><strong>DANTE</strong> ☰</header>
+  <p class="crumbs">Inicio &gt; Contacto</p>
+  <main>
+    <h1 style="font-size:20px;margin:10px">Contacto</h1>
+    <div class="layout">
+      <div class="info">
+        <p><strong>Dirección / Teléfono / Email</strong></p>
+        <div class="map">[Mapa]</div>
+      </div>
+      <form style="margin:0 10px 10px">
+        <div class="field"><label for="m-nombre">Nombre completo</label><input id="m-nombre" type="text"></div>
+        <div class="field"><label for="m-telefono">Teléfono</label><input id="m-telefono" type="tel"></div>
+        <div class="field"><label for="m-email">Email</label><input id="m-email" type="email"></div>
+        <div class="field"><label for="m-mensaje">Mensaje</label><textarea id="m-mensaje" rows="4"></textarea></div>
+        <button class="cta" type="submit">Enviar mensaje</button>
+      </form>
+    </div>
+  </main>
+  <footer><p>DANTE — mapa, enlaces</p></footer>
+</div>
+</body>
+</html>

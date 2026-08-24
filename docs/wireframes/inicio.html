@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Wireframe — Inicio</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;color:#222;margin:0;padding:0;background:#fff}
+  .skip-link{position:absolute;left:-999px;top:0;background:#fff;border:1px solid #000;padding:8px;z-index:10}
+  .skip-link:focus{left:8px;top:8px}
+  header{border-bottom:2px solid #000;padding:10px 20px;display:flex;justify-content:space-between;align-items:center}
+  .util-bar{border-bottom:1px solid #999;padding:4px 20px;font-size:12px;display:flex;justify-content:flex-end;gap:16px}
+  nav ul{list-style:none;display:flex;gap:18px;margin:0;padding:0;font-size:14px}
+  nav a{text-decoration:none;color:#222;border:1px solid transparent}
+  nav a:focus{outline:2px solid #000}
+  .box{border:1px dashed #666;margin:16px 20px;padding:14px}
+  .hero{border:2px solid #000;margin:16px 20px;padding:30px 20px;text-align:center}
+  .cta{display:inline-block;border:2px solid #000;padding:10px 22px;margin-top:10px;min-height:44px;min-width:44px;font-weight:bold}
+  .cards{display:flex;gap:12px;margin:16px 20px}
+  .card{border:1px solid #000;flex:1;padding:12px;min-height:120px}
+  .grid3{display:flex;gap:12px;margin:16px 20px}
+  .grid3 > div{border:1px solid #999;flex:1;padding:10px}
+  footer{border-top:2px solid #000;margin-top:30px;padding:20px;font-size:12px}
+  h1{font-size:26px}
+  h2{font-size:18px;border-bottom:1px solid #ccc;padding-bottom:4px}
+  .note{font-size:11px;color:#666;font-style:italic}
+  .mobile-frame{width:375px;border:3px solid #000;margin:20px auto;padding:0}
+  .mobile-frame header{flex-direction:column;align-items:flex-start;gap:8px}
+  .mobile-frame nav ul{flex-direction:column;gap:0;width:100%}
+  .mobile-frame nav a{display:block;padding:10px 0;border-bottom:1px solid #eee;min-height:44px}
+  .mobile-frame .hero, .mobile-frame .box, .mobile-frame .cards, .mobile-frame .grid3{margin:10px}
+  .mobile-frame .cards, .mobile-frame .grid3{flex-direction:column}
+  .sticky-cta{position:sticky;bottom:0;background:#fff;border-top:2px solid #000;padding:10px;text-align:center;font-weight:bold}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+<h1 style="margin:16px 20px">Wireframe — Plantilla: Inicio (home)</h1>
+<p class="note" style="margin:0 20px 20px">Baja fidelidad, sin color. Contenido real aproximado a partir de hechos confirmados del inventario (Fase 0). Un solo &lt;h1&gt; por vista.</p>
+
+<h2 style="margin:0 20px">Versión escritorio</h2>
+<div>
+  <div class="util-bar">
+    <span>ES | IT (toggle italiano)</span>
+    <span>[buscar]</span>
+  </div>
+  <header>
+    <div><strong>DANTE</strong> <span style="font-size:11px">logo compacto</span></div>
+    <nav aria-label="Principal">
+      <ul>
+        <li><a href="#">Institución</a></li>
+        <li><a href="#">Oferta educativa</a></li>
+        <li><a href="#">Admisiones</a></li>
+        <li><a href="#">Vida escolar</a></li>
+        <li><a href="#">Noticias</a></li>
+        <li><a href="#">Contacto</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="contenido">
+    <h1 style="margin:16px 20px">Colegio Dante Alighieri — educación bilingüe español-italiano en Asunción</h1>
+    <div class="hero">
+      <p>[Imagen/video hero — fachada o acto institucional]</p>
+      <p>Afiliados a la Società Dante Alighieri (Italia). Educación bilingüe desde el nivel inicial.</p>
+      <a class="cta" href="#">Quiero inscribir a mi hijo/a</a>
+    </div>
+
+    <h2>Oferta educativa</h2>
+    <div class="cards">
+      <div class="card"><h3>Instituto de Lengua y Cultura</h3><p>Cursos de italiano para todas las edades.</p><a href="#">Ver más →</a></div>
+      <div class="card"><h3>Certificación internacional</h3><p>Programas con certificación reconocida.</p><a href="#">Ver más →</a></div>
+      <div class="card"><h3>Educación bilingüe</h3><p>Español e italiano desde el nivel inicial.</p><a href="#">Ver más →</a></div>
+    </div>
+
+    <h2>Hitos institucionales</h2>
+    <div class="grid3">
+      <div><strong>129°</strong><br>aniversario de la Scuola Dante Alighieri</div>
+      <div><strong>2024</strong><br>visita del presidente de Italia, Sergio Mattarella</div>
+      <div><strong>Afiliado</strong><br>a la Società Dante Alighieri, Roma</div>
+    </div>
+
+    <h2>Últimas noticias</h2>
+    <div class="cards">
+      <div class="card">Histórico: presidente de Italia visita el colegio Dante Alighieri</div>
+      <div class="card">Mercado navideño a la italiana en Asunción</div>
+      <div class="card">La Scuola Dante Alighieri celebra su 129° aniversario</div>
+    </div>
+    <a href="#">Ver todas las noticias →</a>
+
+    <div class="box">
+      <h2>Comunicados</h2>
+      <p>[Últimos 2-3 comunicados vigentes, con fecha]</p>
+      <a href="#">Ver todos los comunicados →</a>
+    </div>
+
+    <div class="box" style="text-align:center">
+      <h2>¿Querés que tu hijo/a estudie en Dante?</h2>
+      <a class="cta" href="#">Ir a Admisiones</a>
+    </div>
+  </main>
+
+  <footer>
+    <p><strong>DANTE</strong> — logo completo con banderas PY/IT</p>
+    <p>Dirección · Teléfono · Email · Mapa</p>
+    <p>Institución · Oferta educativa · Admisiones · Vida escolar · Noticias · Documentos · Calendario académico · Contacto</p>
+    <p>Redes sociales · Aviso legal / Privacidad</p>
+  </footer>
+</div>
+
+<h2 style="margin:30px 20px 0">Versión móvil</h2>
+<div class="mobile-frame">
+  <div class="util-bar" style="justify-content:space-between"><span>☰ Menú</span><span>ES|IT [buscar]</span></div>
+  <header><strong>DANTE</strong></header>
+  <main>
+    <h1 style="margin:10px;font-size:20px">Educación bilingüe español-italiano en Asunción</h1>
+    <div class="hero"><p>[Imagen hero]</p><a class="cta" href="#">Quiero inscribir a mi hijo/a</a></div>
+    <h2>Oferta educativa</h2>
+    <div class="cards">
+      <div class="card">Instituto de Lengua y Cultura</div>
+      <div class="card">Cursos de italiano</div>
+    </div>
+    <h2>Últimas noticias</h2>
+    <div class="cards"><div class="card">Visita del presidente de Italia</div></div>
+    <div class="box"><h2>Comunicados</h2><p>[Últimos vigentes]</p></div>
+  </main>
+  <div class="sticky-cta">Admisiones →</div>
+  <footer><p>DANTE — contacto, mapa, enlaces, redes</p></footer>
+</div>
+
+</body>
+</html>
