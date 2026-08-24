@@ -1,9 +1,13 @@
 <x-layouts.app :title="$page->effectiveSeoTitle().' — Colegio Dante Alighieri'" :description="$page->getTranslation('seo_description', app()->getLocale())" :indexable="$page->is_indexable">
     <x-breadcrumbs :items="$breadcrumbs" />
     <main id="contenido">
-        <div class="container section" style="padding-bottom:0">
-            <h1>{{ $page->title }}</h1>
-        </div>
+        {{-- Si el primer bloque es un hero, ese bloque ya trae su propio <h1> —
+             no se duplica acá para mantener un solo h1 por página. --}}
+        @if(($blocks[0]['type'] ?? null) !== 'hero')
+            <div class="container section" style="padding-bottom:0">
+                <h1>{{ $page->title }}</h1>
+            </div>
+        @endif
 
         @if($siblings->isNotEmpty())
             <div class="container">

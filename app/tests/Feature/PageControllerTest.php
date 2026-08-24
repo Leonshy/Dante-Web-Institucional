@@ -52,3 +52,36 @@ it('da 404 en una página en borrador', function () {
 it('da 404 en una página que no existe', function () {
     $this->get('/esta-pagina-no-existe')->assertNotFound();
 });
+
+it('muestra un solo h1 aunque el primer bloque sea un hero', function () {
+    $page = Page::factory()->create([
+        'slug' => 'con-hero',
+        'title' => ['es' => 'Título de la página'],
+        'status' => 'published',
+        'blocks' => [
+            ['type' => 'hero', 'data' => ['title' => ['es' => 'Título del hero']]],
+        ],
+    ]);
+
+    $html = $this->get('/'.$page->slug)->assertOk()->getContent();
+
+    expect(substr_count($html, '<h1'))->toBe(1)
+        ->and($html)->toContain('Título del hero')
+        ->not->toContain('Título de la página</h1>');
+});
+
+it('muestra el h1 con el título de la página cuando no hay bloque hero', function () {
+    $page = Page::factory()->create([
+        'slug' => 'sin-hero',
+        'title' => ['es' => 'Título de la página'],
+        'status' => 'published',
+        'blocks' => [
+            ['type' => 'texto', 'data' => ['content' => ['es' => '<p>Texto</p>']]],
+        ],
+    ]);
+
+    $html = $this->get('/'.$page->slug)->assertOk()->getContent();
+
+    expect(substr_count($html, '<h1'))->toBe(1)
+        ->and($html)->toContain('Título de la página');
+});

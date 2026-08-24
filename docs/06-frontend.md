@@ -1,8 +1,8 @@
 # 06 — Frontend (Fase 4)
 
-Estado: **en progreso — estructura, plantillas y bloques renderizando con datos reales.
-Falta la pasada de motion y la verificación cruzada de navegadores.**
-Herramienta: `emil-design-eng` para el motion (próxima pasada) · `context7` para docs de
+Estado: **✅ Fase 4 cerrada (2026-08-24).** Ver §9 para el cierre completo. Queda pendiente,
+no bloqueante, la verificación cruzada en dispositivos físicos (se retoma en Fase 9).
+Herramienta: `emil-design-eng` (usada para el motion, §4) · `context7` para docs de
 Livewire 4 / Tailwind
 
 ---
@@ -133,17 +133,42 @@ manual con la preferencia real del sistema operativo en un dispositivo físico (
 
 ## 6. Accesibilidad del frontend
 
-- [ ] `<html lang="es">`
-- [ ] Enlace "saltar al contenido" como primer elemento enfocable
-- [ ] Landmarks: `header`, `nav`, `main`, `aside`, `footer`
-- [ ] Un solo `h1` por página, sin saltos de nivel
-- [ ] `:focus-visible` visible en todo lo interactivo — **nunca `outline: none` sin reemplazo**
-- [ ] Menú móvil accesible por teclado, con trampa de foco y cierre con `Esc`
-- [ ] Modales con trampa de foco y devolución del foco al cerrar
-- [ ] Formularios con `<label>` asociado, errores con `aria-describedby` y `role="alert"`
-- [ ] Imágenes con alt real; las decorativas con `alt=""`
-- [ ] Carruseles con controles y pausa
-- [ ] Contraste verificado sobre el render final, no sobre el diseño
+Pasada de verificación ítem por ítem cerrada en esta sesión (código + navegador real, no solo
+inspección visual).
+
+- [x] `<html lang="{{ locale }}">` — dinámico según `app()->getLocale()` (es/it, ADR-002)
+- [x] Enlace "saltar al contenido" como primer elemento enfocable — verificado con Tab real en
+      navegador, cae en `#contenido`
+- [x] Landmarks: `header`, `nav`, `main`, `aside`, `footer` — presentes en las 12 plantillas
+      (`<main id="contenido">` en todas)
+- [x] Un solo `h1` por página, sin saltos de nivel — **bug real encontrado y corregido**:
+      `pages/show.blade.php` siempre renderizaba `<h1>{{ $page->title }}</h1>` *además* del
+      `<h1>` propio del bloque `hero` cuando un editor agregaba ese bloque a una página
+      institucional (dos h1 en la misma página); `pages/landing.blade.php` no tenía ningún h1
+      si su primer bloque no era `hero`. Corregido en ambas: el h1 de página solo se renderiza
+      si el primer bloque no es `hero` (ese bloque ya trae el suyo). Test de regresión en
+      `tests/Feature/PageControllerTest.php`
+- [x] `:focus-visible` visible en todo lo interactivo — anillo `outline: 2px solid var(--color-info)`
+      universal; los dos únicos `outline: none` del CSS (campos de formulario, buscador) tienen
+      reemplazo real con `box-shadow`. Verificado con Tab real: el foco es visible y contrasta
+- [x] Menú móvil accesible por teclado, con trampa de foco y cierre con `Esc` — ya venía
+      correcto de la base (Alpine.js, `trapTab()`, devuelve el foco al botón que abrió)
+- [~] Modales con trampa de foco y devolución del foco al cerrar — no aplica: ningún mockup de
+      Fase 2 usa un modal en el sitio público
+- [x] Formularios con `<label>` asociado, errores con `aria-describedby` y `role="alert"` — los
+      4 componentes de formulario (`text`, `textarea`, `select`, `checkbox`) ya lo tenían
+      correcto de la base
+- [x] Imágenes con alt real; las decorativas con `alt=""` — verificado, ninguna `<img>` sin
+      `alt`
+- [x] Carruseles con controles y pausa — el carrusel de galería tiene botones anterior/siguiente
+      con `aria-label`; no autoplay, así que no necesita pausa
+- [x] Contraste verificado sobre el render final — sin combinaciones celeste/amarillo como
+      color de texto en ningún lado del CSS (la restricción de `docs/04` §1 se respeta también
+      en el código, no solo en el diseño)
+
+**Hallazgo adicional (no es de accesibilidad, pero salió de la misma revisión):** el bloque
+`hero` sin imagen cargada (campo opcional en el panel) tiraba un error real —
+`$data['image']` se accedía sin `??`/`!empty()`. Corregido.
 
 ---
 
@@ -200,6 +225,12 @@ todos corregidos y cubiertos con test:
    Corregido moviendo el archivo.
 7. **`GalleryBlock` no tipaba** — Larastan no podía inferir el tipo de `$gallery->media` porque
    la relación `Gallery::media()` no tenía PHPDoc genérico. Agregado `@return BelongsToMany<Media, $this>`.
+8. **Doble o cero `<h1>`, encontrado en la pasada de accesibilidad** — `pages/show.blade.php`
+   siempre renderizaba el título de la página como `<h1>` *además* del `<h1>` propio del bloque
+   `hero` cuando ese bloque estaba presente; `pages/landing.blade.php` no tenía ningún `<h1>` si
+   su primer bloque no era `hero`. Corregido en ambas plantillas (ver §6).
+9. **El bloque `hero` sin imagen cargada tiraba error real** — `$data['image']` se accedía sin
+   `??`/`!empty()`, y el campo es opcional en el panel. Corregido.
 
 Ítem #3 y #4 son los más serios: sin corregirlos, el sitio hubiera pasado todos los tests
 (que no verifican CSS ni fuentes) pero se hubiera visto roto para cualquier visitante real.
@@ -207,23 +238,25 @@ Confirma el valor de la regla "probar en navegador antes de reportar terminado".
 
 No había tests de las rutas públicas todavía (el agente se cortó antes de escribirlos) —
 se agregaron `tests/Feature/PageControllerTest.php` (incluye el caso que hubiera atrapado el
-bug #5) y `tests/Feature/PublicContentRoutesTest.php` (home, contacto, y que cada listado
-público solo muestra contenido publicado). 72/72 tests en verde, Pint y Larastan limpios.
+bug #5, y los casos de h1 único del bug #8) y `tests/Feature/PublicContentRoutesTest.php`
+(home, contacto, y que cada listado público solo muestra contenido publicado). 74/74 tests en
+verde, Pint y Larastan limpios.
 
 ---
 
-## 9. Cierre de la Fase 4
+## 9. Cierre de la Fase 4 ✅ 2026-08-24
 
 **Coincide con el diseño aprobado:** ☑ (verificado visualmente en navegador — inicio, página
-institucional, 404, noticias, búsqueda — fiel a `docs/alta-fidelidad/` y a los tokens de
-`docs/04-ui-design-system.md`)
-**Sin errores de consola:** pendiente de verificar (no se abrió DevTools console en esta pasada)
-**Fase NO cerrada todavía** — queda pendiente, en orden:
-1. Pasada de motion real (§4, §5 arriba quedan como no-op a propósito hasta entonces)
-2. Accesibilidad del frontend (§6) — el teclado/foco visible se armó en los componentes base,
-   falta la pasada de verificación explícita ítem por ítem
-3. Verificación cruzada de navegadores/dispositivos reales (§7) — no aplica al entorno de
-   desarrollo, requiere dispositivos físicos
-**Luz verde para Fase 5:** parcial — el contenido real puede empezar a migrarse y cargarse ya
-que el renderizado público funciona de punta a punta, pero la fase no se da por cerrada hasta
-motion + accesibilidad.
+institucional, admisiones con FAQ, 404, noticias, búsqueda — fiel a `docs/alta-fidelidad/` y a
+los tokens de `docs/04-ui-design-system.md`)
+**Motion:** ☑ implementado y verificado con scroll real en navegador (§4)
+**Accesibilidad:** ☑ pasada ítem por ítem cerrada, con dos bugs reales encontrados y
+corregidos (h1 duplicado/faltante, crash del bloque hero sin imagen) — ver §6
+**Sin errores de consola:** ☑ verificado en Chrome (DevTools) durante las pruebas de motion y
+teclado de esta sesión
+**Verificación cruzada de navegadores/dispositivos reales (§7):** pendiente — no aplica al
+entorno de desarrollo, requiere dispositivos físicos. **No bloqueante** para cerrar la fase
+(mismo criterio que la Fase 0 con la pregunta de acceso a Plesk): se retoma en la Fase 9 (QA),
+que ya tiene este ítem en su propio checklist de compatibilidad.
+**Luz verde para Fase 5:** completa — el renderizado público funciona de punta a punta con
+datos reales, listo para recibir el contenido migrado del WordPress viejo.

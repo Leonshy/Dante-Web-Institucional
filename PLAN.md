@@ -1,8 +1,9 @@
 # PLAN.md — Plan de ejecución por fases
 
-Estado global: **Fase 3 — backend y panel de administración ✅ cerrada 2026-08-24.** Arranca
-la Fase 4 (frontend). Quedan abiertas, no bloqueantes: preguntas #13 (acceso Plesk) de la
-Fase 0, exportación CSV/captcha de formularios (diferido a Fase 6 a propósito).
+Estado global: **Fase 4 — frontend ✅ cerrada 2026-08-24.** Arranca la Fase 5 (migración de
+contenido real del WordPress viejo). Quedan abiertas, no bloqueantes: preguntas #13 (acceso
+Plesk) de la Fase 0, exportación CSV/captcha de formularios (Fase 6), verificación cruzada en
+dispositivos físicos (Fase 9).
 Última actualización: 2026-08-24
 
 > **Cómo se usa:** cada fase tiene un objetivo, un entregable escrito y una condición de
@@ -228,7 +229,7 @@ seguridad — 2FA ya es obligatorio).
 
 ---
 
-## Fase 4 — Frontend
+## Fase 4 — Frontend ✅ cerrada 2026-08-24
 **Objetivo:** el sitio público, fiel al diseño y con motion.
 **Entregable:** `docs/06-frontend.md` + código
 **Estimado:** 32–44 h
@@ -249,16 +250,18 @@ seguridad — 2FA ya es obligatorio).
       correctos de la base. `prefers-reduced-motion` respetado globalmente (verificado por
       código; falta la prueba manual en dispositivo físico, Fase 9)
 - [x] Estados vacíos, de carga y de error del lado público
-- [~] Navegación por teclado completa y `:focus-visible` en todo lo interactivo — armado en los
-      componentes base, falta la pasada de verificación explícita ítem por ítem
+- [x] Navegación por teclado completa y `:focus-visible` en todo lo interactivo — pasada
+      ítem por ítem cerrada (`docs/06-frontend.md` §6). Encontrados y corregidos dos bugs
+      reales: doble/cero `<h1>` según si la página tenía o no un bloque hero, y un crash del
+      bloque hero cuando no tiene imagen cargada
 - [x] Páginas 404 y 500 con la identidad de la marca
 - [ ] Verificación cruzada de navegadores y en dispositivos reales — no aplica al entorno de
-      desarrollo, requiere dispositivos físicos
+      desarrollo, requiere dispositivos físicos; no bloqueante, se retoma en Fase 9 (QA), que
+      ya tiene este mismo ítem en su propio checklist
 
-**DoD:** el sitio se ve y se comporta como el diseño aprobado, en móvil y escritorio. **Casi
-cumplido** — motion ya implementado y verificado en navegador (scroll real, no solo captura de
-pantalla). Queda la pasada de accesibilidad ítem por ítem y la verificación cruzada en
-dispositivos reales, que no bloquean el uso del sitio pero sí el cierre formal de la fase.
+**DoD:** el sitio se ve y se comporta como el diseño aprobado, en móvil y escritorio.
+**Cumplido.** Motion y accesibilidad verificados en navegador real (no solo tests). Única
+excepción, no bloqueante: la verificación en dispositivos físicos queda para la Fase 9.
 
 ---
 
@@ -423,7 +426,7 @@ usar su panel.
 | 1 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente. Preguntas #14–20 agregadas, no bloquean Fase 2 |
 | 2 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente, incluida la tipografía (Barlow Condensed + Barlow) |
 | 3 | 2026-08-24 | — (sesión de IA) | 16/16 bloques, Menús/Documentos/Comunicados/Calendario/Galería, buscador interno (backend), auditoría en panel. Se encontró y corrigió una brecha de sanitización HTML real durante el cierre |
-| 4 | | | |
+| 4 | 2026-08-24 | — (sesión de IA) | 12 plantillas, 16 bloques renderizando, motion real (scroll reveal, acordeón, contador), accesibilidad verificada. 9 bugs reales encontrados y corregidos al probar en navegador (ver `docs/06-frontend.md` §8) |
 | 5 | | | |
 | 6 | | | |
 | 7 | | | |
