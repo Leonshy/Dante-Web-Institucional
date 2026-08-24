@@ -6,6 +6,11 @@
 # trackear un archivo ya agregado solo porque después empieza a matchear el ignore.
 _insumos/
 
+# ── Entorno local de migración (Fase 5) ────────────────────────────────
+# Servidor MariaDB local usado para importar dante_wp_legacy (datos reales del
+# cliente) y para desarrollo. NUNCA va al repo — mismo criterio que _insumos/.
+_local/
+
 # ── Salidas de inventario (pueden contener datos del cliente) ─────────
 docs/inventario-crudo.txt
 docs/*.csv

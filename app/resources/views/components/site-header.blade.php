@@ -42,16 +42,21 @@
     <header class="site-header" :class="{ 'is-scrolled': scrolled }">
         <div class="container site-header-inner">
             <a class="logo" href="{{ url('/') }}">
-                <span class="seal" aria-hidden="true"></span>DANTE
+                <img src="{{ asset('images/logo-dante.svg') }}" alt="Colegio Dante Alighieri" width="211" height="90" class="logo-mark">
             </a>
 
             <nav aria-label="Principal">
                 <ul class="desktop-nav">
                     @foreach($primaryNav as $item)
                         <li>
-                            <a href="{{ url($item['url']) }}" @if(request()->is(ltrim($item['url'], '/')) || request()->is(ltrim($item['url'], '/').'/*')) aria-current="page" @endif>
-                                {{ $item['label'] }}
-                            </a>
+                            @if($item['linkable'] ?? true)
+                                <a href="{{ url($item['url']) }}" @if(request()->is(ltrim($item['url'], '/')) || request()->is(ltrim($item['url'], '/').'/*')) aria-current="page" @endif>
+                                    {{ $item['label'] }}
+                                </a>
+                            @else
+                                {{-- Sin página propia — solo abre el submenú, no navega a ningún lado. --}}
+                                <button type="button" class="nav-parent-toggle" aria-haspopup="true">{{ $item['label'] }}</button>
+                            @endif
                             @if(!empty($item['children']))
                                 <ul class="submenu">
                                     @foreach($item['children'] as $child)

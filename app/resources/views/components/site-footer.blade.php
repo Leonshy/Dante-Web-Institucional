@@ -7,14 +7,16 @@
     <div class="container">
         <div class="footer-grid">
             <div>
-                <p class="footer-logo">DANTE</p>
+                <img src="{{ asset('images/logo-dante-blanco.svg') }}" alt="Colegio Dante Alighieri" width="234" height="100" class="footer-logo">
                 <p class="caption" style="color:var(--color-neutral-400)">Colegio Dante Alighieri — afiliado a la Società Dante Alighieri.</p>
             </div>
             <div>
                 <h2>Navegación</h2>
                 <ul>
                     @foreach($primaryNav as $item)
-                        <li><a href="{{ url($item['url']) }}">{{ $item['label'] }}</a></li>
+                        {{-- Sin página propia (docs/02 §5): el pie no puede abrir un submenú
+                             como el header, así que enlaza directo al primer hijo real. --}}
+                        <li><a href="{{ url(($item['linkable'] ?? true) ? $item['url'] : ($item['children'][0]['url'] ?? $item['url'])) }}">{{ $item['label'] }}</a></li>
                     @endforeach
                 </ul>
             </div>

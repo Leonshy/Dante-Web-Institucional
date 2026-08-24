@@ -9,9 +9,9 @@
 ## 0. Regla de oro
 
 Antes de escribir una sola línea de código de la web nueva, hay que **leer los tres
-insumos** que están en `_insumos/` (repo IPG, manual de marca, WordPress actual + DB).
+insumos** que están en `_insumos/` (repo IGP, manual de marca, WordPress actual + DB).
 El proyecto **no** arranca de cero: arranca copiando un patrón ya probado en producción
-(IPG) y vistiéndolo con la marca de Dante.
+(IGP) y vistiéndolo con la marca de Dante.
 
 Trabajamos **por fases** (ver `PLAN.md`). No se salta de fase sin cerrar la anterior con
 su entregable escrito en `docs/`. Cada decisión no trivial se registra como ADR en
@@ -77,7 +77,7 @@ Estándar de webparaguay, con las versiones vigentes a agosto 2026:
 | Vistas | **Blade** | |
 | Interactividad | **Livewire 4** + Alpine.js | |
 | CSS | **Tailwind CSS** + Vite | Tokens del manual de marca en `tailwind.config` |
-| Panel admin | **Filament 5** | Decidido en ADR-001 (`docs/decisiones/ADR-001-panel-admin.md`): IPG tiene panel a medida sin bloques, menús, 2FA, auditoría, buscador ni redirecciones — se reutiliza su modelo de datos, no su capa Blade/controllers |
+| Panel admin | **Filament 5** | Decidido en ADR-001 (`docs/decisiones/ADR-001-panel-admin.md`): IGP tiene panel a medida sin bloques, menús, 2FA, auditoría, buscador ni redirecciones — se reutiliza su modelo de datos, no su capa Blade/controllers |
 | Despliegue | Servidor **Plesk** de webparaguay | Sin Docker en producción, sin acceso root garantizado |
 | Testing | Pest 3 (unit/feature) + Playwright (E2E) | |
 
@@ -86,7 +86,7 @@ Supervisor** hasta confirmar lo contrario. Colas y caché arrancan en `database`
 si Redis está disponible, se sube después. Los cron van por el Programador de tareas de
 Plesk apuntando a `php artisan schedule:run`.
 
-**Paquetes de referencia** (confirmar contra lo que ya usa IPG antes de sumar nada nuevo —
+**Paquetes de referencia** (confirmar contra lo que ya usa IGP antes de sumar nada nuevo —
 la regla es reutilizar, no coleccionar dependencias):
 
 - `spatie/laravel-medialibrary` — medios y conversiones de imagen
@@ -95,7 +95,7 @@ la regla es reutilizar, no coleccionar dependencias):
 - `spatie/laravel-csp` — Content-Security-Policy
 - `spatie/laravel-honeypot` — antispam en formularios
 - `laravel/fortify` — auth del panel con 2FA
-- Editor enriquecido: **el mismo que use IPG** (TipTap / CKEditor 5 / Trix). No introducir uno distinto.
+- Editor enriquecido: **el mismo que use IGP** (TipTap / CKEditor 5 / Trix). No introducir uno distinto.
 
 ---
 
@@ -146,8 +146,8 @@ Están instaladas globalmente en `~/.claude/`. Usalas — están para eso:
 
 ## 6. Cómo trabajar en este proyecto
 
-1. **Leé el insumo antes de opinar.** Si una decisión depende de cómo lo hace IPG, andá a
-   leer el código de IPG. No inventes un patrón nuevo cuando ya hay uno probado.
+1. **Leé el insumo antes de opinar.** Si una decisión depende de cómo lo hace IGP, andá a
+   leer el código de IGP. No inventes un patrón nuevo cuando ya hay uno probado.
 2. **Una fase a la vez.** Al terminar una fase, escribí su entregable en `docs/` y marcá el
    checklist en `PLAN.md`. Recién ahí se pasa a la siguiente.
 3. **Decisiones no triviales → ADR.** Copiá `docs/decisiones/ADR-000-plantilla.md`, numerá,

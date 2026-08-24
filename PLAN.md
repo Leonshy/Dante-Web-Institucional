@@ -18,16 +18,16 @@ por el cliente, ver ADR-002 — ver `docs/00-legajo-tecnico.md` §7 para el deta
 ---
 
 ## Fase 0 — Descubrimiento, inventario y lectura de insumos
-**Objetivo:** saber exactamente qué hay hoy, qué se reutiliza de IPG y qué manda la marca.
+**Objetivo:** saber exactamente qué hay hoy, qué se reutiliza de IGP y qué manda la marca.
 **Entregable:** `docs/01-analisis-descubrimiento.md` + `docs/00-legajo-tecnico.md` completado
 **Estimado:** 16–24 h
 
 - [x] Confirmar que los tres insumos están en `_insumos/` (ver `_insumos/LEEME.md`) — cargados
       y saneados (ver hallazgos de seguridad en `docs/01-analisis-descubrimiento.md` §C.6)
-- [x] **Leer el repo de IPG completo**: estructura de carpetas, modelo de datos, cómo resuelve
+- [x] **Leer el repo de IGP completo**: estructura de carpetas, modelo de datos, cómo resuelve
       el panel admin, el editor enriquecido, la gestión de medios, los menús, el SEO por página,
       las integraciones. Escribir el mapa en `docs/01-analisis-descubrimiento.md`
-- [x] Listar qué de IPG se **copia tal cual**, qué se **adapta** y qué **no aplica**
+- [x] Listar qué de IGP se **copia tal cual**, qué se **adapta** y qué **no aplica**
 - [x] **Leer el manual de marca**: paleta, tipografías, logotipo y sus usos, grilla, tono
       de voz, aplicaciones. Extraer los tokens a `docs/04-ui-design-system.md` — tipografía
       bloqueada, ver pregunta abierta #6
@@ -51,7 +51,7 @@ por el cliente, ver ADR-002 — ver `docs/00-legajo-tecnico.md` §7 para el deta
       quién administra, cuántos usuarios del panel, calendario académico, etc.) — 13 preguntas
       en `docs/01-analisis-descubrimiento.md` §E, **11 respondidas el 2026-08-24** (produjo
       ADR-002 multiidioma). Quedan abiertas #6 (tipografía) y #13 (acceso Plesk)
-- [x] **ADR-001**: enfoque del panel de administración (replicar IPG vs. Filament 5) — se eligió
+- [x] **ADR-001**: enfoque del panel de administración (replicar IGP vs. Filament 5) — se eligió
       Filament 5, ver `docs/decisiones/ADR-001-panel-admin.md`
 - [x] Ajustar la estimación total con el volumen real de contenido — 204–278 h (antes 214–298 h),
       ver `docs/00-legajo-tecnico.md` §7 y `docs/01-analisis-descubrimiento.md` §F
@@ -156,7 +156,7 @@ contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la
 
 - [x] Instalar Laravel 13 en `app/`, configurar Pint, Larastan, Pest
 - [x] Implementar el patrón de panel decidido en **ADR-001: Filament 5** (reutilizando el
-      modelo de datos de IPG — `media`, `site_settings`, `categories`, roles — no su capa
+      modelo de datos de IGP — `media`, `site_settings`, `categories`, roles — no su capa
       Blade/controllers)
 - [x] **Modelo de datos** a partir de los tipos de contenido de la Fase 1 (`docs/02-ux-arquitectura-informacion.md`
       §7), con soporte **multiidioma ES/IT** (ADR-002): páginas, bloques de contenido,
@@ -170,7 +170,7 @@ contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la
       mapa, formulario, listado de comunicados, documentos y selector de sede sumados en esta
       entrega)
 - [x] **Editor de texto enriquecido** — `Filament\Forms\Components\RichEditor` (se aparta de
-      TinyMCE de IPG, ver `docs/05` §1). Sanitización server-side con lista blanca real
+      TinyMCE de IGP, ver `docs/05` §1). Sanitización server-side con lista blanca real
       (HTMLPurifier) antes de guardar, nunca se confía en el HTML del editor. **Hallazgo y
       corrección de seguridad en esta entrega:** `SanitizesPageBlocks` operaba sobre la forma
       plana `$block[$campo]` en vez de la forma real que persiste el Builder de Filament 5
@@ -270,22 +270,40 @@ excepción, no bloqueante: la verificación en dispositivos físicos queda para 
 **Entregable:** `docs/07-migracion-wordpress.md`
 **Estimado:** 16–24 h
 
-- [ ] Comando `artisan dante:migrate-wp` idempotente, con conexión secundaria de solo lectura
-      a `dante_wp_legacy`
-- [ ] Mapeo `wp_posts` / `wp_postmeta` / `wp_terms` → modelos nuevos, según el mapa de la Fase 1
-- [ ] Limpieza del HTML de WordPress: quitar shortcodes, clases de tema, `<div>` vacíos,
-      estilos en línea. Convertir a HTML semántico limpio
-- [ ] Migración de `uploads/` **con el filtrado de seguridad de `CLAUDE.md` §2**. Registrar
-      cada archivo descartado y por qué
-- [ ] Reescritura de URLs internas dentro del contenido (viejas → nuevas)
-- [ ] Migración de metadatos SEO (Yoast/RankMath: `_yoast_wpseo_title`, `_yoast_wpseo_metadesc`)
-- [ ] Carga del mapa de redirecciones 301
-- [ ] **Verificación**: contar registros origen vs. destino, revisar manualmente una muestra
-      del 10 %, detectar imágenes rotas y enlaces muertos
-- [ ] Reporte final: qué se migró, qué se descartó, qué necesita carga manual
+- [x] Comando `artisan dante:migrate-wp` idempotente (verificado corriéndolo dos veces — mismos
+      conteos), con conexión secundaria `wp_legacy` de solo lectura (usuario MySQL `wp_lector`,
+      GRANT SELECT únicamente, ver `app/config/database.php`)
+- [x] Mapeo `wp_posts`/`wp_postmeta`/`wp_term_relationships` → `Page`/`Post`, según el destino
+      "migrar" ya decidido en `docs/01-analisis-descubrimiento.md` §C.2 (16 páginas, 3 noticias;
+      "Destacada" en WP se usaba como flag, no categoría real, se mapeó a `is_featured`)
+- [x] Limpieza del HTML: shortcodes de Divi, artefactos de Word, atributos/clases del tema —
+      `App\Services\Migration\WpHtmlCleaner`, siempre pasa después por `HtmlSanitizer` (Fase 3)
+- [x] Migración de `uploads/` con el filtrado de seguridad de `CLAUDE.md` §2 — 128 medios reales
+      migrados de 1064 archivos totales, 936 descartados y registrados con motivo (variantes de
+      tamaño autogeneradas, caché de plugins como `wp-file-manager-pro`, extensiones fuera de
+      lista blanca) en `docs/07-migracion-wordpress.md`
+- [x] Reescritura de URLs internas — incluye un bug real encontrado y corregido: enlaces
+      relativos de Divi (`../historia/`) no resolvían contra el mapa de redirecciones
+- [~] Metadatos SEO — **nada que migrar**: el WordPress viejo no tenía ningún plugin de SEO
+      instalado (sin claves Yoast/RankMath en `wp_postmeta`). Los títulos/descripciones reales
+      ya están en `docs/03-copywriting.md` §3 (Fase 2), se cargan manual desde el panel
+- [x] Carga del mapa de redirecciones 301 — ya hecho en Fase 3 (`dante:import-redirects`),
+      confirmado vigente (39 filas)
+- [~] **Verificación**: conteos origen/destino hechos (16/16 páginas, 3/3 noticias, 128/128
+      medios), 1 página revisada visualmente en navegador con contenido e imagen real
+      renderizando bien. Falta la revisión sistemática del 10% de muestra
+- [x] Reporte final en `docs/07-migracion-wordpress.md`, generado automáticamente por el comando
+
+**3 páginas con destino "migrar" no se migraron** — su URL nueva ya la sirve un controller
+dedicado de la Fase 4 (`/contacto`, `/documentos`, `/vida-escolar/galeria`), crear una Page ahí
+sería inalcanzable o pisaría la ruta real. Contenido viejo (3963/476/646 palabras) sin destino
+todavía — agregado como pregunta abierta #22 en `docs/01-analisis-descubrimiento.md` §E.
 
 **DoD:** no hay contenido del sitio viejo que no esté en el nuevo o justificado por escrito
-como descartado.
+como descartado. **Casi cumplido** — cada pieza de contenido está migrada, en la lista de
+colisión justificada por escrito, o ya estaba clasificada "revisar"/"descartar" en la Fase 1
+(decisión editorial ya tomada, no una que se infiera acá). Falta la revisión sistemática del
+10% de muestra para cerrar formalmente.
 
 ---
 

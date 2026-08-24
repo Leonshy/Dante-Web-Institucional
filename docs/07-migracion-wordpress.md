@@ -1,178 +1,88 @@
-# 07 — Migración desde WordPress (Fase 5)
+# 07 — Migración de contenido de WordPress (Fase 5)
 
-Estado: **vacío — completar en Fase 5**
+Generado automáticamente por `php artisan dante:migrate-wp`. Última corrida: 2026-08-24 20:39:26.
 
-> ⚠️ **Leer `CLAUDE.md` §2 antes de tocar nada.** El WordPress origen estuvo comprometido.
+## Medios
 
----
+- Migrados en esta corrida: 0
+- Ya migrados (idempotente): 128
+- Descartados: 936
 
-## 1. Protocolo de seguridad de la migración
+Agrupados por motivo — el detalle completo de variantes de tamaño autogeneradas no
+suma información (son cientos, Laravel genera las suyas propias), se muestra una
+muestra de hasta 5 rutas por motivo:
 
-- [ ] El dump se importa a la base **`dante_wp_legacy`**, con un usuario MySQL de **solo lectura**
-- [ ] Esa base está declarada como conexión secundaria en `config/database.php` y **nunca** se
-      escribe en ella
-- [ ] **No se ejecuta ni un archivo PHP del WordPress**, ni localmente ni en el servidor
-- [ ] Los `uploads/` se copian con lista blanca de extensiones (ver §4)
-- [ ] Los SVG se sanitizan antes de servirse
-- [ ] **No se migra ningún usuario, hash de contraseña, sesión ni token**
-- [ ] Se revisa el contenido en busca de inyecciones (enlaces de spam, iframes, scripts) antes
-      de darlo por migrado
-- [ ] Una vez terminada y verificada la migración, la base legacy se elimina del entorno de
-      desarrollo
-
----
-
-## 2. Comando de migración
-
-`php artisan dante:migrate-wp [--dry-run] [--only=pages|posts|media|menus]`
-
-**Requisitos:**
-
-- **Idempotente**: correrlo dos veces no duplica nada (clave de correspondencia: el ID de
-  WordPress guardado en el registro nuevo)
-- `--dry-run` informa qué haría sin escribir
-- Registro detallado en `storage/logs/migration.log`
-- Transaccional por lote, con reanudación ante fallo
-
----
-
-## 3. Mapa de correspondencias
-
-| Origen (WordPress) | Destino (Laravel) | Transformación |
+| Motivo | Cantidad | Ejemplos |
 |---|---|---|
-| `wp_posts` (post_type=page) | `pages` | según el mapa de la Fase 1 |
-| `wp_posts` (post_type=post) | `posts` | |
-| `wp_posts` (post_type=attachment) | `media` | + conversiones |
-| `wp_postmeta._yoast_wpseo_title` | `pages.seo_title` | |
-| `wp_postmeta._yoast_wpseo_metadesc` | `pages.seo_description` | |
-| `wp_postmeta._thumbnail_id` | imagen de portada | |
-| `wp_terms` + `wp_term_taxonomy` | `categories` | |
-| `wp_term_relationships` | pivote | |
-| `wp_posts` (post_type=nav_menu_item) | `menu_items` | |
-| `post_content` | bloques de contenido | ver §5 |
-| Permalinks | `redirects` | ver §7 |
+| Extensión fuera de la lista blanca (json) | 2 | `2025/11/google.json`, `2025/10/google.json` |
+| Variante de tamaño autogenerada por WordPress — Laravel genera sus propias conversiones responsivas, no hace falta migrarla | 906 | `2024/03/DA-129-placas_OPC-1-150x150.png`, `2024/03/DSC4769-1080x720.jpg`, `2024/03/52549201289_cbb067bb8b_o-1024x683.jpg`, `2024/03/Banner_web-1-opcion-2-1-400x284.png`, `2024/03/dante-Asu-fachadaDante-Asuncion-fachada-9393-2-2048x1365.jpg` |
+| Huérfano: no está referenciado por ningún adjunto de la biblioteca de medios de WordPress | 18 | `2024/03/dante-Asu-fachadaDante-Asuncion-fachada-9393-2.jpg`, `2024/03/DSC4769-1.jpg`, `2024/03/52549201289_cbb067bb8b_o.jpg`, `2024/03/DSC4769.jpg`, `2024/02/DSC3480.jpg` |
+| Extensión fuera de la lista blanca (md) | 1 | `LEEME.md` |
+| Caché/backup del plugin `wp-file-manager-pro`, no es contenido editorial — fuera de alcance | 1 | `wp-file-manager-pro/fm_backup/index.html` |
+| Extensión fuera de la lista blanca () | 3 | `2021/01/navigation`, `2018/08/default_upload`, `2016/Expression` |
+| Caché/backup del plugin `wpcode`, no es contenido editorial — fuera de alcance | 5 | `wpcode/index.html`, `wpcode/cache/index.html`, `wpcode/cache/docs.json`, `wpcode/cache/library/index.html`, `wpcode/cache/library/snippets.json` |
 
-**Campos personalizados / ACF encontrados:**
+## Páginas migradas
 
-| Campo | Dónde se usa | Destino |
+| URL vieja | Slug nuevo | Acción |
 |---|---|---|
+| /acerca-de-la-sociedad/ | /institucion/sociedad-dante-alighieri | actualizada |
+| /administracion/ | /institucion/administracion | actualizada |
+| /autoridades/ | /institucion/autoridades | actualizada |
+| /biblioteca-irene-borello-de-amodei/ | /vida-escolar/biblioteca | actualizada |
+| /certificacion-internacional/ | /institucion/certificacion-internacional | actualizada |
+| /cursos-de-italiano/ | /oferta-educativa/cursos-de-italiano | actualizada |
+| /enlaces-de-interes/ | /vida-escolar/enlaces-de-interes | actualizada |
+| /estatutos-sociales/ | /institucion/estatutos-sociales | actualizada |
+| /eventos/ | /vida-escolar/eventos | actualizada |
+| /formulacion-de-pre-inscripcion/ | /admisiones/pre-inscripcion | actualizada |
+| /formulario-de-pre-inscripcion-sede-fernando-de-la-mora/ | /admisiones/pre-inscripcion-fernando-de-la-mora | actualizada |
+| /historia/ | /institucion/historia | actualizada |
+| /inscripciones-2/ | /admisiones | actualizada |
+| /instituto-de-lengua-y-cultura/ | /oferta-educativa/instituto-de-lengua-y-cultura | actualizada |
+| /mision-vision-objetivos-y-valores/ | /institucion/mision-vision-valores | actualizada |
+| /quienes-somos/ | /institucion/quienes-somos | actualizada |
 
----
+## Noticias migradas
 
-## 4. Migración de medios
-
-**Lista blanca de extensiones:**
-`jpg jpeg png gif webp avif svg pdf docx xlsx pptx mp4 webm`
-
-**Se descarta y se registra:** todo lo demás. Especialmente `.php`, `.phtml`, `.php5`,
-`.htaccess`, `.js`, archivos con doble extensión (`foto.jpg.php`), y cualquier archivo cuyo
-tipo MIME real no coincida con su extensión.
-
-**Verificación de MIME real:** `finfo`, no la extensión.
-
-| Archivos totales en `uploads/` | |
+| URL vieja | Acción |
 |---|---|
-| Migrados | |
-| Descartados por extensión | |
-| Descartados por MIME inconsistente | |
-| Descartados por huérfanos (sin referencia) | |
+| /la-scuola-dante-alighieri-celebra-su-129-aniversario-con-musica-y-arte/ | actualizada |
+| /mercado-navideno-a-la-italiana-en-asuncion/ | actualizada |
+| /historico-presidente-de-italia-sergio-mattarella-visita-colegio-dante-alighieri/ | actualizada |
 
-### Archivos sospechosos encontrados
+## Requiere decisión manual — colisión con ruta dedicada de la Fase 4
 
-| Archivo | Motivo | Acción |
+Estas páginas tenían destino "migrar" en `docs/01-analisis-descubrimiento.md` §C.2, pero
+su URL nueva ya la sirve un controller dedicado (formulario de contacto, listado de
+documentos, galería) — no se creó ninguna Page para no dejar contenido inalcanzable ni
+pisar la ruta real. El texto viejo sigue en el WordPress legacy si hace falta.
+
+| Slug viejo | Motivo | Palabras del contenido viejo |
 |---|---|---|
+| /contacto/ | colisiona con la ruta fija /contacto (ContactController) | 3963 |
+| /descarga-de-documentos/ | colisiona con la ruta fija /documentos (DocumentController) | 476 |
+| /galeria/ | colisiona con la ruta fija /vida-escolar/galeria (GalleryController) | 646 |
 
-> Esta tabla es evidencia del incidente. Guardarla — al cliente le va a interesar y sirve
-> para el informe de cierre.
+## Enlaces internos sin redirección conocida
 
----
+Enlaces dentro del contenido migrado que apuntaban a una URL vieja sin fila en `redirects` — quedaron como estaban (referencia potencialmente rota, revisar manualmente):
 
-## 5. Limpieza del HTML de WordPress
+- `/v2/el-instituto-de-lengua-y-cultura/certificacion-internacional`
 
-El `post_content` de WordPress viene sucio. Se limpia antes de guardar:
+## Imágenes sin migrar referenciadas en el contenido
 
-- [ ] Quitar shortcodes (`[...]`) — mapear los que tengan equivalente a un bloque
-- [ ] Quitar clases del tema viejo (`wp-block-*`, `alignleft`, clases del constructor visual)
-- [ ] Quitar estilos en línea
-- [ ] Quitar `<div>` y `<p>` vacíos
-- [ ] Convertir `<b>`/`<i>` a `<strong>`/`<em>`
-- [ ] Normalizar encabezados: el `h1` del contenido pasa a `h2` (el `h1` es el título de la página)
-- [ ] Reescribir las URLs internas (viejas → nuevas)
-- [ ] Reescribir las rutas de imágenes al almacenamiento nuevo
-- [ ] Pasar el resultado por la misma sanitización del editor (`docs/05` §5)
-- [ ] Detectar y quitar inyecciones de spam
+Ninguna — todas las imágenes referenciadas en el contenido migrado se encontraron y migraron.
 
-**Shortcodes encontrados y su tratamiento:**
 
-| Shortcode | Frecuencia | Reemplazo |
-|---|---|---|
+## Metadatos SEO
 
----
+El WordPress viejo **no tenía ningún plugin de SEO instalado** (sin claves Yoast ni
+RankMath en `wp_postmeta`) — no hay nada que migrar en este punto. Los títulos y
+descripciones SEO reales ya están escritos en `docs/03-copywriting.md` §3 (Fase 2) y se
+cargan manualmente desde el panel al publicar cada página.
 
-## 6. Conversión a bloques
+## Verificación
 
-Si el contenido plano se convierte a bloques del constructor, la heurística:
-
-| Patrón en el HTML | Bloque destino |
-|---|---|
-| Párrafos y listas seguidos | `text` |
-| Imagen suelta + párrafo | `image_text` |
-| Varias imágenes seguidas | `gallery` |
-| `h2` + lista de `h3` con texto | `accordion` |
-
-Todo lo que no encaje en un patrón, va a un bloque `text` — es preferible eso a inventar
-estructura que el cliente después no entienda.
-
----
-
-## 7. Redirecciones 301
-
-Origen: `docs/redirecciones-301.csv` de la Fase 1, más lo que salga del inventario.
-
-```bash
-php artisan dante:import-redirects docs/redirecciones-301.csv
-```
-
-- [ ] Toda URL del inventario tiene una fila
-- [ ] Ninguna redirección apunta a un 404
-- [ ] Sin cadenas de redirección (A→B→C). Se aplanan a A→C
-- [ ] Sin bucles
-- [ ] Verificación automática: recorrer el CSV y comprobar que cada origen devuelve 301 al
-      destino esperado
-
----
-
-## 8. Verificación de la migración
-
-| Verificación | Resultado |
-|---|---|
-| Páginas: origen vs. destino | / |
-| Noticias: origen vs. destino | / |
-| Medios: origen vs. destino | / |
-| Categorías | / |
-| Elementos de menú | / |
-| Revisión manual de una muestra del 10 % | ☐ |
-| Enlaces internos rotos (`dante:check-links`) | |
-| Imágenes rotas | |
-| Contenido con codificación rota (tildes, ñ) | |
-| Redirecciones verificadas | / |
-
----
-
-## 9. Reporte final
-
-**Migrado:**
-**Descartado y por qué:**
-**Requiere carga manual del cliente:**
-**Diferencias con el sitio viejo que hay que avisarle al cliente:**
-
----
-
-## 10. Migración del delta (previa al cutover)
-
-Entre la migración y la salida a producción, el cliente probablemente publique algo nuevo en
-el WordPress viejo.
-
-- [ ] Fecha de **congelamiento de contenido** acordada con el cliente:
-- [ ] Migración del delta ejecutada el:
-- [ ] Verificada: ☐
+- Conteo origen vs. destino, revisión del 10% de una muestra e imágenes/enlaces rotos:
+  pendiente de revisión manual sobre esta corrida.

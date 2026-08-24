@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
  * @property array<string, string>|null $conversions
  */
 #[Fillable([
-    'user_id', 'name', 'file_name', 'mime_type', 'path', 'disk', 'size', 'type',
+    'wp_legacy_id', 'user_id', 'name', 'file_name', 'mime_type', 'path', 'disk', 'size', 'type',
     'alt', 'title', 'caption', 'folder', 'conversions', 'svg_sanitized',
 ])]
 class Media extends Model
@@ -44,8 +44,22 @@ class Media extends Model
         return Storage::disk($this->disk)->url($this->path);
     }
 
+    /**
+     * `MediaUploadService` genera las conversiones con el nombre del ancho
+     * real (`w400`/`w800`/`w1200`/`w1920`, ver `config('dante.media.responsive_widths')`),
+     * no con nombres semánticos — acá se traducen los alias que usa el
+     * frontend (`small`/`medium`/`large`) para no tener que acordarse del
+     * ancho exacto en cada vista.
+     */
+    private const CONVERSION_ALIASES = [
+        'small' => 'w400',
+        'medium' => 'w800',
+        'large' => 'w1200',
+    ];
+
     public function conversionUrl(string $key): ?string
     {
+        $key = self::CONVERSION_ALIASES[$key] ?? $key;
         $path = ($this->conversions ?? [])[$key] ?? null;
 
         return $path !== null ? Storage::disk($this->disk)->url($path) : null;

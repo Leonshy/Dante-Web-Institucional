@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
 
-#[Fillable(['type', 'name', 'slug', 'description', 'parent_id', 'sort_order', 'is_active'])]
+#[Fillable(['wp_legacy_id', 'type', 'name', 'slug', 'description', 'parent_id', 'sort_order', 'is_active'])]
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */

@@ -18,7 +18,7 @@ use Spatie\Translatable\HasTranslations;
  * @property array<int, array<string, mixed>>|null $blocks
  */
 #[Fillable([
-    'created_by', 'updated_by', 'parent_id', 'cover_media_id', 'seo_image_id',
+    'wp_legacy_id', 'created_by', 'updated_by', 'parent_id', 'cover_media_id', 'seo_image_id',
     'title', 'slug', 'template', 'site_section', 'site', 'blocks',
     'seo_title', 'seo_description', 'canonical_url', 'is_indexable',
     'status', 'published_at', 'sort_order',

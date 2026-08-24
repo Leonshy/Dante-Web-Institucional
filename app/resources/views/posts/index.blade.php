@@ -19,7 +19,7 @@
                         :excerpt="$post->excerpt"
                         :category="$post->category?->name"
                         :date="optional($post->published_at)->translatedFormat('d \d\e F \d\e Y')"
-                        :image="$post->featuredMedia?->conversionUrl('medium')"
+                        :image="$post->featuredMedia?->conversionUrl('medium') ?? $post->featuredMedia?->url()"
                     />
                 @endforeach
             </div>

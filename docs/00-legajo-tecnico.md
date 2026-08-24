@@ -30,7 +30,7 @@ de administración que el cliente usa a medias porque nunca fue diseñado para �
 
 Este proyecto reemplaza ese sitio por una **web institucional nueva en Laravel**, con panel de
 administración propio, construida sobre un patrón que webparaguay ya tiene funcionando en
-producción (el proyecto IPG). El contenido actual se migra completo, pero **reorganizado según
+producción (el proyecto IGP). El contenido actual se migra completo, pero **reorganizado según
 una arquitectura de información diseñada desde las tareas reales de los usuarios**, no heredada
 de cómo quedó el WordPress. El diseño sigue el manual de marca de Dante, con estilos propios y
 motion cuidado.
@@ -39,7 +39,7 @@ motion cuidado.
 Restaurar el WordPress deja al cliente en la misma superficie de ataque y con el mismo sitio
 mediocre. Reconstruir en Laravel elimina la superficie de plugins de terceros, da control total
 sobre el rendimiento y la seguridad, y deja al cliente en la plataforma que webparaguay
-mantiene todos los días. Además, el patrón de IPG hace que el costo de ingeniería sea una
+mantiene todos los días. Además, el patrón de IGP hace que el costo de ingeniería sea una
 fracción de lo que sería empezar de cero.
 
 ---
@@ -66,7 +66,7 @@ la marca y que puedan administrar solos.
 
 ### Oportunidad para webparaguay
 
-Este proyecto es la **segunda instancia del patrón IPG**. Cada institución que se hace con este
+Este proyecto es la **segunda instancia del patrón IGP**. Cada institución que se hace con este
 patrón baja el costo marginal de la siguiente. El objetivo secundario, explícito, es que al
 terminar Dante quede un **patrón reutilizable de web institucional educativa autoadministrable**,
 listo para vender al resto del mercado de colegios y universidades privadas de Paraguay — un
@@ -306,7 +306,7 @@ que es la variable con mayor incertidumbre.
 |---|---|---|---|---|
 | R1 | El volumen de contenido del WordPress es mucho mayor de lo estimado | Media | Alto | Inventario cuantitativo en Fase 0 antes de cerrar precio. Cláusula de ajuste por volumen |
 | R2 | El dump o los uploads contienen código malicioso que se arrastra a la web nueva | Media | Crítico | Protocolo de `CLAUDE.md` §2: base legacy aislada, lista blanca de extensiones, SVG sanitizados, cero migración de usuarios |
-| R3 | El repo de IPG resulta menos reutilizable de lo esperado | Baja | Alto | Se evalúa en la Fase 0, antes de comprometer horas. Fallback: Filament 5, que acorta la Fase 3 |
+| R3 | El repo de IGP resulta menos reutilizable de lo esperado | Baja | Alto | Se evalúa en la Fase 0, antes de comprometer horas. Fallback: Filament 5, que acorta la Fase 3 |
 | R4 | El cliente demora en aprobar contenido y diseño | **Alta** | Medio | Plazos de aprobación explícitos en el contrato. Aprobación tácita a los N días hábiles |
 | R5 | Pérdida de posiciones SEO tras el cambio de plataforma | Media | Alto | Mapa 301 exhaustivo, misma estructura de URLs donde rinde, monitoreo en Search Console durante 90 días post-cutover |
 | R6 | El manual de marca no cubre casos web (estados, componentes, responsive) | **Alta** | Medio | Extender la marca en la Fase 2 documentando cada decisión, y hacerla aprobar |
@@ -320,7 +320,7 @@ que es la variable con mayor incertidumbre.
 
 **Supuestos:**
 
-- El repo de IPG es propiedad de webparaguay o hay derecho a reutilizar su código.
+- El repo de IGP es propiedad de webparaguay o hay derecho a reutilizar su código.
 - Existe un dump íntegro y reciente del WordPress, y acceso a `wp-content/uploads/`.
 - El cliente tiene una persona designada para aprobar contenido y diseño.
 - El cliente entrega los accesos a su Analytics, Search Console y cuentas de Meta.

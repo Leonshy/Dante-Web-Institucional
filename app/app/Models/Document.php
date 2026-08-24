@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 #[Fillable([
-    'created_by', 'category_id', 'media_id', 'title', 'description',
+    'wp_legacy_id', 'created_by', 'category_id', 'media_id', 'title', 'description',
     'site', 'published_at', 'is_current', 'status',
 ])]
 class Document extends Model

@@ -336,12 +336,11 @@
         align-items: center;
         gap: var(--spacing-2);
     }
-    .logo .seal {
-        width: 14px;
-        height: 14px;
-        border-radius: var(--radius-full);
-        background: var(--color-brand-sky);
+    .logo .logo-mark {
         display: inline-block;
+        height: 90px;
+        width: auto;
+        flex-shrink: 0;
     }
     .desktop-nav {
         display: none;
@@ -373,6 +372,23 @@
         border-bottom: 2px solid transparent;
     }
     .desktop-nav a:hover {
+        color: var(--color-neutral-700);
+    }
+    .desktop-nav .nav-parent-toggle {
+        display: inline-flex;
+        align-items: center;
+        min-height: 44px;
+        padding: 0 2px;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        font-family: inherit;
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--color-neutral-900);
+        cursor: pointer;
+    }
+    .desktop-nav .nav-parent-toggle:hover {
         color: var(--color-neutral-700);
     }
     .desktop-nav a[aria-current='page'] {
@@ -845,9 +861,11 @@
     }
     .cta-block h2 {
         color: #fff;
+        margin-bottom: var(--spacing-3);
     }
     .cta-block p {
         color: var(--color-neutral-200);
+        margin-bottom: var(--spacing-6);
     }
     .cta-block .btn-primary {
         background: #fff;
@@ -960,10 +978,10 @@
         text-decoration: underline;
     }
     .footer-logo {
-        font-family: var(--font-display);
-        font-weight: 900;
-        font-size: 28px;
-        color: #fff;
+        display: block;
+        height: 100px;
+        width: auto;
+        margin-bottom: var(--spacing-3);
     }
     .footer-bottom {
         border-top: 1px solid rgba(255, 255, 255, 0.15);
@@ -1053,6 +1071,54 @@
     }
     .content-block p {
         color: var(--color-neutral-800);
+    }
+
+    /*
+     * Tipografía de contenido enriquecido (RichEditor del panel, contenido
+     * migrado de WordPress) — Tailwind resetea el margen de todos los
+     * elementos por defecto, así que sin esto los párrafos quedan pegados
+     * unos a otros. `.body` envuelve el HTML crudo en pages/show, posts/show
+     * y el bloque `texto` del constructor de páginas.
+     */
+    .body p {
+        margin-bottom: var(--spacing-4);
+        line-height: 1.7;
+        color: var(--color-neutral-800);
+    }
+    .body p:last-child {
+        margin-bottom: 0;
+    }
+    .body ul,
+    .body ol {
+        margin: 0 0 var(--spacing-4);
+        padding-left: 1.4em;
+    }
+    .body li {
+        margin-bottom: var(--spacing-2);
+        line-height: 1.7;
+    }
+    .body h2 {
+        margin: var(--spacing-8) 0 var(--spacing-3);
+    }
+    .body h3,
+    .body h4 {
+        margin: var(--spacing-6) 0 var(--spacing-2);
+    }
+    .body blockquote {
+        margin: var(--spacing-6) 0;
+        padding-left: var(--spacing-4);
+        border-left: 3px solid var(--color-brand-sky);
+        color: var(--color-neutral-700);
+    }
+    .body img {
+        max-width: 100%;
+        height: auto;
+        border-radius: var(--radius-md);
+        margin: var(--spacing-4) 0;
+    }
+    .body a {
+        color: var(--color-brand-black);
+        text-decoration: underline;
     }
     .doc-link-list {
         list-style: none;

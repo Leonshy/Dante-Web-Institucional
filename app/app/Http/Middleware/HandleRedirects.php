@@ -23,6 +23,15 @@ class HandleRedirects
             ->where('is_active', true)
             ->first();
 
+        // Nunca redirigir una ruta a sí misma — algunas filas del mapa 301
+        // importado en la Fase 3 quedaron con from_path === to_path (URLs que
+        // no cambiaron de verdad), lo que sin esta guarda produce un loop de
+        // redirección infinito (encontrado en /contacto y /noticias al migrar
+        // contenido real en la Fase 5).
+        if ($redirect && $redirect->to_path === $path) {
+            $redirect = null;
+        }
+
         if ($redirect) {
             $redirect->registerHit();
 

@@ -7,6 +7,14 @@
             <div class="container section" style="padding-bottom:0">
                 <h1>{{ $page->title }}</h1>
             </div>
+
+            @if($page->coverMedia)
+                <div class="container">
+                    <img src="{{ $page->coverMedia->conversionUrl('w1200') ?? $page->coverMedia->url() }}"
+                         alt="{{ $page->coverMedia->alt ?? '' }}" width="1200" height="675"
+                         style="width:100%;height:auto;border-radius:var(--radius-md);margin-bottom:var(--spacing-6)" loading="eager">
+                </div>
+            @endif
         @endif
 
         @if($siblings->isNotEmpty())

@@ -8,6 +8,8 @@
             subtitle="Afiliados a la Società Dante Alighieri de Roma. Educación bilingüe desde el nivel inicial, con certificación internacional PLIDA."
             cta-label="Quiero inscribir a mi hijo/a"
             cta-url="{{ url('/admisiones') }}"
+            :image="$heroImage?->conversionUrl('large') ?? $heroImage?->url()"
+            :image-alt="$heroImage?->alt ?? ''"
         />
 
         <section class="section reveal">
@@ -17,9 +19,9 @@
                     <p class="body-lg" style="max-width:720px;color:var(--color-neutral-700)">Instituto de Lengua y Cultura, Cursos de Italiano y certificación internacional PLIDA, obligatoria en ciertos grados.</p>
                 </div>
                 <div class="cards-grid">
-                    <x-card.section title="Instituto de Lengua y Cultura" text="Cursos de italiano para niños, jóvenes y adultos, dentro y fuera del colegio." url="{{ url('/oferta-educativa/instituto-de-lengua-y-cultura') }}" />
-                    <x-card.section title="Cursos de Italiano" text="Niveles y certificación PLIDA (Proyecto Lengua Italiana Dante Alighieri)." url="{{ url('/oferta-educativa/cursos-de-italiano') }}" />
-                    <x-card.section title="Oferta educativa completa" text="Educación bilingüe español-italiano, desde el nivel inicial hasta la certificación internacional." url="{{ url('/oferta-educativa') }}" />
+                    <x-card.section title="Instituto de Lengua y Cultura" text="Cursos de italiano para niños, jóvenes y adultos, dentro y fuera del colegio." url="{{ url('/oferta-educativa/instituto-de-lengua-y-cultura') }}" :image="$languageInstituteImage?->conversionUrl('medium') ?? $languageInstituteImage?->url()" />
+                    <x-card.section title="Cursos de Italiano" text="Niveles y certificación PLIDA (Proyecto Lengua Italiana Dante Alighieri)." url="{{ url('/oferta-educativa/cursos-de-italiano') }}" :image="$italianCoursesImage?->conversionUrl('medium') ?? $italianCoursesImage?->url()" />
+                    <x-card.section title="Oferta educativa completa" text="Educación bilingüe español-italiano, desde el nivel inicial hasta la certificación internacional." url="{{ url('/oferta-educativa') }}" :image="$offeringImage?->conversionUrl('medium') ?? $offeringImage?->url()" />
                 </div>
             </div>
         </section>
@@ -49,7 +51,7 @@
                                 :excerpt="$post->excerpt"
                                 :category="$post->category?->name"
                                 :date="optional($post->published_at)->translatedFormat('d \d\e F \d\e Y')"
-                                :image="$post->featuredMedia?->conversionUrl('medium')"
+                                :image="$post->featuredMedia?->conversionUrl('medium') ?? $post->featuredMedia?->url()"
                             />
                         @endforeach
                     </div>

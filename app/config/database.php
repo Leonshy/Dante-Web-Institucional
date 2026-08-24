@@ -84,6 +84,30 @@ return [
             ]) : [],
         ],
 
+        // Conexión secundaria de SOLO LECTURA al WordPress viejo comprometido
+        // (CLAUDE.md §2, docs/07-migracion-wordpress.md). Nunca se escribe acá:
+        // la sanidad real la da el usuario MySQL `wp_lector` (GRANT SELECT únicamente,
+        // ver scripts/LEEME.md), esto es una segunda barrera a nivel de aplicación.
+        'wp_legacy' => [
+            'driver' => 'mysql',
+            'host' => env('DB_LEGACY_HOST', '127.0.0.1'),
+            'port' => env('DB_LEGACY_PORT', '3306'),
+            'database' => env('DB_LEGACY_DATABASE', 'dante_wp_legacy'),
+            'username' => env('DB_LEGACY_USERNAME', 'wp_lector'),
+            'password' => env('DB_LEGACY_PASSWORD', ''),
+            'unix_socket' => env('DB_LEGACY_SOCKET', ''),
+            'charset' => env('DB_LEGACY_CHARSET', 'utf8mb4'),
+            'collation' => env('DB_LEGACY_COLLATION', 'utf8mb4_unicode_ci'),
+            'prefix' => env('DB_LEGACY_PREFIX', 'tV4yL_'),
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            // Nunca abrir una transacción de escritura contra esta conexión.
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DB_URL'),

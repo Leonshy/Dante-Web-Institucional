@@ -3,8 +3,8 @@
 Estado: **✅ Fase 3 cerrada (2026-08-24).** Ver §9 para el detalle del cierre, el hallazgo de
 seguridad corregido y lo que queda explícitamente diferido a fases posteriores.
 
-> Punto de partida obligatorio: el análisis de IPG en `docs/01-analisis-descubrimiento.md` §A.
-> No se diseña un modelo de datos nuevo si IPG ya tiene uno que funciona.
+> Punto de partida obligatorio: el análisis de IGP en `docs/01-analisis-descubrimiento.md` §A.
+> No se diseña un modelo de datos nuevo si IGP ya tiene uno que funciona.
 
 Código en `app/` (Laravel 13 instalado el 2026-08-24).
 
@@ -14,16 +14,16 @@ Código en `app/` (Laravel 13 instalado el 2026-08-24).
 
 | Decisión | Elección | ADR / nota |
 |---|---|---|
-| Enfoque del panel admin | **Filament 5**, reutilizando modelo de datos de IPG (`media`, `site_settings`, `categories`, roles) | ADR-001 |
+| Enfoque del panel admin | **Filament 5**, reutilizando modelo de datos de IGP (`media`, `site_settings`, `categories`, roles) | ADR-001 |
 | Multiidioma | **`spatie/laravel-translatable`** — columnas JSON `{"es": "...", "it": "..."}` en cada campo editorial, en vez de tablas de traducción separadas. Motivo: menos joins, encaja natural con Filament (`campo.es` / `campo.it` como nombres de campo con notación de punto), y es el patrón más simple para un equipo chico. El toggle "italiano habilitado" vive en `site_settings` (`SiteSetting::italianEnabled()`) y todos los formularios del panel ocultan la pestaña "Italiano" cuando está apagado | ADR-002. Decisión de implementación, no requiere ADR nuevo |
 | Auth del panel | **Sistema nativo de Filament 5** (`multiFactorAuthentication()`, TOTP con `AppAuthentication`), no Fortify | **Se aparta de CLAUDE.md/PLAN.md**, que mencionaban Fortify como paquete de referencia. Motivo: Filament 5 trae MFA (TOTP) nativo, ya integrado con sus páginas de login/perfil — instalar Fortify en paralelo duplicaría rutas de login y complicaría la integración sin aportar nada que Filament no resuelva ya. Fortify se desinstaló del proyecto. 2FA obligatorio (`isRequired`), excepto en entorno `testing` para no bloquear la suite automatizada |
-| Roles y permisos | `spatie/laravel-permission`, **4 roles reales** (no 2 binarios como IPG): `administrador`, `editor_general`, `editor_noticias_marketing`, `editor_academico`. Permisos granulares `{módulo}.{acción}` (`view/create/update/delete/publish`) por cada uno de los 14 módulos del panel | `docs/01-analisis-descubrimiento.md` §E pregunta #2 |
+| Roles y permisos | `spatie/laravel-permission`, **4 roles reales** (no 2 binarios como IGP): `administrador`, `editor_general`, `editor_noticias_marketing`, `editor_academico`. Permisos granulares `{módulo}.{acción}` (`view/create/update/delete/publish`) por cada uno de los 14 módulos del panel | `docs/01-analisis-descubrimiento.md` §E pregunta #2 |
 | Autorización | Policies de Laravel, una por modelo, todas usando el trait `App\Policies\Concerns\AuthorizesViaPermissions` (permiso granular, no rol hardcodeado) | — |
-| Editor de texto enriquecido | `Filament\Forms\Components\RichEditor` (Trix por debajo) en vez de TinyMCE de IPG — es el que trae Filament nativo, evita cargar una librería JS externa duplicada | Se aparta de "el mismo editor que IPG" por practicidad de integración con Filament; el comportamiento (HTML editable) es equivalente |
+| Editor de texto enriquecido | `Filament\Forms\Components\RichEditor` (Trix por debajo) en vez de TinyMCE de IGP — es el que trae Filament nativo, evita cargar una librería JS externa duplicada | Se aparta de "el mismo editor que IGP" por practicidad de integración con Filament; el comportamiento (HTML editable) es equivalente |
 | Sanitización HTML | `ezyang/htmlpurifier`, lista blanca de etiquetas/atributos configurada en `config/dante.php`, aplicada en `App\Services\Html\HtmlSanitizer` antes de guardar cualquier bloque de texto enriquecido (páginas y noticias) | Ver §5 |
-| Gestión de medios | Tabla `media` propia (patrón IPG), subida vía `App\Services\Media\MediaUploadService`: nombre aleatorio (UUID), MIME real verificado con `finfo`, SVG sanitizado con `enshrined/svg-sanitize`, conversión WebP + tamaños responsivos con `intervention/image` v4 | Ver §5 y `docs/01` §A.4 |
+| Gestión de medios | Tabla `media` propia (patrón IGP), subida vía `App\Services\Media\MediaUploadService`: nombre aleatorio (UUID), MIME real verificado con `finfo`, SVG sanitizado con `enshrined/svg-sanitize`, conversión WebP + tamaños responsivos con `intervention/image` v4 | Ver §5 y `docs/01` §A.4 |
 | Constructor de bloques | Columna `blocks` (JSON) directamente en `pages`, no una tabla polimórfica `content_blocks` separada. Motivo: Filament `Builder` está diseñado para bindear directo a una columna JSON; una relación morfológica agregaba complejidad de integración (columna de "tipo" de bloque) sin beneficio real para el volumen de contenido de Dante | Catálogo completo en `docs/02` §8; implementados los 16/16 bloques en `App\Filament\Blocks\PageBlocks`, ver §9 |
-| Estrategia de caché | `database` (Plesk sin Redis asumido), patrón `Cache::remember` de IPG para `site_settings` | — |
+| Estrategia de caché | `database` (Plesk sin Redis asumido), patrón `Cache::remember` de IGP para `site_settings` | — |
 | Colas | `database` (sin Supervisor asumido) | — |
 
 ---
@@ -38,7 +38,7 @@ Columnas propias + `is_active`, `avatar`, `app_authentication_secret`/`app_authe
 
 #### `site_settings`
 `key` (unique) / `value` / `type` (text|textarea|boolean|json) / `group` / `label` / `description`.
-Copiado tal cual de IPG. `SiteSetting::get()/set()` cacheado 1h. `italian_enabled` vive acá
+Copiado tal cual de IGP. `SiteSetting::get()/set()` cacheado 1h. `italian_enabled` vive acá
 (ADR-002).
 
 #### `media`
@@ -48,11 +48,11 @@ Copiado tal cual de IPG. `SiteSetting::get()/set()` cacheado 1h. `italian_enable
 
 #### `categories`
 Polimórfica por `type` (news/document/gallery), `name`/`description` traducibles (json),
-`slug`, `parent_id` (jerarquía), `sort_order`, `is_active`. CRUD real en el panel (en IPG solo
+`slug`, `parent_id` (jerarquía), `sort_order`, `is_active`. CRUD real en el panel (en IGP solo
 se cargaba por seeder).
 
 #### `pages`
-`parent_id` (jerarquía real, reemplaza el `section` fijo de IPG), `title`/`seo_title`/
+`parent_id` (jerarquía real, reemplaza el `section` fijo de IGP), `title`/`seo_title`/
 `seo_description` traducibles, `slug`, `template`, `site_section` (enum: institucion,
 oferta-educativa, admisiones, vida-escolar, general), `site` (sede, nullable), `blocks` (json,
 constructor de bloques), `cover_media_id`, `seo_image_id`, `canonical_url`, `is_indexable`,
@@ -234,10 +234,10 @@ rechaza MIME no permitido).
 ## 7. Formularios públicos
 
 `ContactFormRequest` / `PreRegistrationFormRequest` (Form Requests dedicados, patrón adaptado de
-IPG) → `App\Actions\Forms\StoreFormSubmission` → tabla `form_submissions` + notificación por
+IGP) → `App\Actions\Forms\StoreFormSubmission` → tabla `form_submissions` + notificación por
 mail (`NewFormSubmissionNotification`, destino configurable en `site_settings.form_notification_email`).
 
-Protecciones (ausentes en IPG, `docs/01` §A.3):
+Protecciones (ausentes en IGP, `docs/01` §A.3):
 - **Honeypot** (`spatie/laravel-honeypot`), campo trampa + verificación de tiempo mínimo de
   llenado, obligatorio en ambas rutas.
 - **Rate limiting** `throttle:5,1` (5 envíos por minuto por IP).

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Translatable\HasTranslations;
 
 #[Fillable([
-    'created_by', 'updated_by', 'category_id', 'featured_media_id', 'seo_image_id',
+    'wp_legacy_id', 'created_by', 'updated_by', 'category_id', 'featured_media_id', 'seo_image_id',
     'title', 'slug', 'excerpt', 'content', 'seo_title', 'seo_description',
     'is_indexable', 'is_featured', 'published_at', 'status',
 ])]

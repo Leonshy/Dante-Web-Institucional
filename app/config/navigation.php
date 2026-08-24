@@ -13,6 +13,7 @@ return [
         [
             'label' => 'Institución',
             'url' => '/institucion',
+            'linkable' => false,
             'children' => [
                 ['label' => 'Quiénes somos', 'url' => '/institucion/quienes-somos'],
                 ['label' => 'Historia', 'url' => '/institucion/historia'],
@@ -27,6 +28,7 @@ return [
         [
             'label' => 'Oferta educativa',
             'url' => '/oferta-educativa',
+            'linkable' => false,
             'children' => [
                 ['label' => 'Instituto de Lengua y Cultura', 'url' => '/oferta-educativa/instituto-de-lengua-y-cultura'],
                 ['label' => 'Cursos de Italiano', 'url' => '/oferta-educativa/cursos-de-italiano'],
@@ -40,6 +42,7 @@ return [
         [
             'label' => 'Vida escolar',
             'url' => '/vida-escolar',
+            'linkable' => false,
             'children' => [
                 ['label' => 'Calendario académico', 'url' => '/vida-escolar/calendario'],
                 ['label' => 'Comunicados', 'url' => '/vida-escolar/comunicados'],

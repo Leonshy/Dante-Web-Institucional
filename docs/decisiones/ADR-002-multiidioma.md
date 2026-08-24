@@ -49,7 +49,7 @@ sería más caro que diseñarlo bien desde el principio.
   Fase 3, no bloquea el resto de la Fase 0.
 - **Panel (Filament, ADR-001):** cada formulario de contenido necesita pestañas o campos
   duplicados por idioma. El toggle de "italiano habilitado/deshabilitado" vive en la
-  configuración global (`site_settings`, patrón heredado de IPG).
+  configuración global (`site_settings`, patrón heredado de IGP).
 - **Frontend (Fase 4):** rutas con prefijo de idioma (`/it/...`), selector de idioma visible
   solo si el toggle está activo, fallback a español si falta la traducción de una pieza de
   contenido.
