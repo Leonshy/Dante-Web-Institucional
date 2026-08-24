@@ -1,14 +1,10 @@
 # ── Insumos del cliente ───────────────────────────────────────────────
-# Material del cliente: dump de base, manual de marca, uploads, notas.
-# NO va al repo. Solo se versionan los LEEME.md que explican qué va en cada carpeta.
-_insumos/*
-!_insumos/LEEME.md
-!_insumos/*/
-_insumos/*/*
-!_insumos/*/LEEME.md
-!_insumos/*/*/
-_insumos/*/*/*
-!_insumos/*/*/LEEME.md
+# Material del cliente/referencia: dump de base, manual de marca, uploads, notas,
+# repos de referencia (ej. IPG). NO va al repo, a cualquier profundidad.
+# Los LEEME.md que explican qué va en cada carpeta ya están trackeados (se agregaron
+# a mano con `git add -f`) y siguen versionándose pese a esta regla — git no deja de
+# trackear un archivo ya agregado solo porque después empieza a matchear el ignore.
+_insumos/
 
 # ── Salidas de inventario (pueden contener datos del cliente) ─────────
 docs/inventario-crudo.txt
