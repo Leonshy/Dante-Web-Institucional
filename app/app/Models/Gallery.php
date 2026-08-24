@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
+use Database\Factories\GalleryFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +14,8 @@ use Spatie\Translatable\HasTranslations;
 #[Fillable(['created_by', 'title', 'description', 'event_date', 'site', 'status'])]
 class Gallery extends Model
 {
-    use HasAuditing, HasTranslations, SoftDeletes;
+    /** @use HasFactory<GalleryFactory> */
+    use HasAuditing, HasFactory, HasTranslations, SoftDeletes;
 
     public array $translatable = ['title', 'description'];
 

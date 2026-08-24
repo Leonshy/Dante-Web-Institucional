@@ -3,14 +3,17 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
+use Database\Factories\MenuFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 #[Fillable(['key', 'name'])]
 class Menu extends Model
 {
-    use HasAuditing;
+    /** @use HasFactory<MenuFactory> */
+    use HasAuditing, HasFactory;
 
     public function items(): HasMany
     {

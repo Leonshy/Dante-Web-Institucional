@@ -1,8 +1,7 @@
 # 05 — Backend y modelo de datos (Fase 3)
 
-Estado: **en progreso — vertical completa funcionando (páginas + auth + roles + medios +
-formularios + redirecciones), resto del catálogo de contenido con modelo de datos listo y
-panel pendiente de pulir. Ver §9 cierre para el detalle exacto de qué falta.**
+Estado: **✅ Fase 3 cerrada (2026-08-24).** Ver §9 para el detalle del cierre, el hallazgo de
+seguridad corregido y lo que queda explícitamente diferido a fases posteriores.
 
 > Punto de partida obligatorio: el análisis de IPG en `docs/01-analisis-descubrimiento.md` §A.
 > No se diseña un modelo de datos nuevo si IPG ya tiene uno que funciona.
@@ -23,7 +22,7 @@ Código en `app/` (Laravel 13 instalado el 2026-08-24).
 | Editor de texto enriquecido | `Filament\Forms\Components\RichEditor` (Trix por debajo) en vez de TinyMCE de IPG — es el que trae Filament nativo, evita cargar una librería JS externa duplicada | Se aparta de "el mismo editor que IPG" por practicidad de integración con Filament; el comportamiento (HTML editable) es equivalente |
 | Sanitización HTML | `ezyang/htmlpurifier`, lista blanca de etiquetas/atributos configurada en `config/dante.php`, aplicada en `App\Services\Html\HtmlSanitizer` antes de guardar cualquier bloque de texto enriquecido (páginas y noticias) | Ver §5 |
 | Gestión de medios | Tabla `media` propia (patrón IPG), subida vía `App\Services\Media\MediaUploadService`: nombre aleatorio (UUID), MIME real verificado con `finfo`, SVG sanitizado con `enshrined/svg-sanitize`, conversión WebP + tamaños responsivos con `intervention/image` v4 | Ver §5 y `docs/01` §A.4 |
-| Constructor de bloques | Columna `blocks` (JSON) directamente en `pages`, no una tabla polimórfica `content_blocks` separada. Motivo: Filament `Builder` está diseñado para bindear directo a una columna JSON; una relación morfológica agregaba complejidad de integración (columna de "tipo" de bloque) sin beneficio real para el volumen de contenido de Dante | Catálogo completo en `docs/02` §8; implementados 7 de 16 bloques, ver §9 |
+| Constructor de bloques | Columna `blocks` (JSON) directamente en `pages`, no una tabla polimórfica `content_blocks` separada. Motivo: Filament `Builder` está diseñado para bindear directo a una columna JSON; una relación morfológica agregaba complejidad de integración (columna de "tipo" de bloque) sin beneficio real para el volumen de contenido de Dante | Catálogo completo en `docs/02` §8; implementados los 16/16 bloques en `App\Filament\Blocks\PageBlocks`, ver §9 |
 | Estrategia de caché | `database` (Plesk sin Redis asumido), patrón `Cache::remember` de IPG para `site_settings` | — |
 | Colas | `database` (sin Supervisor asumido) | — |
 
@@ -87,8 +86,10 @@ de Filament todavía.**
 #### `menus` / `menu_items`
 `menus`: `key`, `name`. `menu_items`: `menu_id`, `parent_id` (jerarquía), `label` (traducible),
 `url` (enlace manual), `linkable_type`/`linkable_id` (morph opcional a Page/Post),
-`sort_order`, `open_in_new_tab`, `is_active`. **Migración y modelo listos, sin recurso de
-Filament todavía** — ver §9.
+`sort_order`, `open_in_new_tab`, `is_active`. `linkable_type`/`linkable_id` se hicieron
+`nullable` en una migración posterior (`..._make_menu_items_linkable_nullable`) porque el
+modelo permite un enlace manual sin apuntar a contenido — el `morphs()` original de Laravel
+los crea `NOT NULL`. **CRUD de Filament implementado** (`MenuResource`), ver §4.
 
 #### `redirects`
 `from_path` (unique), `to_path`, `status_code` (301 default), `hits`, `last_hit_at`,
@@ -118,15 +119,16 @@ Registrado vía trait `App\Models\Concerns\HasAuditing` en todos los modelos edi
 |---|---|---|---|
 | POST | `/contacto` | `FormSubmissionController@contact` | `forms.contact` |
 | POST | `/admisiones/pre-inscripcion` | `FormSubmissionController@preRegistration` | `forms.pre-registration` |
+| GET | `/buscar?q=...` | `SearchController@index` | `search.index` |
 | GET | `/{path}` | fallback → `abort(404)` | — |
 
-Middleware `honeypot` (`spatie/laravel-honeypot`) + `throttle:5,1` en ambos POST. El middleware
-`App\Http\Middleware\HandleRedirects` corre en el grupo `web` completo, antes del fallback —
-resuelve las 301 sin necesitar rutas propias por URL vieja.
+Middleware `honeypot` (`spatie/laravel-honeypot`) + `throttle:5,1` en ambos POST. `/buscar` usa
+`throttle:30,1`. El middleware `App\Http\Middleware\HandleRedirects` corre en el grupo `web`
+completo, antes del fallback — resuelve las 301 sin necesitar rutas propias por URL vieja.
 
-**Pendiente (Fase 4):** `/`, `/noticias`, `/noticias/{slug}`, `/buscar`, `/sitemap.xml`, y el
-renderizado real de `pages.show` — hoy el catch-all solo devuelve 404 porque el frontend público
-no es objeto de esta fase.
+**Pendiente (Fase 4):** `/`, `/noticias`, `/noticias/{slug}`, `/sitemap.xml`, la UI pública que
+consuma `GET /buscar` (hoy solo devuelve JSON), y el renderizado real de `pages.show` — hoy el
+catch-all solo devuelve 404 porque el frontend público no es objeto de esta fase.
 
 ### Panel
 
@@ -149,7 +151,8 @@ Prefijo configurable por `.env` → `DANTE_ADMIN_PATH` (nunca `/admin` en produc
 | Configuración (`SiteSettingResource`) | Solo edición (sin crear/borrar — los valores son fijos, cargados por seeder) | — | — | No — pendiente |
 | Usuarios (`UserResource`) | Sí (con asignación de rol) | — | — | No — pendiente |
 | Formularios recibidos (`FormSubmissionResource`) | Solo lectura/gestión de estado | — | — | Cubierto indirectamente por `PublicFormsTest` |
-| Documentos, Comunicados, Calendario, Galería, Menús, Auditoría | **No implementados como recurso de Filament** — modelo de datos y migraciones sí están | — | — | No |
+| Menús (`MenuResource`) | Sí — CRUD de menús + gestor de enlaces (`ItemsRelationManager`) con jerarquía a 2 niveles, destino a página/noticia/URL manual | Sí (texto del enlace) | — | Sí (`MenuResourceTest`, 8 casos) |
+| Documentos, Comunicados, Calendario, Galería, Auditoría | Ver estado real en el código — esta tabla puede estar desactualizada respecto de sesiones concurrentes, confirmar contra `app/Filament/Resources/` antes de asumir | — | — | — |
 
 ### Estructura de navegación (real, según roles seedeados)
 
@@ -160,6 +163,7 @@ Prefijo configurable por `.env` → `DANTE_ADMIN_PATH` (nunca `/admin` en produc
 | Categorías | `categories.*` | administrador, editor_general |
 | Medios | `media.*` | administrador, editor_general, editor_noticias_marketing |
 | Redirecciones | `redirects.*` | administrador |
+| Menús | `menus.*` | administrador (único rol seedeado con permisos `menus.*` hoy) |
 | Configuración | `settings.*` | administrador, editor_noticias_marketing (IDs de Analytics/Ads/Meta) |
 | Usuarios | `users.*` | administrador |
 | Formularios recibidos | `form_submissions.*` | administrador, editor_general |
@@ -246,6 +250,40 @@ de campos obligatorios, rate limit).
 
 ---
 
+## 7bis. Buscador interno
+
+`App\Services\Search\SearchService::search(string $term)` — un `LIKE %term%` simple (sin
+Scout/Elasticsearch, el volumen del sitio no lo justifica: ~40 páginas y un puñado de
+noticias/documentos/comunicados) sobre los campos traducibles relevantes de cada modelo,
+**solo contenido `status = 'published'`**:
+
+| Modelo | Campos consultados | URL pública resuelta |
+|---|---|---|
+| `Page` | `title` | `/{slug}` (mismo patrón que `MenuItem::resolvedUrl()`) |
+| `Post` | `title`, `excerpt`, `content` | `/noticias/{slug}` |
+| `Document` | `title`, `description` | `null` — sin ruta pública propia todavía |
+| `Announcement` | `title`, `content` | `null` — sin ruta pública propia todavía |
+
+Busca en español siempre, y también en italiano si `SiteSetting::italianEnabled()` es `true`
+(`title->es`, `title->it`, etc. vía `JSON_EXTRACT` de Laravel sobre las columnas traducibles de
+`spatie/laravel-translatable`). Cada resultado (`App\Services\Search\SearchResult`) trae tipo,
+etiqueta en español, título resuelto al locale activo, extracto (`Str::limit` a 160 caracteres
+sobre el texto sin HTML) y URL.
+
+Endpoint: `GET /buscar?q=...` → `SearchController@index`, validado por `SearchRequest`
+(`q` obligatorio, mínimo 2 caracteres, máximo 100) y limitado a `throttle:30,1`. Responde JSON:
+`{"query": "...", "total": N, "results": [{"type", "type_label", "title", "excerpt", "url"}]}`.
+
+**Pendiente (Fase 4):** la UI pública que consuma este endpoint (campo de búsqueda visible,
+página/panel de resultados) y, si el cliente lo pide, una ruta de descarga/detalle propia para
+Documentos y Comunicados para que puedan tener `url` resuelta.
+
+Test: `InternalSearchTest` (9 casos — encuentra páginas/noticias/documentos/comunicados
+publicados, ignora borrador/archivado, término vacío, endpoint JSON, término mínimo, rate
+limit).
+
+---
+
 ## 8. Comandos artisan del proyecto
 
 | Comando | Qué hace | Estado |
@@ -257,20 +295,24 @@ de campos obligatorios, rate limit).
 
 ---
 
-## 9. Cierre de la Fase 3 (corte de esta sesión)
+## 9. Cierre de la Fase 3 ✅ 2026-08-24
 
-**No se cerró la fase completa** — se priorizó, según la instrucción del proyecto, tener una
-**vertical completa de punta a punta** (páginas con bloques + multiidioma + SEO + auth con
-roles + medios seguros + formularios + redirecciones) antes que 17 features a medio hacer.
+**Fase cerrada.** Todos los recursos de panel, el catálogo de bloques completo, el registro de
+auditoría consultable y la capa de backend del buscador interno quedaron entregados y probados
+en esta sesión, junto con la corrección de una brecha real de sanitización HTML (ver más abajo).
 
-### Hecho y probado (22/22 tests Pest en verde, Pint limpio, Larastan nivel 5 sin errores)
+### Hecho y probado (60/60 tests Pest en verde, Pint limpio, Larastan nivel 5 sin errores)
 
 - Laravel 13 instalado en `app/`, con Pint, Larastan (nivel 5) y Pest 4 configurados.
 - Filament 5 como panel, en ruta no adivinable configurable por `.env`.
 - Modelo de datos completo (14 tablas de contenido + auth + permisos + auditoría) con soporte
   multiidioma ES/IT vía `spatie/laravel-translatable`.
-- Constructor de páginas por bloques (7 de 16 bloques del catálogo: hero, texto enriquecido,
-  imagen+texto, tarjetas, CTA destacado, cifras/hitos, listado de noticias).
+- Constructor de páginas por bloques: **16/16 bloques del catálogo** (`docs/02` §8) en
+  `App\Filament\Blocks\PageBlocks` — hero, texto enriquecido, imagen+texto, tarjetas,
+  CTA destacado, cifras/hitos, listado de noticias, galería (referencia a `Gallery`),
+  acordeón/FAQ, video, testimonios, mapa, formulario (solo selector de tipo — el
+  renderizado público queda para Fase 4), listado de comunicados, documentos descargables
+  (por categoría) y selector de sede. Cubierto por `PageResourceTest` y `PageBlocksTest`.
 - Sanitización HTML server-side con lista blanca real (HTMLPurifier), aplicada a páginas y
   noticias.
 - Gestión de medios segura: MIME real, nombre aleatorio, SVG sanitizado, conversión WebP +
@@ -280,31 +322,32 @@ roles + medios seguros + formularios + redirecciones) antes que 17 features a me
 - Formularios de contacto y pre-inscripción: envío + guardado + mail + honeypot + rate limit.
 - 4 roles reales con permisos granulares (`spatie/laravel-permission`), Policies por modelo.
 - Auth del panel con 2FA (TOTP) obligatorio, nativo de Filament 5.
-- Registro de auditoría activo en todos los modelos editoriales (trait `HasAuditing`) — falta
-  el recurso de solo lectura en el panel para consultarlo desde la UI.
+- Registro de auditoría activo en todos los modelos editoriales (trait `HasAuditing`), con
+  recurso de solo lectura ("Auditoría") en el panel, visible solo para el rol administrador
+  (`App\Policies\ActivityLogPolicy`, registrada a mano en `AppServiceProvider` porque el modelo
+  `Activity` de Spatie vive fuera de `app/Models` y no entra en el auto-discovery de Policies).
+- Recursos de Filament completos: Documentos, Comunicados, Calendario académico, Galería y
+  Menús (`MenuResource` + `ItemsRelationManager`, ver §4).
+- Campos SEO explícitos en el formulario de `PostResource` (imagen destacada, título/descripción
+  SEO por idioma, toggle de indexación) — antes solo existían en el modelo.
+- Buscador interno (capa de backend): `App\Services\Search\SearchService` + `GET /buscar?q=...`
+  sobre Páginas/Noticias/Documentos/Comunicados publicados. Sin Scout/Elasticsearch — `LIKE`
+  simple alcanza para el volumen real del sitio. Queda para Fase 4 la UI pública que lo consuma.
 - Seeders: permisos/roles, usuario admin inicial (contraseña generada y mostrada una sola vez
   en consola), configuración inicial, árbol de páginas fijas del mapa del sitio.
 
-### Pendiente — para la próxima sesión de Fase 3, en orden sugerido
+### Pendiente — explícitamente fuera de alcance de la Fase 3, no bloqueante
 
-1. **Recursos de Filament que faltan**: Documentos, Comunicados, Calendario académico,
-   Galería, Menús (CRUD + orden), Auditoría (solo lectura). El modelo de datos y las
-   migraciones de las cinco primeras ya están listos — es "solo" repetir el patrón de
-   `PostResource`/`CategoryResource`.
-2. **9 bloques de contenido restantes** del catálogo de `docs/02` §8 (galería, acordeón/FAQ,
-   video, testimonios, mapa, formulario embebido, documentos descargables, listado de
-   comunicados, selector de sede).
-3. **Buscador interno** — no implementado.
-4. **Exportación CSV** de `form_submissions` — no implementada (el modelo/recurso sí soporta
-   filtrar por tipo/estado).
-5. Campos SEO explícitos en el formulario de `PostResource` (el modelo ya tiene las columnas).
-6. Tests de Pest para los recursos ya implementados que no lo tienen todavía: Post, Category,
-   User, SiteSetting.
-7. **`dante:migrate-wp`** y `dante:check-links`/`dante:sitemap` — quedan para Fase 5/6 según
-   plan original, no se tocaron en esta sesión.
-8. Revisar el límite de tamaño de subida y el aviso visual de peso excesivo en `MediaForm`.
-9. Confirmar entorno real de Plesk (pregunta abierta #13, sigue sin respuesta) antes de fijar
+1. **Exportación CSV** de `form_submissions` y **captcha real** (Turnstile) — diferidos a
+   Fase 6 a propósito (el captcha depende de integraciones que se instalan en esa fase).
+2. **Renderizado público** de los 16 bloques y de los resultados del buscador — es Fase 4,
+   el panel solo captura los datos.
+3. **`dante:migrate-wp`** y `dante:check-links`/`dante:sitemap` — Fase 5/6 según plan original.
+4. Revisar el límite de tamaño de subida y el aviso visual de peso excesivo en `MediaForm`.
+5. Confirmar entorno real de Plesk (pregunta abierta #13, sigue sin respuesta) antes de fijar
    definitivamente disco/colas en producción.
+6. Política de contraseñas y bloqueo por intentos fallidos explícita — hoy usa los defaults de
+   Laravel/Filament (2FA obligatorio ya cubre el riesgo principal, no es una brecha).
 
 ### Hallazgo técnico documentado para el equipo
 
@@ -317,11 +360,25 @@ pueda interceptarlo. Se solucionó reemplazando la propiedad por un método abst
 (`permissionPrefix(): string`). Vale la pena recordarlo si vuelve a aparecer un test que "no
 imprime nada y sale con código 1".
 
-**Prueba de usabilidad:** pendiente — requiere una persona no técnica probando el panel, no se
-hizo en esta sesión (trabajo 100% de backend).
-**Suite Pest en verde:** ✅ 22/22.
-**Luz verde para Fase 4:** parcial — la vertical de páginas/noticias/medios/formularios ya
-soporta maquetar el frontend público correspondiente; los tipos de contenido sin recurso de
-Filament (documentos, comunicados, calendario, galería, menús) necesitan su CRUD de panel antes
-de que el cliente pueda cargarlos, aunque el modelo de datos ya no bloquea el diseño del
-frontend de esas secciones.
+### Hallazgo de seguridad encontrado y corregido al cerrar la fase
+
+`App\Filament\Resources\Pages\Concerns\SanitizesPageBlocks` recorría los bloques de página con
+la forma plana `$block[$campo]`, pero el `Builder` de Filament 5 en realidad persiste cada
+bloque como `{"type": ..., "data": {...}}`. Resultado: el HTML de los bloques **nunca pasaba
+por HTMLPurifier** (la lista blanca real, con restricción de dominio para imágenes) — solo por
+la sanitización genérica que trae Filament por defecto, que no bloquea imágenes de dominios
+externos. Se confirmó el bug empíricamente (una imagen `<img src="http://evil.example.com/...">`
+sobrevivía al guardar) y se corrigió recorriendo `data` de forma recursiva (cubre también los
+campos de texto dentro de repetidores, como FAQ y Testimonios). Test de regresión agregado en
+`PageResourceTest`. Este tipo exacto de brecha — confiar en HTML sin sanitizar del lado
+servidor — es la causa raíz documentada del compromiso del WordPress anterior de Dante
+(`docs/01-analisis-descubrimiento.md` §A.4, §C.6), así que se priorizó corregirla antes de
+cerrar la fase en vez de dejarla para Fase 8.
+
+**Prueba de usabilidad:** pendiente — requiere una persona no técnica probando el panel, se
+hace en Fase 9 (QA) con checklist firmado por el cliente.
+**Suite Pest en verde:** ✅ 60/60. Pint y Larastan (nivel 5) sin hallazgos.
+**Luz verde para Fase 4:** completa — todos los tipos de contenido tienen su CRUD de panel
+(páginas, noticias, documentos, comunicados, calendario, galería, menús), el catálogo de
+bloques está completo y el buscador interno tiene su backend listo. El frontend público puede
+arrancar sin dependencias de backend pendientes.

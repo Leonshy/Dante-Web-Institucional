@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,7 +17,7 @@ use Spatie\Translatable\HasTranslations;
 ])]
 class MenuItem extends Model
 {
-    use HasAuditing, HasTranslations;
+    use HasAuditing, HasFactory, HasTranslations;
 
     public array $translatable = ['label'];
 

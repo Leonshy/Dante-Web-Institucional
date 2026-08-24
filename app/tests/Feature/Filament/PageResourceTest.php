@@ -56,7 +56,9 @@ it('sanitiza el HTML del bloque de texto antes de guardar', function () {
             'blocks' => [
                 'bloque-1' => [
                     'type' => 'texto',
-                    'content' => ['es' => '<p>Hola</p><script>alert(1)</script>'],
+                    'data' => [
+                        'content' => ['es' => '<p>Hola</p><script>alert(1)</script>'],
+                    ],
                 ],
             ],
         ])
@@ -65,9 +67,31 @@ it('sanitiza el HTML del bloque de texto antes de guardar', function () {
 
     $page->refresh();
 
-    expect($page->blocks[0]['content']['es'])
+    expect($page->blocks[0]['data']['content']['es'])
         ->toContain('<p>Hola</p>')
         ->not->toContain('<script>');
+});
+
+it('bloquea imágenes de dominios externos en el bloque de texto', function () {
+    $page = Page::factory()->create();
+
+    $this->livewire(EditPage::class, ['record' => $page->getRouteKey()])
+        ->fillForm([
+            'blocks' => [
+                'bloque-1' => [
+                    'type' => 'texto',
+                    'data' => [
+                        'content' => ['es' => '<p>Hola</p><img src="http://evil.example.com/x.png">'],
+                    ],
+                ],
+            ],
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $page->refresh();
+
+    expect($page->blocks[0]['data']['content']['es'])->not->toContain('evil.example.com');
 });
 
 it('un usuario sin permiso no puede ver el listado de páginas', function () {

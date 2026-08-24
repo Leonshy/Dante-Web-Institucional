@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
+use Database\Factories\CalendarEventFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Translatable\HasTranslations;
 
@@ -13,7 +15,8 @@ use Spatie\Translatable\HasTranslations;
 ])]
 class CalendarEvent extends Model
 {
-    use HasAuditing, HasTranslations;
+    /** @use HasFactory<CalendarEventFactory> */
+    use HasAuditing, HasFactory, HasTranslations;
 
     public array $translatable = ['title', 'description'];
 

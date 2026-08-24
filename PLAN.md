@@ -1,6 +1,8 @@
 # PLAN.md — Plan de ejecución por fases
 
-Estado global: **Fase 0 — casi cerrada** (falta confirmar entorno Plesk, pregunta abierta #13)
+Estado global: **Fase 3 — backend y panel de administración ✅ cerrada 2026-08-24.** Arranca
+la Fase 4 (frontend). Quedan abiertas, no bloqueantes: preguntas #13 (acceso Plesk) de la
+Fase 0, exportación CSV/captcha de formularios (diferido a Fase 6 a propósito).
 Última actualización: 2026-08-24
 
 > **Cómo se usa:** cada fase tiene un objetivo, un entregable escrito y una condición de
@@ -149,7 +151,7 @@ contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la
 ## Fase 3 — Backend Laravel y panel de administración
 **Objetivo:** el motor y el panel donde el cliente carga todo.
 **Entregable:** `docs/05-backend-modelo-datos.md` + código funcionando
-**Estimado:** 48–64 h — **la fase más pesada**
+**Estimado:** 48–64 h — **la fase más pesada** — ✅ cerrada 2026-08-24
 
 - [x] Instalar Laravel 13 en `app/`, configurar Pint, Larastan, Pest
 - [x] Implementar el patrón de panel decidido en **ADR-001: Filament 5** (reutilizando el
@@ -159,23 +161,30 @@ contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la
       §7), con soporte **multiidioma ES/IT** (ADR-002): páginas, bloques de contenido,
       noticias/entradas, categorías, medios, menús, usuarios, configuración global (con el
       toggle de italiano), formularios y sus envíos, redirecciones — todas las tablas creadas;
-      recursos de panel de Documentos/Comunicados/Calendario/Galería/Menús pendientes (ver
-      `docs/05-backend-modelo-datos.md` §9)
-- [~] **Constructor de páginas por bloques** — implementado como columna `blocks` (JSON) en
-      `pages` con `Filament\Forms\Components\Builder`. 7 de 16 bloques del catálogo de
-      `docs/02-ux-arquitectura-informacion.md` §8 construidos; el resto queda documentado como
-      pendiente
+      recursos de panel de Documentos/Comunicados/Calendario/Galería/Menús ya construidos
+      (ver `docs/05-backend-modelo-datos.md` §9)
+- [x] **Constructor de páginas por bloques** — implementado como columna `blocks` (JSON) en
+      `pages` con `Filament\Forms\Components\Builder`. **16 de 16 bloques** del catálogo de
+      `docs/02-ux-arquitectura-informacion.md` §8 construidos (galería, FAQ, video, testimonios,
+      mapa, formulario, listado de comunicados, documentos y selector de sede sumados en esta
+      entrega)
 - [x] **Editor de texto enriquecido** — `Filament\Forms\Components\RichEditor` (se aparta de
       TinyMCE de IPG, ver `docs/05` §1). Sanitización server-side con lista blanca real
-      (HTMLPurifier) antes de guardar, nunca se confía en el HTML del editor
+      (HTMLPurifier) antes de guardar, nunca se confía en el HTML del editor. **Hallazgo y
+      corrección de seguridad en esta entrega:** `SanitizesPageBlocks` operaba sobre la forma
+      plana `$block[$campo]` en vez de la forma real que persiste el Builder de Filament 5
+      (`$block['data'][$campo]`), por lo que el HTML de los bloques **nunca pasaba realmente**
+      por HTMLPurifier — solo por la sanitización genérica de Filament, que no bloquea imágenes
+      de dominios externos. Corregido para recorrer `data` recursivamente (incluye repetidores
+      como FAQ/testimonios); test de regresión agregado (`bloquea imágenes de dominios externos`)
 - [x] **Gestión de medios**: subida con MIME real (`finfo`), nombre aleatorio, SVG sanitizado,
       conversión WebP + tamaños responsivos, alt text obligatorio en la UI, biblioteca
       reutilizable — recorte manual pendiente
-- [ ] **Gestión de menús** desde el panel — modelo de datos (`menus`/`menu_items`, jerárquico)
-      listo, recurso de Filament pendiente
+- [x] **Gestión de menús** desde el panel — recurso de Filament con gestor de ítems (enlace a
+      página interna, a noticia o URL manual), hasta 2 niveles, drag/orden manual
 - [x] **Campos SEO por página**: título, meta descripción, imagen OG, canonical, índice/noindex,
-      slug editable — implementado en Páginas; en Noticias los campos existen en el modelo pero
-      faltan en el formulario del panel
+      slug editable — implementado en Páginas y ahora también en Noticias (imagen destacada +
+      título/descripción SEO por idioma + toggle de indexación)
 - [x] **Gestión de redirecciones** desde el panel, precargada con las 39 filas reales del mapa
       301 de la Fase 1 (`dante:import-redirects`) + middleware público que las aplica
 - [x] **Configuración global** editable: datos de contacto, redes, horarios, IDs de analytics,
@@ -191,17 +200,31 @@ contacto, contenido migrado de algunas páginas) que no bloquean el inicio de la
       `docs/05` §1 por qué). Política de contraseñas y bloqueo por intentos: por definir
       explícitamente (hoy usa los defaults de Laravel/Filament, no configurados a medida)
 - [x] **Registro de auditoría**: `spatie/laravel-activitylog` activo en todos los modelos
-      editoriales vía trait `HasAuditing` — falta el recurso de solo lectura en el panel para
-      consultarlo desde la UI
-- [ ] **Buscador interno** del sitio — no implementado
-- [x] Tests de Pest para los CRUD entregados (Páginas, Redirecciones, sanitización HTML, subida
-      de medios, formularios públicos, middleware de redirecciones) — 22/22 en verde. Post,
-      Category, User y SiteSetting sin test propio todavía
+      editoriales vía trait `HasAuditing` — recurso de solo lectura ("Auditoría") ya disponible
+      en el panel, solo visible para el rol administrador
+- [x] **Buscador interno** del sitio — capa de backend lista: `App\Services\Search\SearchService`
+      hace `LIKE` sobre título/extracto/contenido (es + it si `SiteSetting::italianEnabled()`) de
+      Páginas, Noticias, Documentos y Comunicados **publicados**, y `GET /buscar?q=...` (form
+      request con mínimo de 2 caracteres, `throttle:30,1`) devuelve JSON con tipo, título,
+      extracto y URL pública (páginas y noticias resuelven URL con el mismo patrón que
+      `MenuItem::resolvedUrl()`; documentos y comunicados aún no tienen ruta pública propia,
+      viajan con `url: null`). Sin Scout/Elasticsearch — volumen del sitio no lo justifica.
+      Pendiente para Fase 4: la vista/UI pública que consuma este endpoint (buscador visible,
+      página de resultados, posible ruta de descarga para documentos)
+- [x] Tests de Pest para los CRUD entregados (Páginas, Noticias, Categorías, Usuarios,
+      Configuración global, Auditoría, Menús, Redirecciones, sanitización HTML (incluida la
+      regresión de imágenes externas), subida de medios, formularios públicos, middleware de
+      redirecciones, buscador interno, catálogo de 16 bloques) — **60/60 en verde**, Pint y
+      Larastan (nivel 5) sin hallazgos
 - [x] **Seeders** con la estructura base (páginas fijas del mapa del sitio, configuración
       inicial, usuario admin inicial con contraseña generada, roles y permisos)
 
 **DoD:** una persona no técnica puede crear, editar, despublicar y borrar cualquier contenido
-del sitio desde el panel, sin ayuda.
+del sitio desde el panel, sin ayuda. **Cumplido.** Quedan dos ítems menores fuera del DoD
+estricto, no bloqueantes: exportación CSV de formularios y captcha real (explícitamente
+diferidos a Fase 6, `docs/05` lo documenta), y la política de contraseñas/bloqueo por intentos
+sigue en los defaults de Filament (a definir a medida más adelante, no es un hueco de
+seguridad — 2FA ya es obligatorio).
 
 ---
 
@@ -387,7 +410,7 @@ usar su panel.
 | 0 | 2026-08-24 | — (sesión de IA) | Casi cerrada — quedan abiertas #6 (tipografía) y #13 (acceso Plesk), no bloqueantes |
 | 1 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente. Preguntas #14–20 agregadas, no bloquean Fase 2 |
 | 2 | 2026-08-24 | — (sesión de IA) | Aprobada por el cliente, incluida la tipografía (Barlow Condensed + Barlow) |
-| 3 | | | |
+| 3 | 2026-08-24 | — (sesión de IA) | 16/16 bloques, Menús/Documentos/Comunicados/Calendario/Galería, buscador interno (backend), auditoría en panel. Se encontró y corrigió una brecha de sanitización HTML real durante el cierre |
 | 4 | | | |
 | 5 | | | |
 | 6 | | | |

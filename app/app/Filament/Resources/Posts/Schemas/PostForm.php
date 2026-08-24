@@ -43,6 +43,14 @@ class PostForm
                 DatePicker::make('published_at')->label('Fecha de publicación')->required(),
                 Toggle::make('is_featured')->label('Destacar en el inicio'),
             ])->columns(3),
+            Section::make('Imagen destacada')->schema([
+                Select::make('featured_media_id')
+                    ->label('Imagen')
+                    ->relationship('featuredMedia', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->helperText('Subí la imagen primero desde la sección Medios y elegila acá.'),
+            ]),
             Section::make('Publicación')->schema([
                 Select::make('status')
                     ->label('Estado')
@@ -50,6 +58,24 @@ class PostForm
                     ->default('draft')
                     ->required(),
             ]),
+            Section::make('Buscadores (SEO)')
+                ->description('Cómo se ve esta noticia en Google. Si lo dejás vacío, se usa el título de la noticia.')
+                ->collapsed()
+                ->schema([
+                    Tabs::make('seo_idiomas')->tabs([
+                        Tab::make('Español')->schema([
+                            TextInput::make('seo_title.es')->label('Título para buscadores')->maxLength(60),
+                            Textarea::make('seo_description.es')->label('Descripción para buscadores')->maxLength(160)->rows(2),
+                        ]),
+                        Tab::make('Italiano')->schema([
+                            TextInput::make('seo_title.it')->label('Título para buscadores')->maxLength(60),
+                            Textarea::make('seo_description.it')->label('Descripción para buscadores')->maxLength(160)->rows(2),
+                        ])->visible(fn () => SiteSetting::italianEnabled()),
+                    ]),
+                    Toggle::make('is_indexable')
+                        ->label('Permitir que Google indexe esta noticia')
+                        ->default(true),
+                ]),
         ]);
     }
 }
