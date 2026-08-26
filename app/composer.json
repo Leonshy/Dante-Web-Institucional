@@ -14,6 +14,7 @@
         "laravel/framework": "^13.17",
         "laravel/tinker": "^3.0",
         "spatie/laravel-activitylog": "^4.0",
+        "spatie/laravel-backup": "^10.3",
         "spatie/laravel-honeypot": "^4.7",
         "spatie/laravel-permission": "^8.3",
         "spatie/laravel-sitemap": "^7.0",
@@ -60,6 +61,10 @@
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
+        ],
+        "audit-deps": [
+            "composer audit",
+            "npm audit"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

@@ -1,6 +1,6 @@
 <x-layouts.app title="Comunicados — Colegio Dante Alighieri" description="Comunicados y circulares vigentes del Colegio Dante Alighieri.">
-    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => url('/vida-escolar')], ['label' => 'Comunicados', 'url' => null]]" />
-    <main id="contenido" class="container section">
+    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => \App\Models\Page::publishedUrl('vida-escolar')], ['label' => 'Comunicados', 'url' => null]]" />
+    <main id="contenido" tabindex="-1" class="container section">
         <h1>Comunicados</h1>
         <p class="body-lg" style="color:var(--color-neutral-700);margin:var(--spacing-2) 0 var(--spacing-6)">Circulares y avisos vigentes de la administración.</p>
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
+use App\Services\Cache\PublicContentCache;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,6 +24,22 @@ class Post extends Model
 
     public array $translatable = ['title', 'excerpt', 'content', 'seo_title', 'seo_description'];
 
+    /**
+     * Invalida la caché de consulta pública (`PublicContentCache`, Fase 7,
+     * docs/09-rendimiento.md §6) al guardar o borrar — mismo criterio que `Page`.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (self $post) {
+            PublicContentCache::forgetPostSlug($post->slug);
+            PublicContentCache::forgetPostSlug($post->getOriginal('slug'));
+        });
+
+        static::deleted(function (self $post) {
+            PublicContentCache::forgetPostSlug($post->slug);
+        });
+    }
+
     protected function casts(): array
     {
         return [
@@ -37,6 +54,9 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * @return BelongsTo<Media, $this>
+     */
     public function featuredMedia(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'featured_media_id');

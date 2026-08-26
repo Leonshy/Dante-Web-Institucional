@@ -1,6 +1,6 @@
 <x-layouts.app title="Documentos — Colegio Dante Alighieri" description="Estatutos, circulares y formularios del Colegio Dante Alighieri, para descargar.">
     <x-breadcrumbs :items="[['label' => 'Documentos', 'url' => null]]" />
-    <main id="contenido" class="container section">
+    <main id="contenido" tabindex="-1" class="container section">
         <h1>Documentos</h1>
         <p class="body-lg" style="color:var(--color-neutral-700);margin-top:var(--spacing-2)">Estatutos, circulares y formularios del colegio, para descargar.</p>
 
@@ -45,7 +45,13 @@
                 @foreach($documents as $document)
                     <div class="doc-card">
                         <h3>{{ $document->title }}</h3>
-                        <p class="meta">{{ $document->category?->name }} · {{ $document->site === 'ambas' ? 'Ambas sedes' : ucfirst((string) $document->site) }} · {{ optional($document->published_at)->format('d/m/Y') }}</p>
+                        <p class="meta">
+                            {{ collect([
+                                $document->category?->name,
+                                $document->site === 'ambas' ? 'Ambas sedes' : ucfirst((string) $document->site),
+                                optional($document->published_at)->format('d/m/Y'),
+                            ])->filter()->implode(' · ') }}
+                        </p>
                         <a href="{{ $document->file?->url() }}" aria-label="Descargar {{ $document->title }} en PDF" download>Descargar (PDF)</a>
                     </div>
                 @endforeach

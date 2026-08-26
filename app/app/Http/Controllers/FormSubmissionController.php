@@ -15,15 +15,19 @@ class FormSubmissionController extends Controller
 {
     public function contact(ContactFormRequest $request, StoreFormSubmission $action): RedirectResponse
     {
-        $action->handle('contacto', $request->validated(), $request->ip());
+        $result = $action->handle('contacto', $request->validated(), $request->ip(), $request);
 
-        return back()->with('status', 'Gracias por escribirnos. Te vamos a responder a la brevedad.');
+        return back()
+            ->with('status', 'Gracias por escribirnos. Te vamos a responder a la brevedad.')
+            ->with('meta_event_id', $result['meta_event_id']);
     }
 
     public function preRegistration(PreRegistrationFormRequest $request, StoreFormSubmission $action): RedirectResponse
     {
-        $action->handle('pre_inscripcion', $request->validated(), $request->ip());
+        $result = $action->handle('pre_inscripcion', $request->validated(), $request->ip(), $request);
 
-        return back()->with('status', 'Recibimos tu pre-inscripción. Nos vamos a comunicar para coordinar los siguientes pasos.');
+        return back()
+            ->with('status', 'Recibimos tu pre-inscripción. Nos vamos a comunicar para coordinar los siguientes pasos.')
+            ->with('meta_event_id', $result['meta_event_id']);
     }
 }

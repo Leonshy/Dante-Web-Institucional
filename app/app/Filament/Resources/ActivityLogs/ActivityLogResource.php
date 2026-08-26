@@ -9,6 +9,7 @@ use Filament\Resources\Resource;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Spatie\Activitylog\Models\Activity;
+use UnitEnum;
 
 class ActivityLogResource extends Resource
 {
@@ -17,6 +18,10 @@ class ActivityLogResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClock;
 
     protected static ?string $navigationLabel = 'Auditoría';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Configuraciones';
+
+    protected static ?int $navigationSort = 18;
 
     protected static ?string $modelLabel = 'registro de auditoría';
 

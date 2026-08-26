@@ -70,6 +70,21 @@ it('muestra un solo h1 aunque el primer bloque sea un hero', function () {
         ->not->toContain('Título de la página</h1>');
 });
 
+it('el breadcrumb no enlaza a una página padre en borrador', function () {
+    $parent = Page::factory()->create(['slug' => 'institucion', 'title' => ['es' => 'Institución'], 'status' => 'draft']);
+    $child = Page::factory()->create([
+        'slug' => 'institucion/historia',
+        'title' => ['es' => 'Historia'],
+        'status' => 'published',
+        'parent_id' => $parent->id,
+    ]);
+
+    $html = $this->get('/'.$child->slug)->assertOk()->getContent();
+
+    expect($html)->toContain('Institución')
+        ->not->toContain('href="/institucion"');
+});
+
 it('muestra el h1 con el título de la página cuando no hay bloque hero', function () {
     $page = Page::factory()->create([
         'slug' => 'sin-hero',

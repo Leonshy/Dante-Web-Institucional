@@ -15,6 +15,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class AnnouncementResource extends Resource
 {
@@ -23,6 +24,10 @@ class AnnouncementResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedMegaphone;
 
     protected static ?string $navigationLabel = 'Comunicados';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Contenido';
+
+    protected static ?int $navigationSort = 11;
 
     public static function form(Schema $schema): Schema
     {

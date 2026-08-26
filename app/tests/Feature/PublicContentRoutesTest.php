@@ -4,6 +4,7 @@ use App\Models\Announcement;
 use App\Models\CalendarEvent;
 use App\Models\Document;
 use App\Models\Gallery;
+use App\Models\Page;
 use App\Models\Post;
 
 it('la home responde 200', function () {
@@ -42,6 +43,24 @@ it('lista solo documentos publicados y vigentes', function () {
         ->assertDontSee('Documento vencido');
 });
 
+it('no deja un separador colgando cuando un documento no tiene categoría', function () {
+    Document::factory()->create([
+        'status' => 'published',
+        'is_current' => true,
+        'title' => ['es' => 'Sin categoría'],
+        'category_id' => null,
+    ]);
+
+    // Antes: "{{ $document->category?->name }} · {{ sede }} · {{ fecha }}"
+    // dejaba un "· Ambas sedes · fecha" colgando al inicio cuando la
+    // categoría era null (campo opcional, no debe dejar rastro en el
+    // front si queda vacío) — ahora empieza directo en "Ambas sedes".
+    $this->get('/documentos')
+        ->assertOk()
+        ->assertSee('Ambas sedes · '.now()->format('d/m/Y'))
+        ->assertDontSee('· Ambas sedes');
+});
+
 it('lista solo comunicados publicados', function () {
     Announcement::factory()->create(['status' => 'published', 'title' => ['es' => 'Comunicado real']]);
     Announcement::factory()->create(['status' => 'draft', 'title' => ['es' => 'Comunicado borrador']]);
@@ -70,4 +89,12 @@ it('lista solo galerías publicadas', function () {
         ->assertOk()
         ->assertSee('Galería real')
         ->assertDontSee('Galería borrador');
+});
+
+it('el breadcrumb de galería no enlaza a la sección "Vida escolar" si está en borrador', function () {
+    Page::factory()->create(['slug' => 'vida-escolar', 'status' => 'draft']);
+
+    $html = $this->get('/vida-escolar/galeria')->assertOk()->getContent();
+
+    expect($html)->toContain('Vida escolar')->not->toContain('href="'.url('/vida-escolar').'"');
 });

@@ -13,14 +13,19 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class RedirectResource extends Resource
 {
     protected static ?string $model = Redirect::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedArrowsRightLeft;
 
     protected static ?string $navigationLabel = 'Redirecciones';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Configuraciones';
+
+    protected static ?int $navigationSort = 17;
 
     public static function form(Schema $schema): Schema
     {

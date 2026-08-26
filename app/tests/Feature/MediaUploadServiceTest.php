@@ -21,6 +21,21 @@ it('sube una imagen y genera una conversión webp', function () {
     Storage::disk('media')->assertExists($media->path);
 });
 
+it('reprocesa la imagen y descarta cualquier byte extra embebido (payload tipo polyglot)', function () {
+    $original = UploadedFile::fake()->image('foto.jpg', 200, 200)->getContent();
+    $payload = "\n<?php system(\$_GET['c']); ?>\n";
+    $withPayload = $original.$payload;
+
+    $file = UploadedFile::fake()->createWithContent('foto.jpg', $withPayload);
+
+    $media = app(MediaUploadService::class)->upload($file, 'general');
+
+    $stored = Storage::disk('media')->get($media->path);
+
+    expect($stored)->not->toContain('<?php')
+        ->and($stored)->not->toBe($withPayload);
+});
+
 it('rechaza un archivo con doble extensión disfrazado de imagen', function () {
     $file = UploadedFile::fake()->createWithContent('logo.fw.php', '<?php echo "hola"; ?>');
 

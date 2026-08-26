@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Responses\HoneypotRedirectResponder;
 use Spatie\Honeypot\SpamProtection;
-use Spatie\Honeypot\SpamResponder\BlankPageResponder;
 
 return [
     /*
@@ -49,7 +49,9 @@ return [
      * A valid responder is any class that implements
      * `Spatie\Honeypot\SpamResponder\SpamResponder`
      */
-    'respond_to_spam_with' => BlankPageResponder::class,
+    // Nunca el `BlankPageResponder` por defecto — ver docs de
+    // `App\Http\Responses\HoneypotRedirectResponder` (Fase 9 §8).
+    'respond_to_spam_with' => HoneypotRedirectResponder::class,
 
     /*
      * When activated, requests will be checked if honeypot fields are missing,

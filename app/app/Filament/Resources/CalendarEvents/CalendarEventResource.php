@@ -13,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class CalendarEventResource extends Resource
 {
@@ -21,6 +22,10 @@ class CalendarEventResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDays;
 
     protected static ?string $navigationLabel = 'Calendario académico';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Contenido';
+
+    protected static ?int $navigationSort = 9;
 
     public static function form(Schema $schema): Schema
     {

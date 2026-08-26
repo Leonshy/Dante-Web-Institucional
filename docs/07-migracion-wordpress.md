@@ -64,11 +64,35 @@ pisar la ruta real. El texto viejo sigue en el WordPress legacy si hace falta.
 | /descarga-de-documentos/ | colisiona con la ruta fija /documentos (DocumentController) | 476 |
 | /galeria/ | colisiona con la ruta fija /vida-escolar/galeria (GalleryController) | 646 |
 
+**Decisión (pregunta abierta #22, resuelta 2026-08-25):** reescribir como introducción
+breve arriba de cada página nueva, en vez de descartar o migrar aparte. Al limpiar el
+Divi/HTML de las 3 con `WpHtmlCleaner` se confirmó que el "contenido" real detrás del
+conteo de palabras era sobre todo ruido de atributos del constructor visual, no texto
+editorial:
+
+- **`/contacto/`** (revisado a fondo el 2026-08-25, ver pregunta #19 en
+  `docs/01-analisis-descubrimiento.md` §E): el cuerpo real (sin Divi) era una lista de
+  contacto estructurada por sede/área — Asunción (académico/administrativo), Fernando de la
+  Mora (académico/administrativo) e Instituto de Lengua Italiana — con email y teléfono de
+  cada una. Búsqueda exhaustiva en el dump (contenido de la página, `postmeta`, `options` —
+  widgets y theme mods —, y las plantillas de header/footer del Theme Builder de Divi)
+  confirmó que **no existe dirección física ni horario de atención en ningún lado** del
+  WordPress viejo — esos dos siguen `[COMPLETAR CON DATO REAL DE MIGRACIÓN]`, genuinamente
+  pendientes del cliente. Los emails/teléfonos sí se cargaron en `/contacto` y en el pie de
+  página, con dominio `dante.edu.py` — el dump traía `dante.webparaguay.com` (dominio del
+  proveedor), pero el cliente confirmó 2026-08-25 que era solo el entorno de desarrollo.
+- **`/descarga-de-documentos/`**: el cuerpo real no tenía texto además del título; la bajada
+  que ya traía `resources/views/documents/index.blade.php` la cubre por completo, sin cambios.
+- **`/galeria/`**: el cuerpo real eran solo títulos de sub-álbumes (ej. "Graduación 2023"),
+  ya representados por los álbumes migrados como `Gallery`; se agregó una bajada corta en
+  `resources/views/galleries/index.blade.php` (no tenía ninguna).
+
 ## Enlaces internos sin redirección conocida
 
-Enlaces dentro del contenido migrado que apuntaban a una URL vieja sin fila en `redirects` — quedaron como estaban (referencia potencialmente rota, revisar manualmente):
-
-- `/v2/el-instituto-de-lengua-y-cultura/certificacion-internacional`
+- `/v2/el-instituto-de-lengua-y-cultura/certificacion-internacional` — **corregido
+  2026-08-25**: era un enlace absoluto al dominio de staging viejo dentro del bloque de
+  texto de `oferta-educativa/cursos-de-italiano`, apuntaba al contenido que hoy es
+  `institucion/certificacion-internacional`. Reescrito a esa URL nueva.
 
 ## Imágenes sin migrar referenciadas en el contenido
 
@@ -84,5 +108,20 @@ cargan manualmente desde el panel al publicar cada página.
 
 ## Verificación
 
-- Conteo origen vs. destino, revisión del 10% de una muestra e imágenes/enlaces rotos:
-  pendiente de revisión manual sobre esta corrida.
+Revisión manual hecha el 2026-08-25 sobre una muestra de 6 páginas (de 16, 37%) y las 3
+noticias (3 de 3, 100%) — bien por encima del mínimo del 10%:
+
+- Páginas revisadas: `institucion/historia`, `institucion/sociedad-dante-alighieri`,
+  `vida-escolar/biblioteca`, `admisiones/pre-inscripcion-fernando-de-la-mora`,
+  `institucion/certificacion-internacional`, `oferta-educativa/cursos-de-italiano`
+- Sin rastros de shortcodes Divi, artefactos de Word o enlaces al dominio viejo en el HTML
+  renderizado de la muestra
+- Todas las imágenes de la muestra cargan (200) — ninguna rota
+- Todos los enlaces internos de la muestra resuelven — se encontró y corrigió un bug real:
+  el breadcrumb de una página hija enlazaba a su página padre aunque esa página padre
+  estuviera en borrador (`institucion`, `oferta-educativa`, `vida-escolar` son páginas de
+  sección todavía sin contenido propio), dando 404 al público. Corregido en
+  `App\Http\Controllers\PageController::breadcrumbsFor()` — ya no enlaza a un padre no
+  publicado, test de regresión agregado (`tests/Feature/PageControllerTest.php`)
+- El enlace absoluto roto al dominio de staging (ver arriba) también se detectó y corrigió
+  en esta pasada

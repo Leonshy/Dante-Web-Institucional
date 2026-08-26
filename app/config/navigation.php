@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Estructura fija del menú principal y accesos secundarios del pie de página,
- * según docs/02-ux-arquitectura-informacion.md §4-5. No es contenido editorial
- * (eso vive en Page/Post/etc. vía el panel) — es la arquitectura de información
- * aprobada del sitio, por eso se declara acá y no en base de datos. Si el cliente
- * pide un menú administrable desde el panel, ya existe el modelo Menu/MenuItem
- * (Fase 3) para reemplazar este archivo sin tocar las vistas.
+ * Ya NO es la fuente en vivo del menú del sitio (Fase 10): `site-header` y
+ * `site-footer` leen de `Menu::renderTree()`, administrable desde el panel
+ * ("Menús"). Este archivo queda solo como referencia de la arquitectura de
+ * información original (docs/02-ux-arquitectura-informacion.md §4-5) y como
+ * contenido de partida de `MenuSeeder`, que carga estos mismos ítems en base
+ * la primera vez que corre.
  */
 return [
     'primary' => [
@@ -46,7 +46,6 @@ return [
             'children' => [
                 ['label' => 'Calendario académico', 'url' => '/vida-escolar/calendario'],
                 ['label' => 'Comunicados', 'url' => '/vida-escolar/comunicados'],
-                ['label' => 'Eventos', 'url' => '/vida-escolar/eventos'],
                 ['label' => 'Galería', 'url' => '/vida-escolar/galeria'],
                 ['label' => 'Biblioteca "Irene Borello de Amodei"', 'url' => '/vida-escolar/biblioteca'],
                 ['label' => 'Enlaces de interés', 'url' => '/vida-escolar/enlaces-de-interes'],

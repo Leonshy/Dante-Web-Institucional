@@ -13,6 +13,7 @@
                 :category="$post->category?->name"
                 :date="optional($post->published_at)->translatedFormat('d \d\e F \d\e Y')"
                 :image="$post->featuredMedia?->conversionUrl('medium') ?? $post->featuredMedia?->url()"
+                :image-srcset="$post->featuredMedia?->srcset()"
             />
         @endforeach
     </div>

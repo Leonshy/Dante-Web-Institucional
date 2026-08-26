@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Documents\Schemas;
 
+use App\Filament\Forms\Components\MediaPicker;
+use App\Filament\Tables\MediaLibraryTable;
 use App\Models\SiteSetting;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -29,13 +31,11 @@ class DocumentForm
                         Textarea::make('description.it')->label('Descripción')->rows(2),
                     ])->visible(fn () => SiteSetting::italianEnabled()),
                 ]),
-                Select::make('media_id')
+                MediaPicker::make('media_id')
                     ->label('Archivo')
-                    ->relationship('file', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->helperText('Subí el archivo primero desde la sección Medios y elegilo acá.'),
+                    ->anyFileType()
+                    ->tableConfiguration(MediaLibraryTable::class)
+                    ->required(),
             ]),
             Section::make('Clasificación')->schema([
                 Select::make('category_id')->label('Categoría')->relationship('category', 'name')->searchable()->preload(),

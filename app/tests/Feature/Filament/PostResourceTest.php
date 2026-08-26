@@ -3,6 +3,7 @@
 use App\Filament\Resources\Posts\Pages\CreatePost;
 use App\Filament\Resources\Posts\Pages\EditPost;
 use App\Filament\Resources\Posts\Pages\ListPosts;
+use App\Models\Media;
 use App\Models\Post;
 use App\Models\User;
 use Database\Seeders\PermissionSeeder;
@@ -21,6 +22,13 @@ it('lista las noticias en el panel', function () {
 
     $this->livewire(ListPosts::class)
         ->assertSuccessful();
+});
+
+it('muestra el enlace público de una noticia para copiar', function () {
+    $post = Post::factory()->create(['slug' => 'aniversario-129']);
+
+    $this->livewire(ListPosts::class)
+        ->assertTableColumnStateSet('public_url', route('posts.show', 'aniversario-129'), record: $post);
 });
 
 it('crea una noticia con título, bajada y contenido en español', function () {
@@ -77,4 +85,36 @@ it('un usuario sin permiso no puede ver el listado de noticias', function () {
     $this->actingAs($editorAcademico);
 
     $this->livewire(ListPosts::class)->assertForbidden();
+});
+
+it('elige la imagen destacada de la biblioteca de medios desde el picker', function () {
+    $media = Media::factory()->create();
+
+    $this->livewire(CreatePost::class)
+        ->fillForm([
+            'title' => ['es' => 'Noticia con imagen'],
+            'excerpt' => ['es' => 'Bajada'],
+            'content' => ['es' => '<p>Contenido</p>'],
+            'slug' => 'noticia-con-imagen',
+            'published_at' => now()->toDateString(),
+            'status' => 'draft',
+            'featured_media_id' => $media->id,
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $post = Post::query()->where('slug', 'noticia-con-imagen')->firstOrFail();
+
+    expect($post->featured_media_id)->toBe($media->id);
+});
+
+it('permite dejar la noticia sin imagen destacada', function () {
+    $post = Post::factory()->create();
+
+    $this->livewire(EditPost::class, ['record' => $post->getRouteKey()])
+        ->fillForm(['featured_media_id' => null])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    expect($post->refresh()->featured_media_id)->toBeNull();
 });

@@ -23,7 +23,13 @@ class PagesTable
                     ->formatStateUsing(fn ($record) => $record->getTranslation('title', 'es'))
                     ->searchable()
                     ->weight('bold'),
-                TextColumn::make('slug')->label('URL')->prefix('/')->copyable(),
+                TextColumn::make('public_url')
+                    ->label('Enlace público')
+                    ->state(fn ($record): string => url($record->urlPath()))
+                    ->limit(40)
+                    ->copyable()
+                    ->copyMessage('¡Enlace copiado!')
+                    ->icon('heroicon-o-link'),
                 TextColumn::make('site_section')->label('Sección')->badge(),
                 TextColumn::make('status')
                     ->label('Estado')

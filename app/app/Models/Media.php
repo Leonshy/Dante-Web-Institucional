@@ -64,4 +64,23 @@ class Media extends Model
 
         return $path !== null ? Storage::disk($this->disk)->url($path) : null;
     }
+
+    /**
+     * `srcset` real a partir de las variantes generadas por `MediaUploadService`
+     * (`w400`/`w800`/`w1200`/`w1920`, según `config('dante.media.responsive_widths')`).
+     * Devuelve `null` si el medio no tiene ninguna variante (SVG, GIF, o si el
+     * original ya es más chico que el ancho pedido — `generateConversions()` no
+     * genera una variante más grande que el original). Fase 7,
+     * docs/09-rendimiento.md §3: evita servirle 1920 px a un teléfono.
+     */
+    public function srcset(): ?string
+    {
+        $conversions = $this->conversions ?? [];
+
+        $entries = collect(config('dante.media.responsive_widths'))
+            ->filter(fn (int $width) => isset($conversions["w{$width}"]))
+            ->map(fn (int $width) => Storage::disk($this->disk)->url($conversions["w{$width}"])." {$width}w");
+
+        return $entries->isEmpty() ? null : $entries->implode(', ');
+    }
 }

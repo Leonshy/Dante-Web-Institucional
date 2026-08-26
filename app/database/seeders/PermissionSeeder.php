@@ -16,7 +16,7 @@ class PermissionSeeder extends Seeder
     private array $modules = [
         'pages', 'posts', 'documents', 'announcements', 'calendar_events',
         'galleries', 'media', 'categories', 'menus', 'redirects',
-        'settings', 'users', 'form_submissions', 'activity_log',
+        'settings', 'users', 'form_submissions', 'activity_log', 'locations',
     ];
 
     private array $actions = ['view', 'create', 'update', 'delete', 'publish'];
@@ -34,7 +34,7 @@ class PermissionSeeder extends Seeder
 
         $editorGeneral = Role::findOrCreate('editor_general');
         $editorGeneral->syncPermissions($this->permissionsFor([
-            'pages', 'documents', 'categories', 'media', 'galleries', 'form_submissions',
+            'pages', 'documents', 'categories', 'media', 'galleries', 'form_submissions', 'locations',
         ], ['view', 'create', 'update', 'publish']));
 
         $editorNoticiasMarketing = Role::findOrCreate('editor_noticias_marketing');

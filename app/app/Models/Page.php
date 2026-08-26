@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Concerns\HasAuditing;
+use App\Models\Concerns\ResolvesLocaleFields;
+use App\Services\Cache\PublicContentCache;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,18 +23,37 @@ use Spatie\Translatable\HasTranslations;
     'wp_legacy_id', 'created_by', 'updated_by', 'parent_id', 'cover_media_id', 'seo_image_id',
     'title', 'slug', 'template', 'site_section', 'site', 'blocks',
     'seo_title', 'seo_description', 'canonical_url', 'is_indexable',
-    'status', 'published_at', 'sort_order',
+    'status', 'published_at', 'sort_order', 'is_featured_home', 'home_excerpt',
 ])]
 class Page extends Model
 {
-    use HasAuditing, HasFactory, HasTranslations, SoftDeletes;
+    use HasAuditing, HasFactory, HasTranslations, ResolvesLocaleFields, SoftDeletes;
 
-    public array $translatable = ['title', 'seo_title', 'seo_description'];
+    public array $translatable = ['title', 'seo_title', 'seo_description', 'home_excerpt'];
+
+    /**
+     * Invalida la caché de consulta pública (`PublicContentCache`, Fase 7,
+     * docs/09-rendimiento.md §6) al guardar o borrar — se limpia tanto el slug
+     * actual como el original si se editó el slug, para no dejar una entrada
+     * vieja apuntando a contenido que ya no existe en esa URL.
+     */
+    protected static function booted(): void
+    {
+        static::saved(function (self $page) {
+            PublicContentCache::forgetPageSlug($page->slug);
+            PublicContentCache::forgetPageSlug($page->getOriginal('slug'));
+        });
+
+        static::deleted(function (self $page) {
+            PublicContentCache::forgetPageSlug($page->slug);
+        });
+    }
 
     protected function casts(): array
     {
         return [
             'is_indexable' => 'boolean',
+            'is_featured_home' => 'boolean',
             'published_at' => 'datetime',
             'blocks' => 'array',
         ];
@@ -51,34 +72,9 @@ class Page extends Model
         return collect($this->blocks ?? [])
             ->map(fn (array $block): array => [
                 'type' => $block['type'],
-                'data' => self::resolveBlockLocale(is_array($block['data'] ?? null) ? $block['data'] : [], $locale),
+                'data' => self::resolveLocaleFields(is_array($block['data'] ?? null) ? $block['data'] : [], $locale),
             ])
             ->all();
-    }
-
-    /**
-     * Resuelve recursivamente los campos bilingües (`{"es": "...", "it": "..."}`)
-     * de los datos de un bloque, incluidos los que están dentro de repetidores
-     * (ej. `faq`/`testimonios`), al idioma pedido.
-     *
-     * @param  array<string, mixed>  $data
-     * @return array<string, mixed>
-     */
-    private static function resolveBlockLocale(array $data, string $locale): array
-    {
-        return collect($data)->map(function ($value) use ($locale) {
-            if (! is_array($value)) {
-                return $value;
-            }
-
-            if (array_key_exists('es', $value) || array_key_exists('it', $value)) {
-                return $value[$locale] ?? $value['es'] ?? null;
-            }
-
-            return array_is_list($value)
-                ? collect($value)->map(fn ($item) => is_array($item) ? self::resolveBlockLocale($item, $locale) : $item)->all()
-                : self::resolveBlockLocale($value, $locale);
-        })->all();
     }
 
     public function parent(): BelongsTo
@@ -91,11 +87,17 @@ class Page extends Model
         return $this->hasMany(self::class, 'parent_id')->orderBy('sort_order');
     }
 
+    /**
+     * @return BelongsTo<Media, $this>
+     */
     public function coverMedia(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'cover_media_id');
     }
 
+    /**
+     * @return BelongsTo<Media, $this>
+     */
     public function seoImage(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'seo_image_id');
@@ -128,5 +130,18 @@ class Page extends Model
         }
 
         return implode('/', $segments);
+    }
+
+    /**
+     * URL pública de una página de sección (ej. "vida-escolar") solo si ya está
+     * publicada — evita que breadcrumbs de otras secciones (Comunicados,
+     * Calendario, Galería) enlacen a una página de aterrizaje todavía en
+     * borrador y den 404 al público.
+     */
+    public static function publishedUrl(string $slug): ?string
+    {
+        $isPublished = static::query()->where('slug', $slug)->where('status', 'published')->exists();
+
+        return $isPublished ? url('/'.$slug) : null;
     }
 }

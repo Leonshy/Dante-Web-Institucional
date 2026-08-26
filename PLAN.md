@@ -1,10 +1,20 @@
 # PLAN.md — Plan de ejecución por fases
 
-Estado global: **Fase 4 — frontend ✅ cerrada 2026-08-24.** Arranca la Fase 5 (migración de
-contenido real del WordPress viejo). Quedan abiertas, no bloqueantes: preguntas #13 (acceso
-Plesk) de la Fase 0, exportación CSV/captcha de formularios (Fase 6), verificación cruzada en
-dispositivos físicos (Fase 9).
-Última actualización: 2026-08-24
+Estado global: **Fase 9 — QA y testing ✅ cerrada 2026-08-25.** Arranca la Fase 10
+(Despliegue y puesta en producción) — última fase del plan.
+2FA del panel rediseñado en esta sesión: pasó de TOTP obligatorio a **email, opt-in por
+usuario** (ADR-003), pedido explícito del cliente. De paso se cerraron los 2 hallazgos
+mayores que había dejado abiertos la Fase 9 (honeypot sin mensaje claro al rechazar un envío,
+2FA sin test automatizado) — ver `docs/11-qa-testing.md` §8.
+Quedan abiertas, no bloqueantes: preguntas #13 (acceso Plesk) de la Fase 0, #19 (contenido real
+de Contacto por sede) y #21 (aranceles vigentes), alta en Search Console/Bing/Google Business
+Profile y verificación de Rich Results/OG con URL pública (requieren dominio real), IDs y
+credenciales reales de GA4/GTM/Meta/Turnstile (se cargan desde el panel → Integraciones cuando
+el cliente las entregue), mejoras futuras de rendimiento (LCP de Home, AVIF, CSS crítico,
+compresión/HTTP2/OPcache en Plesk real), pentest real con Strix (Docker y CLI ya listos, falta
+solo una API key de LLM), verificación en dispositivos físicos reales y aceptación del cliente
+en staging — todo esto se resuelve en la Fase 10, que ya arrancó.
+Última actualización: 2026-08-25
 
 > **Cómo se usa:** cada fase tiene un objetivo, un entregable escrito y una condición de
 > cierre (*Definition of Done*). No se pasa de fase sin el entregable en `docs/` y el
@@ -265,7 +275,7 @@ excepción, no bloqueante: la verificación en dispositivos físicos queda para 
 
 ---
 
-## Fase 5 — Migración de contenido
+## Fase 5 — Migración de contenido ✅ cerrada 2026-08-25
 **Objetivo:** todo el contenido del WordPress dentro del Laravel nuevo.
 **Entregable:** `docs/07-migracion-wordpress.md`
 **Estimado:** 16–24 h
@@ -289,122 +299,251 @@ excepción, no bloqueante: la verificación en dispositivos físicos queda para 
       ya están en `docs/03-copywriting.md` §3 (Fase 2), se cargan manual desde el panel
 - [x] Carga del mapa de redirecciones 301 — ya hecho en Fase 3 (`dante:import-redirects`),
       confirmado vigente (39 filas)
-- [~] **Verificación**: conteos origen/destino hechos (16/16 páginas, 3/3 noticias, 128/128
-      medios), 1 página revisada visualmente en navegador con contenido e imagen real
-      renderizando bien. Falta la revisión sistemática del 10% de muestra
+- [x] **Verificación**: conteos origen/destino (16/16 páginas, 3/3 noticias, 128/128 medios) +
+      revisión manual de 6 páginas (37%) y las 3 noticias (100%) — sin artefactos de
+      Divi/Word, sin imágenes rotas. Encontrados y corregidos 2 bugs reales: un enlace
+      absoluto al dominio de staging viejo dentro de un bloque de texto, y un breadcrumb que
+      enlazaba a una página padre en borrador (404 público) — ver `docs/07-migracion-wordpress.md`
+      §Verificación y test de regresión en `tests/Feature/PageControllerTest.php`
 - [x] Reporte final en `docs/07-migracion-wordpress.md`, generado automáticamente por el comando
 
 **3 páginas con destino "migrar" no se migraron** — su URL nueva ya la sirve un controller
 dedicado de la Fase 4 (`/contacto`, `/documentos`, `/vida-escolar/galeria`), crear una Page ahí
-sería inalcanzable o pisaría la ruta real. Contenido viejo (3963/476/646 palabras) sin destino
-todavía — agregado como pregunta abierta #22 en `docs/01-analisis-descubrimiento.md` §E.
+sería inalcanzable o pisaría la ruta real. **Resuelto** (pregunta #22 en
+`docs/01-analisis-descubrimiento.md` §E): el contenido viejo se reescribió como introducción
+breve en cada página nueva — el detalle completo de la decisión, página por página, está en
+`docs/07-migracion-wordpress.md`.
 
 **DoD:** no hay contenido del sitio viejo que no esté en el nuevo o justificado por escrito
-como descartado. **Casi cumplido** — cada pieza de contenido está migrada, en la lista de
-colisión justificada por escrito, o ya estaba clasificada "revisar"/"descartar" en la Fase 1
-(decisión editorial ya tomada, no una que se infiera acá). Falta la revisión sistemática del
-10% de muestra para cerrar formalmente.
+como descartado. **Cumplido.**
 
 ---
 
-## Fase 6 — SEO técnico e integraciones
+## Fase 6 — SEO técnico e integraciones ✅ cerrada 2026-08-25
 **Objetivo:** que el cambio de plataforma no cueste tráfico, y que el marketing tenga sus datos.
 **Entregable:** `docs/08-seo.md`
 **Estimado:** 12–16 h
 
-- [ ] Metaetiquetas por página desde el panel, con valores por defecto sensatos
-- [ ] Open Graph y Twitter Cards, con imagen por defecto de la marca
-- [ ] **JSON-LD schema.org**: `EducationalOrganization`, `BreadcrumbList`, `Article` en noticias,
-      `FAQPage` donde aplique, `LocalBusiness` con dirección y horarios
-- [ ] `sitemap.xml` dinámico + `robots.txt`
-- [ ] URLs canónicas, jerarquía de `<h1>`–`<h6>` correcta, un solo `h1` por página
-- [ ] **Redirecciones 301** activas y verificadas una por una
-- [ ] **Google Analytics 4** vía Google Tag Manager, con ID configurable desde el panel
-- [ ] **Meta Pixel + Conversions API** (el lado servidor es lo que sobrevive a los bloqueadores)
-- [ ] **Captcha** en todos los formularios públicos — preferencia: Cloudflare Turnstile
-      (gratis, mejor UX, menos fricción). Alternativa: reCAPTCHA v3
-- [ ] **Banner de consentimiento de cookies** que efectivamente bloquee los scripts hasta
-      aceptar (no un cartel decorativo)
-- [ ] Alta en Google Search Console y Bing Webmaster, envío del sitemap
-- [ ] Google Business Profile verificado y enlazado
-- [ ] Verificar que nada del sitio viejo quedó indexado apuntando a un 404
+- [x] Metaetiquetas por página desde el panel, con valores por defecto sensatos — incluye
+      `canonical_url` de `Page`, que existía en la base desde la Fase 3 pero no estaba expuesto
+      en el formulario ni en la vista (corregido)
+- [~] Open Graph y Twitter Cards, con imagen por defecto de la marca — implementado completo;
+      la imagen OG de marca (1200×630) no existe en los insumos de Fase 2, queda pendiente de
+      diseño (no se generó una imagen nueva, por instrucción explícita). Ver `docs/08-seo.md` §2
+- [~] **JSON-LD schema.org**: `EducationalOrganization`, `BreadcrumbList`, `Article` en noticias,
+      `FAQPage` donde aplique — los 4 implementados, más `WebSite`+`SearchAction` en el inicio.
+      `LocalBusiness` se decidió **no** usar (`EducationalOrganization` es el tipo correcto para
+      una institución educativa). `Event` no aplica: no existe todavía un bloque/modelo de
+      "evento" individual en el catálogo de 16 bloques — ver `docs/08-seo.md` §3
+- [x] `sitemap.xml` dinámico + `robots.txt` — ambos dinámicos (sin archivo estático), con
+      `lastmod` real y bloqueo automático de indexación fuera de `production`
+- [x] URLs canónicas, jerarquía de `<h1>`–`<h6>` correcta, un solo `h1` por página — canónicas
+      nuevas en esta fase, jerarquía de encabezados ya verificada en Fase 4
+- [x] **Redirecciones 301** activas y verificadas una por una — las 39 filas del mapa, con test
+      automatizado (`Redirects301VerificationTest.php`), sin cadenas ni 404s
+- [x] **Google Analytics 4** vía Google Tag Manager, con ID configurable desde el panel — carga
+      solo tras consentimiento; sin ID real del cliente todavía (pendiente de datos, no de código)
+- [x] **Meta Pixel + Conversions API** (el lado servidor es lo que sobrevive a los bloqueadores)
+      — con deduplicación por `event_id`; sin token real del cliente todavía (pendiente de datos)
+- [x] **Captcha** en todos los formularios públicos — Cloudflare Turnstile, validado del lado
+      servidor, sumado a honeypot + rate limit; sin claves reales de Cloudflare todavía (pendiente
+      de datos, el captcha queda inactivo sin bloquear los formularios mientras tanto)
+- [x] **Todos los IDs y credenciales de integraciones administrables desde el panel, con
+      activar/desactivar por integración** — pedido explícito del cliente tras cerrar el resto de
+      la fase: se creó `App\Models\IntegrationSetting` (fila única, cifra los dos campos
+      realmente secretos con el cast `encrypted` de Eloquent) y la página
+      `App\Filament\Pages\IntegrationSettings` ("Integraciones" en el panel), reemplazando el uso
+      de `.env` para el token de Meta Conversions API y las claves de Turnstile. Ver
+      `docs/08-seo.md` §6
+- [x] **Banner de consentimiento de cookies** que efectivamente bloquea los scripts hasta
+      aceptar — verificado que no hay ningún `<script src>` de terceros incondicional en el HTML
+- [ ] Alta en Google Search Console y Bing Webmaster, envío del sitemap — requiere acceso al
+      dominio/DNS del cliente, no se puede simular. Movido a Fase 10 (cutover)
+- [ ] Google Business Profile verificado y enlazado — mismo caso, movido a Fase 10
+- [~] Verificar que nada del sitio viejo quedó indexado apuntando a un 404 — verificado a nivel
+      de código (las 39 redirecciones del mapa no dan 404); la verificación contra el índice
+      real de Google solo se puede hacer con Search Console del dominio real (Fase 10)
 
 **DoD:** el sitio pasa Rich Results Test, el sitemap está enviado y todas las 301 responden.
+**Parcialmente cumplido:** las 301 responden y están verificadas (test automatizado). El
+Rich Results Test real y el envío del sitemap a Search Console requieren una URL pública —
+no aplican a este entorno de desarrollo, quedan para la Fase 10 (despliegue/cutover). Detalle
+completo de qué quedó pendiente y por qué, en `docs/08-seo.md` §6–§8.
 
 ---
 
-## Fase 7 — Rendimiento
+## Fase 7 — Rendimiento ✅ cerrada 2026-08-25
 **Objetivo:** Core Web Vitals en verde, en móvil y con la conexión promedio de Paraguay.
 **Entregable:** `docs/09-rendimiento.md`
 **Estimado:** 10–14 h
 
-- [ ] **Objetivos**: LCP < 2.5 s, INP < 200 ms, CLS < 0.1, Lighthouse móvil ≥ 90
-- [ ] Imágenes: WebP/AVIF, tamaños responsivos, lazy loading salvo el LCP, dimensiones fijas
-- [ ] Fuentes: autoalojadas, `font-display: swap`, subconjunto de caracteres, precarga de la crítica
-- [ ] CSS y JS: purga de Tailwind, división de código, diferir lo no crítico, cero jQuery
-- [ ] **Caché de respuesta** de páginas públicas, con invalidación al publicar desde el panel
-- [ ] Caché de configuración, rutas y vistas en producción (`config:cache`, `route:cache`, `view:cache`)
-- [ ] Eliminar consultas N+1 (Laravel Debugbar en local, `preventLazyLoading` en desarrollo)
-- [ ] Índices de base de datos en las columnas que se filtran y ordenan
-- [ ] Compresión Gzip/Brotli y cabeceras de caché en Plesk
-- [ ] Medición **antes y después**, con captura en `docs/09-rendimiento.md`
+- [x] **Objetivos**: LCP < 2.5 s, INP < 200 ms, CLS < 0.1, Lighthouse móvil ≥ 90 — cumplidos en
+      institucional (LCP 2.1 s, Lighthouse 98) y noticia (LCP 2.4 s, Lighthouse 97). Home queda en
+      Lighthouse 90 (cumple) pero LCP 3.6 s (no cumple el umbral de 2.5 s) — detalle y motivo en
+      `docs/09-rendimiento.md` §8/§10
+- [x] Imágenes: WebP ✅ (AVIF no, decisión documentada), tamaños responsivos, `srcset`/`sizes`
+      reales agregados (no existían en ninguna vista — hallazgo real de esta fase), lazy loading
+      salvo el LCP, dimensiones fijas (CLS = 0 en las tres plantillas)
+- [x] Fuentes: autoalojadas (confirmado, sin CDN externo), `font-display: swap`, subconjunto
+      latino, precarga reducida de 6 a 2 archivos (los críticos arriba del pliegue) — hallazgo
+      real: se precargaban los 6 pesos configurados, compitiendo con la imagen del LCP
+- [x] CSS y JS: purga de Tailwind v4 activa, cero jQuery, **hallazgo real corregido**: Livewire
+      (126 KB) se cargaba en las 12 plantillas públicas aunque solo lo usa el buscador interno —
+      ahora es opt-in por plantilla (`x-layouts.app` con prop `livewire`)
+- [x] **Caché de respuesta** — implementada como caché de **consulta** (no de HTML completo, por
+      el riesgo de servir un CSRF viejo en páginas con bloque de formulario, ver `docs/09` §6),
+      con invalidación real al guardar/borrar `Page`/`Post` desde el panel. Home/listados con
+      filtros quedan sin caché de consulta, decisión documentada (sin tags en `file`/`database`)
+- [x] Caché de configuración, rutas y vistas en producción (`config:cache`, `route:cache`,
+      `view:cache`) — corridos localmente sin errores
+- [x] Eliminar consultas N+1 — encontradas y corregidas en `HomeController`, `PostController` y
+      el bloque "listado de noticias" del constructor de páginas, con test de regresión
+      (`DB::enableQueryLog()`)
+- [x] Índices de base de datos — 4 índices nuevos en `pages`/`announcements`/`galleries`/
+      `documents`, justificados contra consultas reales de los controllers públicos (migración
+      `2026_08_25_030000_add_performance_indexes.php`)
+- [ ] Compresión Gzip/Brotli y cabeceras de caché en Plesk — configuración de servidor real, no
+      aplica al entorno de desarrollo (Herd/Valet). Documentado como checklist de Fase 10
+- [x] Medición **antes y después**, con captura en `docs/09-rendimiento.md` y en
+      `docs/rendimiento-capturas/` (Lighthouse HTML + JSON completos, 6 archivos)
+
+**Hallazgo de seguridad real durante esta fase, no bloqueante pero relevante:**
+`config('cache.serializable_classes')` (Laravel 13, default `false`) hacía que **toda** lectura
+desde la caché de consulta con el driver `database` devolviera un objeto roto
+(`__PHP_Incomplete_Class`) y tirara 500 — reproducido, confirmado con test y corregido con una
+allowlist explícita de clases en vez de desactivar la protección por completo. Detalle en
+`docs/09-rendimiento.md` §6.
 
 **DoD:** PageSpeed Insights móvil ≥ 90 en home, una página institucional y un detalle de noticia.
+**Cumplido con reserva:** Lighthouse móvil ≥ 90 en las tres (90/98/97), pero el LCP de Home queda
+en 3.6 s (objetivo < 2.5 s) — no bloqueante para el DoD tal como está redactado (pide Lighthouse,
+no LCP puntual), documentado como pendiente explícito en `docs/09-rendimiento.md` §10. Suite de
+tests: 136/136 en verde (129 antes de esta fase + 7 nuevos), Pint y Larastan (nivel 5) sin
+hallazgos.
+
+**Cerrada 2026-08-25.** Quedan como **mejoras futuras**, explícitamente no bloqueantes, decisión
+del usuario al cerrar: LCP de Home a < 2.5 s (hoy 3.6 s), AVIF además de WebP, reducir de 4 a
+menos pesos de fuente precargados, CSS crítico inline, y la revisión de compresión
+Gzip/Brotli/HTTP2/OPcache/CDN en el Plesk real — esta última no se puede hacer sin el servidor
+de producción, se retoma en la Fase 10 (despliegue).
 
 ---
 
-## Fase 8 — Seguridad
+## Fase 8 — Seguridad ✅ cerrada 2026-08-25
 **Objetivo:** que no vuelva a pasar lo del WordPress.
 **Entregable:** `docs/10-seguridad.md`
 **Estimado:** 12–18 h
 **Herramienta:** `strix` (solo contra nuestro staging, con autorización escrita)
 
-- [ ] Cabeceras: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
-      `Permissions-Policy`
-- [ ] Panel admin: 2FA obligatorio, sesiones con expiración, `throttle` en login, bloqueo por
-      intentos fallidos, y ruta del panel no adivinable
-- [ ] Validación estricta de toda entrada (Form Requests). Sanitización del HTML del editor
-      con lista blanca en el servidor
-- [ ] Subida de archivos: lista blanca de tipos MIME reales (no por extensión), tamaño máximo,
-      nombres aleatorios, almacenamiento fuera de la raíz web, SVG sanitizados
-- [ ] `APP_DEBUG=false` en producción, sin `.env` accesible, sin listado de directorios,
-      sin `/storage` expuesto de más
-- [ ] Rate limiting en formularios y endpoints públicos
-- [ ] **Respaldos automáticos** (base + medios) con `spatie/laravel-backup`, fuera del mismo
-      servidor, y **prueba de restauración documentada** (un backup no probado no es un backup)
-- [ ] Registro de auditoría del panel activo y consultable
-- [ ] Monitoreo de disponibilidad y alerta ante caída
-- [ ] Proceso de actualización de dependencias: `composer audit` + `npm audit` mensual, agendado
-- [ ] **Pentest con strix** contra el staging. Corregir todo lo Crítico y Alto antes de salir a
-      producción. Documentar hallazgos y correcciones
-- [ ] Verificar que el `.git` no queda expuesto en producción
+- [x] Cabeceras: CSP, HSTS, `X-Frame-Options`, `X-Content-Type-Options`, `Referrer-Policy`,
+      `Permissions-Policy` — no existía ninguna antes de esta fase, verificadas con
+      `curl -I` real. HSTS solo se envía bajo HTTPS (Fase 10), ver `docs/10-seguridad.md` §1
+- [x] Panel admin: 2FA obligatorio (nativo Filament 5), sesiones con expiración, `throttle`
+      en login (nativo, verificado), y ruta del panel no adivinable — confirmados.
+      **Hallazgo real:** `.env` local con `DANTE_REQUIRE_2FA=false`, aceptado para
+      desarrollo con segunda línea de defensa (log crítico si ocurre en producción).
+      Política de contraseñas (mínimo 12 + verificación contra filtraciones) no existía,
+      agregada en esta fase — ver `docs/10-seguridad.md` §2
+- [x] Validación estricta de toda entrada (Form Requests) confirmada. Sanitización del HTML
+      del editor con lista blanca en el servidor confirmada (ya cerrada en Fase 3), y los
+      `{!! !!}` del proyecto auditados uno por uno — ver `docs/10-seguridad.md` §3
+- [x] Subida de archivos: MIME real, tamaño máximo y nombres aleatorios ya cumplían.
+      **2 hallazgos Altos reales corregidos en esta fase:** las imágenes no se
+      reprocesaban (solo se copiaba el original) y el directorio de medios no tenía
+      ninguna regla propia contra ejecución de PHP — ver `docs/10-seguridad.md` §4
+- [x] `APP_DEBUG=false` confirmado como default de producción (verificación en servidor
+      real queda para Fase 10), `.env`/`.git` no accesibles (`curl` → 404), sin listado de
+      directorios. **Corregido:** `.gitignore` no cubría `.env.*` en general — ver
+      `docs/10-seguridad.md` §5
+- [x] Rate limiting: buscador y login ya cumplían. **Hallazgo Medio corregido:**
+      formularios públicos tenían `throttle:5,1` (5/min, 60x más laxo que la política
+      documentada de 3/hora) — corregido a `throttle:5,60`
+- [x] **Respaldos automáticos** — `spatie/laravel-backup` **no estaba instalado**
+      (hallazgo Alto). Instalado y configurado en esta fase (base + medios, diario,
+      retención 30 días, cifrado, destino configurable) y **prueba de restauración real
+      hecha y documentada** (2026-08-25, conteos de tablas/filas idénticos entre origen y
+      restaurado) — ver `docs/10-seguridad.md` §7. Destino off-site real queda para
+      Fase 10
+- [x] Registro de auditoría del panel activo y consultable — ya existía de la Fase 3,
+      confirmado con test
+- [~] Monitoreo de disponibilidad — depende de un servicio externo real (ej. UptimeRobot),
+      no se puede configurar sin dominio/cuenta del cliente. Documentado como pendiente
+      explícito de Fase 10, no simulado
+- [x] Proceso de actualización de dependencias: `composer audit` + `npm audit`, ambos en
+      **0 vulnerabilidades**. Agregado `composer audit-deps`. Falta agendarlo mensual de
+      forma real (CI en Fase 9 / cron de Plesk en Fase 10)
+- [~] **Pentest con strix** — **no se pudo ejecutar en esta sesión**: Docker ya se dejó
+      corriendo y el CLI de Strix (v1.5.3) está instalado, pero faltó una API key de LLM
+      (Anthropic/OpenAI) que el usuario no tenía a mano en el momento. Documentado sin
+      simular resultado, con los comandos exactos para correrlo apenas exista la key. En su
+      lugar, revisión manual dirigida por el mismo checklist contra `dante-web.test`
+      (autorizado por el usuario como sustituto temporal del staging que no existe
+      todavía) — 9 hallazgos reales (4 Altos, 4 Medios, 1 Bajo), todos corregidos o
+      mitigados salvo el pentest automatizado en sí — ver `docs/10-seguridad.md` §10
+- [x] Verificado que `.git` no se sirve — `curl` → 404 en local; regla de servidor para
+      Plesk real queda en el checklist de la Fase 10
 
-**DoD:** cero hallazgos Críticos o Altos abiertos, y el backup se restauró con éxito al menos una vez.
+**DoD:** cero hallazgos Críticos o Altos abiertos, y el backup se restauró con éxito al menos
+una vez. **Backup restaurado con éxito, verificado con conteos (§7 de `docs/10-seguridad.md`).
+Cero hallazgos Críticos.** Los 4 Altos encontrados en la revisión manual de esta sesión están
+corregidos y re-verificados.
+
+**Cerrada 2026-08-25**, con el pentest automatizado real de Strix contra un staging como
+**pendiente explícito y no bloqueante** (decisión del usuario): faltó solo la API key de LLM en
+esta sesión (Docker y el CLI ya están listos); se retoma apenas exista la key, o en la Fase 10
+contra el Plesk real — lo que ocurra primero.
 
 ---
 
-## Fase 9 — QA y testing
+## Fase 9 — QA y testing ✅ cerrada 2026-08-25
 **Objetivo:** encontrar los problemas antes que el cliente.
 **Entregable:** `docs/11-qa-testing.md`
 **Estimado:** 14–20 h
 **Herramienta:** `playwright-cli` (⚠️ solo credenciales de prueba)
 
-- [ ] **Pest**: tests feature de cada CRUD del panel, de autenticación, de permisos por rol,
-      de envío de formularios y de las rutas públicas principales
-- [ ] **Playwright E2E**: recorridos completos de las 5 tareas críticas de la Fase 1, en móvil
-      y escritorio
-- [ ] Cobertura mínima: 100 % de las rutas del panel tocadas por al menos un test
-- [ ] **Accesibilidad**: axe sobre cada plantilla, navegación completa por teclado, prueba con
-      lector de pantalla en las páginas principales, objetivo WCAG 2.1 AA
-- [ ] **Compatibilidad**: Chrome, Firefox, Safari, Edge + iOS Safari y Chrome Android reales
-- [ ] Verificación de contenido: enlaces rotos, imágenes faltantes, ortografía, datos de
-      contacto correctos
-- [ ] Prueba de los formularios de punta a punta: llega el mail, se guarda el registro, el
-      captcha bloquea el bot, el honeypot funciona
+- [x] **Pest**: tests feature de cada CRUD del panel, de autenticación, de permisos por rol,
+      de envío de formularios y de las rutas públicas principales — 192/192 en verde (137
+      antes de esta fase + 55 nuevos), incluida la cobertura que faltaba de pre-inscripción, de
+      autorización real de borrado por rol (no solo el botón oculto) y del 2FA por email
+- [x] **Playwright E2E**: recorridos completos de las 5 tareas críticas de la Fase 1, en móvil
+      y escritorio — 40/40, en Desktop Chrome/Firefox/Safari(WebKit) + Mobile Chrome/Safari
+- [x] Cobertura mínima: 100 % de las rutas del panel tocadas por al menos un test — 47 rutas
+      de `panel-dante-2026`, 15 recursos + auth, todos con al menos un test
+- [x] **Accesibilidad**: axe sobre cada plantilla (13/13 sin violaciones), navegación completa
+      por teclado (skip link, menú móvil, tab order de formulario), objetivo WCAG 2.1 AA — 3
+      hallazgos reales encontrados y corregidos (contraste del 404, skip link sin foco, menú
+      móvil cerrado igual tabulable). Prueba con lector de pantalla real (VoiceOver/NVDA)
+      **no hecha** — requiere un operador humano, ver `docs/11-qa-testing.md` §3
+- [~] **Compatibilidad**: Chrome, Firefox, Safari cubiertos con los motores reales de
+      Playwright (Chromium/Firefox/WebKit). Edge no aporta cobertura distinta de Chrome (mismo
+      motor). iOS Safari y Chrome Android **reales no disponibles en esta sesión** (sin
+      hardware) — sustituidos por los proyectos móviles de Playwright, no equivalentes al
+      dispositivo físico
+- [x] Verificación de contenido: enlaces rotos (0), imágenes faltantes (0), datos de contacto
+      correctos (verificados contra Fase 5/6) — ortografía completa no automatizada (ver
+      `docs/11-qa-testing.md` §5)
+- [x] Prueba de los formularios de punta a punta: llega el mail (`Notification::fake`), se
+      guarda el registro, el captcha bloquea (Turnstile, 4 escenarios), el honeypot funciona —
+      para **ambos** formularios (Contacto y Pre-inscripción, este último sin cobertura antes
+      de esta fase)
 - [ ] **Prueba de aceptación con el cliente** sobre staging, con lista de verificación firmada
-- [ ] Registro y cierre de todos los defectos encontrados
+      — no hecha, no hay staging ni cliente presente en esta sesión (Fase 10)
+- [x] Registro y cierre de todos los defectos encontrados — `docs/11-qa-testing.md` §8, 9
+      defectos reales: **7 cerrados** (3 de accesibilidad, 1 hueco de test de formulario, 1
+      hueco de test de autorización, CI agregado, y los 2 mayores que habían quedado abiertos
+      por decisión — honeypot sin mensaje claro y 2FA sin test automatizado, resueltos al
+      reemplazar el 2FA por TOTP obligatorio por 2FA por email opt-in a pedido del cliente, ver
+      ADR-003). Queda **1 menor abierto**, no bloqueante (structured data sin teléfono/dirección
+      — bloqueado por dato pendiente del cliente, pregunta #19)
 
 **DoD:** suite verde en CI, cero defectos bloqueantes abiertos, cliente aprobó en staging.
+**Cumplido en lo que depende de este entorno:** CI en verde (`.github/workflows/ci.yml`),
+cero defectos bloqueantes ni mayores abiertos. **Pendiente, no bloqueante:** la aceptación del
+cliente en staging real no se pudo hacer (no hay staging desplegado todavía) — se hace en la
+Fase 10, junto con la verificación en dispositivos físicos reales (iOS/Android).
+
+**Cerrada 2026-08-25** por decisión del usuario, con esos dos pendientes explícitos movidos a
+la Fase 10.
 
 ---
 
@@ -413,26 +552,49 @@ colisión justificada por escrito, o ya estaba clasificada "revisar"/"descartar"
 **Entregable:** `docs/12-deploy-plesk.md`
 **Estimado:** 10–14 h
 
-- [ ] Staging en el Plesk, idéntico a producción, con `noindex` y protegido por contraseña
-- [ ] Procedimiento de despliegue documentado y repetible (script o Deployer)
-- [ ] Variables de entorno de producción, `APP_KEY` propia, `APP_ENV=production`
-- [ ] Cron de Plesk → `php artisan schedule:run` cada minuto
-- [ ] Colas: si no hay Supervisor, `queue:work` vía cron con `--max-time`
-- [ ] SSL Let's Encrypt + redirección forzada a HTTPS + www/no-www unificado
+> **Arrancada 2026-08-26, en curso.** Esta fase necesita acceso real al Plesk y al DNS del
+> dominio (pregunta #13, abierta desde la Fase 0) para su mitad — no se puede simular ni
+> ejercitar sin eso. Se adelantó todo lo que sí se puede dejar listo sin tocar un servidor
+> real; el resto queda explícitamente bloqueado hasta tener las credenciales.
+
+- [ ] Staging en el Plesk, idéntico a producción, con `noindex` y protegido por contraseña —
+      **bloqueado, requiere acceso al Plesk (pregunta #13)**
+- [x] Procedimiento de despliegue documentado y repetible — `scripts/deploy-plesk.sh` (nuevo:
+      script real, no solo comandos en el doc), 9 pasos con manejo de errores (`trap` que
+      levanta el sitio de mantenimiento si algo falla a mitad de camino)
+- [x] Variables de entorno de producción — `app/.env.production.example` (nuevo), corregido
+      contra el estado real del código (ya no lista GTM/Meta/Turnstile como variables de
+      entorno, eso se movió al panel en la Fase 6 — el doc viejo había quedado desactualizado)
+- [ ] Cron de Plesk → `php artisan schedule:run` cada minuto — comando documentado
+      (`docs/12-deploy-plesk.md` §5), **no se puede dar de alta sin el Plesk real**
+- [ ] Colas: si no hay Supervisor, `queue:work` vía cron con `--max-time` — comando
+      documentado, mismo bloqueo
+- [ ] SSL Let's Encrypt + redirección forzada a HTTPS + www/no-www unificado — **bloqueado,
+      requiere el Plesk real**
 - [ ] **Congelamiento de contenido**: el cliente deja de editar el WordPress. Migración final
-      del delta de contenido
+      del delta de contenido — pendiente de coordinar fecha con el cliente
 - [ ] **Cutover**: cambiar solo el registro A/web. **No tocar los MX ni el registro de correo**
-      — el mail sigue en HostGator
+      — el mail sigue en HostGator — **bloqueado, requiere acceso al DNS**
 - [ ] Verificación post-cutover: SSL, 301s, formularios, analytics recibiendo datos, sitemap,
-      backups corriendo
-- [ ] Bajar el WordPress viejo, conservando una copia offline del sitio y la base
-- [ ] **Manual del cliente**: cómo usar el panel, en español, con capturas. Y una sesión de
-      capacitación grabada
-- [ ] Acuerdo de mantenimiento: qué cubre, con qué frecuencia se actualiza, a quién se llama
-- [ ] Monitoreo activo la primera semana
+      backups corriendo — checklist ya escrito (`docs/12-deploy-plesk.md` §6), se ejecuta
+      recién en el cutover real
+- [ ] Bajar el WordPress viejo, conservando una copia offline del sitio y la base — pendiente
+      del cutover real
+- [x] **Manual del cliente**: cómo usar el panel, en español, con capturas — hecho,
+      `docs/manual-cliente/manual-panel-dante.md`, 9 capturas reales del panel local (login,
+      escritorio, páginas, editor de bloques, noticias, medios, menús, formularios recibidos,
+      2FA). **Recapturar las pantallas** una vez que el contenido de producción esté cargado
+      (hoy se ven datos de prueba de QA en el listado). La sesión de capacitación grabada
+      sigue pendiente — requiere agendar con el cliente presente
+- [ ] Acuerdo de mantenimiento: qué cubre, con qué frecuencia se actualiza, a quién se llama —
+      estructura del documento lista (`docs/12-deploy-plesk.md` §8), **faltan las decisiones
+      comerciales** (precio, horas de soporte mensuales incluidas) que solo puede tomar
+      Leonardo, no se inventan acá
+- [ ] Monitoreo activo la primera semana — depende de que el sitio esté en línea
 
 **DoD:** `dante.edu.py` sirve el sitio nuevo, el correo sigue funcionando, y el cliente sabe
-usar su panel.
+usar su panel. **No cumplido — en curso.** Lo que dependía solo de código/documentación está
+listo; lo que depende de acceso real al Plesk/DNS y de decisiones comerciales, no.
 
 ---
 

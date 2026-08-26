@@ -18,6 +18,7 @@ class NewsList extends Component
     public function __construct(int $count = 3)
     {
         $this->posts = Post::query()
+            ->with(['category', 'featuredMedia'])
             ->where('status', 'published')
             ->orderByDesc('published_at')
             ->limit($count)

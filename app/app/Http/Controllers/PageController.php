@@ -3,16 +3,25 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use App\Services\Cache\PublicContentCache;
 use Illuminate\View\View;
 
 class PageController extends Controller
 {
     public function show(string $slug): View
     {
-        $page = Page::query()
-            ->where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
+        // Caché de consulta (no de respuesta HTTP completa, ver el porqué en
+        // PublicContentCache) — invalidada al guardar/borrar desde el panel.
+        $page = PublicContentCache::rememberPageBySlug(
+            $slug,
+            fn () => Page::query()
+                ->with(['coverMedia', 'seoImage'])
+                ->where('slug', $slug)
+                ->where('status', 'published')
+                ->first()
+        );
+
+        abort_if($page === null, 404);
 
         $breadcrumbs = $this->breadcrumbsFor($page);
         $blocks = $page->blocksForLocale();
@@ -39,7 +48,7 @@ class PageController extends Controller
         $node = $page;
 
         while ($node !== null) {
-            $trail[] = ['label' => $node->title, 'url' => '/'.$node->slug];
+            $trail[] = ['label' => $node->title, 'url' => $node->status === 'published' ? '/'.$node->slug : null];
             $node = $node->parent;
         }
 

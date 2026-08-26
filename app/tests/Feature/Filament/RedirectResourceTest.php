@@ -31,3 +31,12 @@ it('crea una redirección 301', function () {
 
     expect(Redirect::query()->where('from_path', '/pagina-vieja')->exists())->toBeTrue();
 });
+
+it('un rol sin permiso sobre redirecciones no puede ver el listado', function () {
+    $editorGeneral = User::factory()->create(['is_active' => true]);
+    $editorGeneral->assignRole('editor_general');
+
+    $this->actingAs($editorGeneral);
+
+    $this->livewire(ListRedirects::class)->assertForbidden();
+});

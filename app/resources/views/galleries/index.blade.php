@@ -1,7 +1,8 @@
 <x-layouts.app title="Galería — Colegio Dante Alighieri" description="Fotos de actividades y eventos del Colegio Dante Alighieri.">
-    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => url('/vida-escolar')], ['label' => 'Galería', 'url' => null]]" />
-    <main id="contenido" class="container section">
+    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => \App\Models\Page::publishedUrl('vida-escolar')], ['label' => 'Galería', 'url' => null]]" />
+    <main id="contenido" tabindex="-1" class="container section">
         <h1>Galería</h1>
+        <p class="body-lg" style="color:var(--color-neutral-700);margin-top:var(--spacing-2)">Fotos de las actividades, eventos y celebraciones del colegio a lo largo del año.</p>
 
         @if($galleries->isEmpty())
             <x-empty-state icon="image">No hay álbumes publicados todavía.</x-empty-state>

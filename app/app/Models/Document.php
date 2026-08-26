@@ -35,6 +35,9 @@ class Document extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /**
+     * @return BelongsTo<Media, $this>
+     */
     public function file(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'media_id');

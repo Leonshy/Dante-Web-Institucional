@@ -15,6 +15,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use UnitEnum;
 
 class GalleryResource extends Resource
 {
@@ -23,6 +24,10 @@ class GalleryResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedPhoto;
 
     protected static ?string $navigationLabel = 'Galería';
+
+    protected static string|UnitEnum|null $navigationGroup = 'Contenido';
+
+    protected static ?int $navigationSort = 12;
 
     public static function form(Schema $schema): Schema
     {

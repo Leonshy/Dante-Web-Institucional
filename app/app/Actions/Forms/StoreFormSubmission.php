@@ -5,6 +5,8 @@ namespace App\Actions\Forms;
 use App\Models\FormSubmission;
 use App\Models\SiteSetting;
 use App\Notifications\NewFormSubmissionNotification;
+use App\Services\Integrations\MetaConversionsApi;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 
 /**
@@ -13,7 +15,12 @@ use Illuminate\Support\Facades\Notification;
  */
 class StoreFormSubmission
 {
-    public function handle(string $type, array $data, ?string $ip): FormSubmission
+    public function __construct(private readonly MetaConversionsApi $metaConversionsApi) {}
+
+    /**
+     * @return array{submission: FormSubmission, meta_event_id: ?string}
+     */
+    public function handle(string $type, array $data, ?string $ip, ?Request $request = null): array
     {
         $submission = FormSubmission::query()->create([
             'type' => $type,
@@ -33,6 +40,19 @@ class StoreFormSubmission
                 ->notify(new NewFormSubmissionNotification($submission));
         }
 
-        return $submission;
+        // Solo se manda a Meta si el visitante aceptó cookies de marketing —
+        // la cookie la escribe `resources/js/consent.js` tras el banner
+        // (docs/08-seo.md §6, "Un banner que carga el pixel igual antes de
+        // aceptar no sirve de nada"): el mismo criterio aplica al lado servidor.
+        $marketingConsent = $request?->cookie('dante_consent_marketing') === '1';
+
+        $eventId = $marketingConsent
+            ? $this->metaConversionsApi->send('Lead', [
+                'email' => $data['email'] ?? null,
+                'phone' => $data['phone'] ?? null,
+            ], $request)
+            : null;
+
+        return ['submission' => $submission, 'meta_event_id' => $eventId];
     }
 }

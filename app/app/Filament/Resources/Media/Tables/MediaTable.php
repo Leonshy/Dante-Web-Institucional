@@ -24,6 +24,13 @@ class MediaTable
                 TextColumn::make('type')->label('Tipo')->badge(),
                 TextColumn::make('size')->label('Peso')->formatStateUsing(fn (int $state) => number_format($state / 1024, 0).' KB'),
                 TextColumn::make('created_at')->label('Subido')->dateTime('d/m/Y')->sortable(),
+                TextColumn::make('public_url')
+                    ->label('Enlace público')
+                    ->state(fn ($record): string => $record->url())
+                    ->limit(40)
+                    ->copyable()
+                    ->copyMessage('¡Enlace copiado!')
+                    ->icon('heroicon-o-link'),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([EditAction::make()])

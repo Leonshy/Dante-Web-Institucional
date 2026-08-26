@@ -5,7 +5,6 @@ namespace App\Filament\Resources\Menus;
 use App\Filament\Resources\Menus\Pages\CreateMenu;
 use App\Filament\Resources\Menus\Pages\EditMenu;
 use App\Filament\Resources\Menus\Pages\ListMenus;
-use App\Filament\Resources\Menus\RelationManagers\ItemsRelationManager;
 use App\Filament\Resources\Menus\Schemas\MenuForm;
 use App\Filament\Resources\Menus\Tables\MenusTable;
 use App\Models\Menu;
@@ -14,6 +13,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class MenuResource extends Resource
 {
@@ -22,6 +22,10 @@ class MenuResource extends Resource
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3;
 
     protected static ?string $navigationLabel = 'Menús';
+
+    protected static string|UnitEnum|null $navigationGroup = 'General';
+
+    protected static ?int $navigationSort = 5;
 
     protected static ?string $modelLabel = 'menú';
 
@@ -35,13 +39,6 @@ class MenuResource extends Resource
     public static function table(Table $table): Table
     {
         return MenusTable::configure($table);
-    }
-
-    public static function getRelations(): array
-    {
-        return [
-            ItemsRelationManager::class,
-        ];
     }
 
     public static function getPages(): array

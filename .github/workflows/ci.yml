@@ -1,0 +1,64 @@
+name: CI
+
+# Fase 9 (QA, docs/11-qa-testing.md §9): Pint, Larastan y Pest en cada push
+# y pull request contra main. La suite corre con SQLite en memoria — igual
+# que en local (phpunit.xml) — sin tocar ningún entorno real.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/ci.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'app/**'
+      - '.github/workflows/ci.yml'
+
+jobs:
+  quality-and-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configurar PHP 8.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, fileinfo, mysql, sqlite3, gd
+          coverage: none
+
+      - name: Instalar dependencias de Composer
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Configurar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: app/package-lock.json
+
+      - name: Instalar dependencias de npm
+        run: npm ci
+
+      - name: Compilar assets
+        run: npm run build
+
+      - name: Copiar .env de pruebas
+        run: cp .env.example .env
+
+      - name: Generar APP_KEY
+        run: php artisan key:generate
+
+      - name: Pint (PSR-12)
+        run: vendor/bin/pint --test
+
+      - name: Larastan (nivel 5)
+        run: vendor/bin/phpstan analyse --memory-limit=1G
+
+      - name: Pest
+        run: vendor/bin/pest --ci

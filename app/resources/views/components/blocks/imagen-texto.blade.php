@@ -12,7 +12,9 @@
             @if(!empty($data['title']))
                 <h2>{{ $data['title'] }}</h2>
             @endif
-            <div class="body">{!! $data['text'] ?? '' !!}</div>
+            @if(!empty($data['text']))
+                <div class="body">{!! $data['text'] !!}</div>
+            @endif
         </div>
     </div>
 </div>

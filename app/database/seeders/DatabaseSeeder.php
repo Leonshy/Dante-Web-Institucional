@@ -16,6 +16,8 @@ class DatabaseSeeder extends Seeder
             AdminUserSeeder::class,
             SiteSettingSeeder::class,
             PageTreeSeeder::class,
+            MenuSeeder::class,
+            LocationSeeder::class,
         ]);
     }
 }

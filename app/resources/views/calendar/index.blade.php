@@ -1,6 +1,6 @@
 <x-layouts.app title="Calendario académico — Colegio Dante Alighieri" description="Calendario académico del Colegio Dante Alighieri.">
-    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => url('/vida-escolar')], ['label' => 'Calendario académico', 'url' => null]]" />
-    <main id="contenido" class="container section">
+    <x-breadcrumbs :items="[['label' => 'Vida escolar', 'url' => \App\Models\Page::publishedUrl('vida-escolar')], ['label' => 'Calendario académico', 'url' => null]]" />
+    <main id="contenido" tabindex="-1" class="container section">
         <h1>Calendario académico</h1>
 
         @if($events->isEmpty())

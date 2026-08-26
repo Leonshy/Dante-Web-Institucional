@@ -32,5 +32,9 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!-- El default de 128M no alcanza para MediaUploadServiceTest (re-encodeo real de
+             imágenes con Intervention Image/GD, Fase 8) — sin esto, `php artisan test` sin
+             flags extra tira un fatal de memoria en vez de correr la suite. -->
+        <ini name="memory_limit" value="512M"/>
     </php>
 </phpunit>

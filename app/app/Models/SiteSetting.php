@@ -50,4 +50,14 @@ class SiteSetting extends Model
     {
         return (bool) self::get('italian_enabled', false);
     }
+
+    /**
+     * Mantenimiento del sitio público — no toca el panel (Fase 10, pedido del
+     * cliente): es un interruptor de contenido, no el `php artisan down` de
+     * infraestructura. `App\Http\Middleware\PublicMaintenanceMode` lo lee.
+     */
+    public static function maintenanceModeEnabled(): bool
+    {
+        return (bool) self::get('maintenance_mode', false);
+    }
 }

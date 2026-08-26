@@ -1,8 +1,26 @@
-// Punto de entrada JS del sitio público. Alpine.js llega empaquetado con
-// Livewire (@livewireScripts en resources/views/layouts/app.blade.php) — no
-// se suma una copia propia de Alpine para no duplicar el bundle (presupuesto
-// de <150KB JS comprimido en carga inicial, CLAUDE.md/docs/06-frontend.md).
-//
+import './consent.js';
+
+// Hallazgo real de Fase 9 (QA, docs/11-qa-testing.md §6), encontrado con
+// Playwright: la premisa original de este archivo ("Alpine.js llega
+// empaquetado con Livewire, no hace falta una copia propia") era falsa en la
+// práctica. Livewire es opt-in por plantilla desde la Fase 7
+// (docs/09-rendimiento.md §5, `x-layouts.app` con prop `livewire`) — home,
+// páginas institucionales, noticias, contacto, calendario, comunicados y
+// documentos NO cargan Livewire, así que tampoco cargaban Alpine. Resultado:
+// el botón de menú móvil (`x-data`/`@click` en site-header.blade.php) y el
+// banner de cookies (`alpine:init` en consent.js) quedaban completamente
+// inertes en casi todo el sitio público — el menú no abría en móvil en
+// ninguna plantilla salvo el buscador. Se agrega Alpine standalone (mucho
+// más liviano que el bundle completo de Livewire) y se arranca solo si
+// Livewire no lo hizo ya (evita una segunda instancia/doble inicialización
+// en la página del buscador, que sí carga Livewire).
+import Alpine from 'alpinejs';
+
+if (!window.Alpine) {
+    window.Alpine = Alpine;
+    Alpine.start();
+}
+
 // Motion real (docs/04-ui-design-system.md §5). Nada de esto anima nada si
 // `prefers-reduced-motion: reduce` está activo — el CSS ya lo desactiva a
 // nivel global (app.css), acá solo evitamos correr el conteo de cifras.

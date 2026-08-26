@@ -1,5 +1,5 @@
 <x-layouts.app title="Página no encontrada — Colegio Dante Alighieri" :indexable="false">
-    <main id="contenido">
+    <main id="contenido" tabindex="-1">
         <div class="not-found">
             <p class="code" aria-hidden="true">404</p>
             <h1>Esta página no existe</h1>

@@ -2,6 +2,9 @@
 
 namespace App\Filament\Resources\Galleries\Schemas;
 
+use App\Filament\Forms\Components\MediaPicker;
+use App\Filament\Tables\MediaLibraryTable;
+use App\Models\Gallery;
 use App\Models\SiteSetting;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Select;
@@ -40,13 +43,13 @@ class GalleryForm
                     ->required(),
             ]),
             Section::make('Fotos del álbum')->schema([
-                Select::make('media')
+                MediaPicker::make('media')
                     ->label('Fotos')
-                    ->relationship('media', 'name')
                     ->multiple()
-                    ->searchable()
-                    ->preload()
-                    ->helperText('Subí las fotos primero desde la sección Medios y elegilas acá.'),
+                    ->tableConfiguration(MediaLibraryTable::class)
+                    ->afterStateHydrated(function ($component, ?Gallery $record) {
+                        $component->state($record ? $record->media->pluck('id')->all() : []);
+                    }),
             ]),
             Section::make('Publicación')->schema([
                 Select::make('status')

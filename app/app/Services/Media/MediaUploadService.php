@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\AvifEncoder;
+use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\Encoders\PngEncoder;
 use Intervention\Image\Encoders\WebpEncoder;
 use Intervention\Image\ImageManager;
 
@@ -47,6 +50,16 @@ class MediaUploadService
             $clean = $this->svgSanitizer->sanitize($file->getContent());
             Storage::disk('media')->put($path, $clean);
             $svgSanitized = true;
+        } elseif ($type === 'image' && $realMime !== 'image/gif') {
+            // Reprocesar y volver a codificar el archivo original (no solo
+            // guardar una copia intacta) — destruye cualquier payload que
+            // viaje embebido en los bytes de la imagen (esteganografía,
+            // polyglots tipo GIF89a/PHP). El antecedente del WordPress
+            // comprometido incluía justamente un archivo "imagen" con
+            // código ejecutable embebido (docs/01 §C.6). GIF queda afuera
+            // porque Intervention Image no reencodea animaciones sin perder
+            // los frames; se acepta el riesgo documentado en docs/10-seguridad.md §4.
+            $this->reencodeAndStore($file, $path, $realMime);
         } else {
             Storage::disk('media')->putFileAs(
                 dirname($path) === '.' ? '' : dirname($path),
@@ -75,6 +88,21 @@ class MediaUploadService
             'conversions' => $conversions,
             'svg_sanitized' => $svgSanitized,
         ]);
+    }
+
+    private function reencodeAndStore(UploadedFile $file, string $path, string $mime): void
+    {
+        $manager = new ImageManager(new Driver);
+        $image = $manager->decodePath($file->getRealPath());
+
+        $encoder = match ($mime) {
+            'image/png' => new PngEncoder,
+            'image/webp' => new WebpEncoder(quality: 90),
+            'image/avif' => new AvifEncoder(quality: 80),
+            default => new JpegEncoder(quality: 90),
+        };
+
+        Storage::disk('media')->put($path, (string) $image->encode($encoder));
     }
 
     private function detectRealMime(UploadedFile $file): string

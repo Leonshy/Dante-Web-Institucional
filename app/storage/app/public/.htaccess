@@ -1,0 +1,30 @@
+# Segunda línea de defensa (Fase 8, docs/10-seguridad.md §4): aunque la
+# validación de MIME real + nombre aleatorio + reprocesamiento en
+# App\Services\Media\MediaUploadService ya descarta cualquier archivo
+# ejecutable, este directorio se sirve directo por el servidor web a través
+# del symlink `public/storage` (`php artisan storage:link`) — así que un bug
+# futuro en la validación no debe poder convertirse en ejecución de código.
+# Nunca confiar en una sola capa (antecedente: CLAUDE.md §2, WordPress
+# comprometido vía un archivo subido).
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phar|pl|py|cgi|asp|aspx|sh|exe)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order Deny,Allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+Options -ExecCGI -Indexes
+AddHandler default-handler .php .phtml .php3 .php4 .php5 .php7 .phar

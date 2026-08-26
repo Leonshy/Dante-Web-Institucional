@@ -22,6 +22,13 @@ class DocumentsTable
                 IconColumn::make('is_current')->label('Vigente')->boolean(),
                 TextColumn::make('status')->label('Estado')->badge(),
                 TextColumn::make('published_at')->label('Publicación')->date('d/m/Y')->sortable(),
+                TextColumn::make('public_url')
+                    ->label('Enlace público')
+                    ->state(fn ($record): ?string => $record->file?->url())
+                    ->limit(40)
+                    ->copyable()
+                    ->copyMessage('¡Enlace copiado!')
+                    ->icon('heroicon-o-link'),
             ])
             ->defaultSort('published_at', 'desc')
             ->filters([

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Turnstile;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PreRegistrationFormRequest extends FormRequest
@@ -19,6 +20,7 @@ class PreRegistrationFormRequest extends FormRequest
             'phone' => ['required', 'string', 'max:50'],
             'site' => ['required', 'in:asuncion,fernando-de-la-mora'],
             'message' => ['nullable', 'string', 'max:5000'],
+            'cf-turnstile-response' => [new Turnstile],
         ];
     }
 

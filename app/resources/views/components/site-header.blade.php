@@ -1,5 +1,5 @@
 @php
-    $primaryNav = config('navigation.primary');
+    $primaryNav = \App\Models\Menu::renderTree('primary');
     $italianEnabled = \App\Models\SiteSetting::italianEnabled();
 @endphp
 <div
@@ -29,8 +29,8 @@
         <div class="util-bar">
             <div class="container util-bar-inner">
                 <div class="lang-toggle" role="group" aria-label="Cambiar idioma del sitio">
-                    <button type="button" aria-pressed="{{ app()->getLocale() === 'es' ? 'true' : 'false' }}">ES</button>
-                    <button type="button" aria-pressed="{{ app()->getLocale() === 'it' ? 'true' : 'false' }}">IT</button>
+                    <a href="{{ route('locale.switch', 'es') }}" aria-current="{{ app()->getLocale() === 'es' ? 'true' : 'false' }}">ES</a>
+                    <a href="{{ route('locale.switch', 'it') }}" aria-current="{{ app()->getLocale() === 'it' ? 'true' : 'false' }}">IT</a>
                 </div>
                 <a class="icon-btn" href="{{ route('search.index') }}" aria-label="Buscar en el sitio">
                     <x-icon.search />
@@ -84,8 +84,16 @@
         </div>
     </header>
 
+    {{-- Hallazgo real de accesibilidad (Fase 9, E2E de teclado): el panel solo
+         se desplazaba fuera de pantalla con `transform` al cerrarse, sin
+         `display:none` ni equivalente — quedaba igual de "visible" para
+         Playwright/lectores de pantalla y sus enlaces seguían en el orden de
+         tabulación aunque estuvieran fuera de la vista. `inert` lo saca del
+         árbol de accesibilidad y del tab order mientras está cerrado, sin
+         tocar la animación de `transform` que ya existía. --}}
     <nav id="mobile-nav" class="mobile-nav" :class="{ 'is-open': mobileOpen }" aria-label="Principal"
          x-ref="mobileNav"
+         :inert="!mobileOpen"
          @keydown.escape.window="close()"
          @keydown.tab="trapTab($event)">
         <div class="mobile-nav-header">

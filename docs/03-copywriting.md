@@ -459,21 +459,34 @@ Estructura común de detalle: `h1` = título, fecha visible, imagen destacada, c
 - **CTA principal:** "Enviar mensaje"
 
 > Nota heredada del wireframe: la página actual tiene 4661 palabras — muy por encima de lo
-> típico. El copy de esta página se acota a datos de contacto, mapa y formulario; qué otro
-> contenido migrado (si lo hay) se reubica en otra sección depende de
-> `[PENDIENTE: pregunta #19]`.
+> típico. Resuelto en la Fase 5 (`docs/07-migracion-wordpress.md`): ese conteo era casi todo
+> ruido de atributos Divi, no texto editorial. El contenido real era una lista de contacto
+> estructurada por sede/área — ya cargada abajo, con dominio `dante.edu.py` (confirmado por
+> el cliente 2026-08-25). Dirección y horario siguen sin dato en ningún lado del WordPress
+> viejo (`[PENDIENTE: pregunta #19]`, parcial).
 
 | Elemento | Texto |
 |---|---|
 | `h1` | Contacto |
 | Bajada | Escríbanos o comuníquese directamente con la secretaría. |
+| Bajada 2 | El colegio atiende consultas académicas y administrativas por separado en cada sede — Asunción y Fernando de la Mora — y en el Instituto de Lengua Italiana. |
 | Etiqueta "Dirección" | `[COMPLETAR CON DATO REAL DE MIGRACIÓN]` |
-| Etiqueta "Teléfono" | `[COMPLETAR CON DATO REAL DE MIGRACIÓN]` |
-| Etiqueta "Email" | `[COMPLETAR CON DATO REAL DE MIGRACIÓN]` |
 | Etiqueta "Horario de atención" | `[COMPLETAR CON DATO REAL DE MIGRACIÓN]` |
+| Sede Asunción — Académico | colegioasu@dante.edu.py |
+| Sede Asunción — Administrativo | administracionasu@dante.edu.py |
+| Sede Asunción — Teléfono | +595 (21) 491 622 · +595 984 464500 |
+| Sede Fernando de la Mora — Académico | administracionfdo@dante.edu.py |
+| Sede Fernando de la Mora — Administrativo | secret.dante.fdo@hotmail.com |
+| Sede Fernando de la Mora — Teléfono | +595 (21) 500 370 · +595 984 464501 |
+| Instituto de Lengua Italiana — Email | institutoda@dante.edu.py |
+| Instituto de Lengua Italiana — Teléfono | +595 974 812022 |
 | Título del formulario | Escríbanos |
 | SEO título | Contacto — Colegio Dante Alighieri |
 | SEO descripción | Dirección, teléfono y formulario de contacto del Colegio Dante Alighieri en Asunción. |
+
+> Los emails de arriba llegaron en el dump de WordPress con el dominio `dante.webparaguay.com`
+> (del proveedor) — el cliente confirmó 2026-08-25 que ese dominio era solo el entorno de
+> desarrollo, así que se cargaron con `dante.edu.py`, igual que el resto del sitio.
 
 ---
 

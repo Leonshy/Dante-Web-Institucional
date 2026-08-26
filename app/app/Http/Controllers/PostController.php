@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Services\Cache\PublicContentCache;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -14,6 +15,7 @@ class PostController extends Controller
         $categorySlug = $request->string('categoria')->toString() ?: null;
 
         $posts = Post::query()
+            ->with(['category', 'featuredMedia'])
             ->where('status', 'published')
             ->when($categorySlug, fn ($q) => $q->whereHas('category', fn ($c) => $c->where('slug', $categorySlug)))
             ->orderByDesc('published_at')
@@ -36,12 +38,19 @@ class PostController extends Controller
 
     public function show(string $slug): View
     {
-        $post = Post::query()
-            ->where('slug', $slug)
-            ->where('status', 'published')
-            ->firstOrFail();
+        $post = PublicContentCache::rememberPostBySlug(
+            $slug,
+            fn () => Post::query()
+                ->with(['category', 'featuredMedia'])
+                ->where('slug', $slug)
+                ->where('status', 'published')
+                ->first()
+        );
+
+        abort_if($post === null, 404);
 
         $related = Post::query()
+            ->with(['category', 'featuredMedia'])
             ->where('status', 'published')
             ->where('id', '!=', $post->id)
             ->when($post->category_id, fn ($q) => $q->where('category_id', $post->category_id))

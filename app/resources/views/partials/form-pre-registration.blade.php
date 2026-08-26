@@ -1,6 +1,9 @@
 @if(session('status'))
     <x-alert variant="success">{{ session('status') }}</x-alert>
 @endif
+@if(session('form_error'))
+    <x-alert variant="danger">{{ session('form_error') }}</x-alert>
+@endif
 
 <form class="form-card" method="POST" action="{{ route('forms.pre-registration') }}" aria-label="Formulario de pre-inscripción" novalidate>
     @csrf
@@ -13,6 +16,8 @@
     <x-form.text name="phone" label="Teléfono" type="tel" autocomplete="tel" required />
     <x-form.select name="site" label="Sede" required :options="['asuncion' => 'Asunción', 'fernando-de-la-mora' => 'Fernando de la Mora']" />
     <x-form.textarea name="message" label="Mensaje (opcional)" :required="false" />
+
+    <x-turnstile-widget />
 
     <p class="caption">La secretaría se comunica para coordinar la entrega de documentación.</p>
     <x-button variant="primary" type="submit" style="margin-top:var(--spacing-4)">Enviar pre-inscripción</x-button>
