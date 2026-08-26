@@ -26,6 +26,12 @@
 set -euo pipefail
 
 php_bin="${PHP_BIN:-php}"
+# Hallazgo real (Fase 10, Plesk de webparaguay): el `composer` global del
+# servidor resuelve al PHP de sistema (5.4, viejísimo), no al 8.3 del sitio —
+# "Composer 2.3.0 dropped support for PHP <7.2.5". Por eso NO se usa el
+# comando `composer` a secas; se invoca el .phar directo con el PHP correcto.
+# Sobreescribible con COMPOSER_CMD si el Plesk destino no tiene este problema.
+composer_cmd="${COMPOSER_CMD:-$php_bin /usr/local/psa/var/modules/composer/composer.phar}"
 app_dir="app"
 
 if [ ! -d "$app_dir" ] || [ ! -f "$app_dir/artisan" ]; then
@@ -57,7 +63,7 @@ echo "==> 3/8 Dependencias de Composer (sin dev, autoloader optimizado)"
 # paquetes de dev que ya no están instalados ("Laravel\Pail\PailServiceProvider
 # not found") — se limpia antes de reinstalar para no arrastrar ese estado.
 rm -f bootstrap/cache/packages.php bootstrap/cache/services.php
-composer install --no-dev --optimize-autoloader --no-interaction
+$composer_cmd install --no-dev --optimize-autoloader --no-interaction
 
 echo "==> 4/8 Migraciones"
 "$php_bin" artisan migrate --force
