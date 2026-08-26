@@ -69,40 +69,49 @@ cargan a mano en el `.env` del servidor o vía el gestor de variables del Plesk.
 
 ## 4. Procedimiento de despliegue
 
-**Script real, no solo documentado:** `scripts/deploy-plesk.sh` (nuevo en esta sesión). Corre
-los 9 pasos (mantenimiento → git pull → composer → assets → migraciones → cachés →
-storage:link → permisos → verificación) con `set -euo pipefail` y un `trap` que **levanta el
-sitio de mantenimiento automáticamente si cualquier paso falla** — nunca se queda colgado en
-mantenimiento por un error a mitad de camino.
+**Desde el 2026-08-26 el despliegue es por Git, no por `tar`/`scp` manual.** El repo
+(`github.com/Leonshy/Dante-Web-Institucional`, público) está clonado en el servidor en
+`~/dante-web-institucional`, y `~/dante-app` (la ruta que ya conocía Plesk) es un **symlink**
+a `~/dante-web-institucional/app` — no una copia separada. Esto reemplazó el método anterior
+de armar un `.tar.gz` a mano y extraerlo (`scripts/package-for-staging.sh`, ya eliminado).
+
+**Restricción real que no cambia:** el Node del Plesk es demasiado viejo para compilar Vite, y
+además el cliente pidió explícitamente que el build compilado (`public/build/`) **nunca** se
+suba a GitHub — son binarios, no código fuente. Por eso el despliegue son **dos scripts
+separados**, uno por Git y otro por scp, y se pueden correr en cualquier orden:
 
 ```bash
-# Uso normal (Node disponible en el Plesk, build de assets en el servidor):
-cd /ruta/al/proyecto/app
-./scripts/deploy-plesk.sh
+# 1. En el servidor (por SSH): trae el código y todo lo demás por `git pull`.
+#    Nunca compila nada — no toca `public/build`.
+cd ~/dante-web-institucional && ./scripts/deploy-plesk.sh
 
-# Si el Plesk NO tiene Node — build local, se suben los assets ya construidos:
-SKIP_ASSET_BUILD=1 ./scripts/deploy-plesk.sh
+# 2. Desde la máquina LOCAL: compila los assets acá y los sube por scp,
+#    directo a la carpeta public/ del servidor. Nunca pasa por GitHub.
+./scripts/push-assets.sh dante.webparaguay.co_cln9tief7cu@177.251.252.12 \
+    53931 ~/dante-web-institucional/app/public
 ```
 
-- [x] Procedimiento probado en staging real (`dante.webparaguay.com`) — 2026-08-26, dos
-      despliegues (instalación inicial + un redeploy de código)
-- [ ] Plan de reversión: `git checkout <commit-anterior>` + repetir el script (las migraciones
-      de este proyecto son reversibles, `php artisan migrate:rollback --force` si hace falta
-      deshacer el esquema) + restaurar el backup de la base tomado antes del deploy si el
-      rollback de esquema no alcanza
+`deploy-plesk.sh` corre mantenimiento → `git pull origin main` → composer (sin dev) →
+migraciones → cachés → `storage:link` → permisos → verificación, con `set -euo pipefail` y un
+`trap` que **levanta el sitio de mantenimiento automáticamente si cualquier paso falla** —
+nunca se queda colgado en mantenimiento por un error a mitad de camino.
 
-**Nota real — todavía no hay `git pull` configurado en el servidor** (sin auth de Git
-resuelta aún), así que el despliegue de hoy se hizo con `scripts/package-for-staging.sh`
-(nuevo) + `scp` + extracción manual, no con `scripts/deploy-plesk.sh` tal cual. Mismo
-resultado, procedimiento documentado en ese script.
+- [x] Procedimiento por Git probado en staging real (`dante.webparaguay.com`) — 2026-08-26:
+      clonado el repo, migrado `~/dante-app` a symlink, `git pull` confirmado funcionando sin
+      credenciales (repo público), assets subidos por `push-assets.sh` y verificados en el
+      navegador (home, panel, Escritorio, Sedes, selector de idioma)
+- [ ] Plan de reversión: `git checkout <commit-anterior>` en el servidor + repetir el script
+      (las migraciones de este proyecto son reversibles, `php artisan migrate:rollback --force`
+      si hace falta deshacer el esquema) + restaurar el backup de la base tomado antes del
+      deploy si el rollback de esquema no alcanza
 
-**Hallazgo real durante el redeploy de hoy:** el primer paquete armado a mano incluía
-`public/storage` — el symlink que crea `php artisan storage:link` en local, apuntando a una
-ruta del disco de esta máquina — y al extraerse en el servidor **pisó el symlink correcto**,
-dejando los 129 medios migrados con `403`. `tar` no respeta `.gitignore` (ahí `/public/storage`
-sí está excluido), así que el día que exista `git pull` real este problema no puede repetirse;
-mientras tanto, `package-for-staging.sh` lo excluye a mano y `deploy-plesk.sh` siempre borra y
-recrea el symlink en vez de confiar en que `storage:link` detecte uno roto.
+**Hallazgo real del primer despliegue manual (previo a este cambio, ya resuelto):** un paquete
+armado a mano con `tar` incluía `public/storage` — el symlink que crea `php artisan
+storage:link` en local, apuntando a una ruta de disco de esa máquina — y al extraerse en el
+servidor pisó el symlink correcto, dejando los medios migrados con `403`. Con Git esto no
+puede repetirse (`/public/storage` está en `.gitignore`, `git pull` nunca lo toca), pero
+`deploy-plesk.sh` igual borra y recrea el symlink en cada corrida en vez de confiar en que
+`storage:link` detecte uno roto.
 
 ---
 
