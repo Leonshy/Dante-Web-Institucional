@@ -75,6 +75,27 @@ cargan a mano en el `.env` del servidor o vía el gestor de variables del Plesk.
 a `~/dante-web-institucional/app` — no una copia separada. Esto reemplazó el método anterior
 de armar un `.tar.gz` a mano y extraerlo (`scripts/package-for-staging.sh`, ya eliminado).
 
+**El servidor solo baja el sitio, no la documentación del proyecto** (pedido del cliente): el
+repo tiene `PLAN.md`, `CLAUDE.md`, `docs/`, etc. en la raíz, que son información de referencia
+del proyecto, no parte de lo que hay que desplegar. El clon del servidor usa
+`git sparse-checkout` para traer solo `app/` (el sitio) y los dos scripts de deploy —
+`docs/`, `_insumos/` (además ya ignorado por git), `PLAN.md`, `CLAUDE.md`, etc. nunca se
+materializan como archivos ahí, aunque técnicamente sigan existiendo dentro de `.git/` como
+parte del historial versionado (no hay forma de clonar "solo una carpeta" sin traer el
+historial completo del repo salvo con un repo separado). Configuración (una sola vez, ya
+hecha en staging):
+
+```bash
+cd ~/dante-web-institucional
+git config core.sparseCheckout true
+printf 'app/*\nscripts/deploy-plesk.sh\nscripts/push-assets.sh\n' > .git/info/sparse-checkout
+git read-tree -m -u HEAD
+```
+
+Si el servidor tiene una versión de Git más nueva (2.25+), el equivalente moderno es
+`git sparse-checkout set app scripts/deploy-plesk.sh scripts/push-assets.sh` — acá se usó la
+sintaxis vieja porque el Plesk de webparaguay trae Git 1.8.3.1.
+
 **Restricción real que no cambia:** el Node del Plesk es demasiado viejo para compilar Vite, y
 además el cliente pidió explícitamente que el build compilado (`public/build/`) **nunca** se
 suba a GitHub — son binarios, no código fuente. Por eso el despliegue son **dos scripts
