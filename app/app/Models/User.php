@@ -26,6 +26,45 @@ class User extends Authenticatable implements FilamentUser, HasEmailAuthenticati
 
     use InteractsWithEmailAuthentication;
 
+    /**
+     * Cuentas del proveedor (webparaguay) que no pueden borrarse, desactivarse ni
+     * cambiar de correo, por ninguna vía (panel, tinker, seeders). Su nombre y
+     * contraseña solo los cambia la propia cuenta o la consola.
+     */
+    public const PROTECTED_EMAILS = [
+        'webmaster@webparaguay.com',
+    ];
+
+    protected static function booted(): void
+    {
+        static::deleting(function (User $user) {
+            if ($user->isProtected()) {
+                throw new \RuntimeException("El usuario {$user->email} está protegido y no puede eliminarse.");
+            }
+        });
+
+        static::updating(function (User $user) {
+            if (! in_array($user->getOriginal('email'), self::PROTECTED_EMAILS, true)) {
+                return;
+            }
+
+            if ($user->isDirty('email') || ($user->isDirty('is_active') && ! $user->is_active)) {
+                throw new \RuntimeException("El usuario {$user->getOriginal('email')} está protegido: no puede cambiar de correo ni desactivarse.");
+            }
+
+            $isOwnAccountOrConsole = app()->runningInConsole() || auth()->id() === $user->getKey();
+
+            if (! $isOwnAccountOrConsole && $user->isDirty(['name', 'password'])) {
+                throw new \RuntimeException("El usuario {$user->email} está protegido: solo puede modificarlo su propia cuenta.");
+            }
+        });
+    }
+
+    public function isProtected(): bool
+    {
+        return in_array($this->email, self::PROTECTED_EMAILS, true);
+    }
+
     protected function casts(): array
     {
         return [

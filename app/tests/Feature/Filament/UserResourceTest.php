@@ -61,3 +61,38 @@ it('un usuario sin permiso no puede ver el listado de usuarios', function () {
 
     $this->livewire(ListUsers::class)->assertForbidden();
 });
+
+describe('cuenta protegida del proveedor', function () {
+    beforeEach(function () {
+        $this->webmaster = User::factory()->create([
+            'email' => 'webmaster@webparaguay.com',
+            'is_active' => true,
+        ]);
+        $this->webmaster->assignRole('administrador');
+    });
+
+    it('no se puede borrar, ni siquiera por código', function () {
+        expect(fn () => $this->webmaster->delete())->toThrow(RuntimeException::class);
+        expect(fn () => $this->webmaster->forceDelete())->toThrow(RuntimeException::class);
+        expect(User::query()->where('email', 'webmaster@webparaguay.com')->exists())->toBeTrue();
+    });
+
+    it('no puede cambiar de correo ni desactivarse', function () {
+        expect(fn () => $this->webmaster->update(['email' => 'otro@dante.edu.py']))->toThrow(RuntimeException::class);
+        expect(fn () => $this->webmaster->update(['is_active' => false]))->toThrow(RuntimeException::class);
+    });
+
+    it('otro administrador no puede editarla ni borrarla', function () {
+        expect($this->admin->can('update', $this->webmaster))->toBeFalse()
+            ->and($this->admin->can('delete', $this->webmaster))->toBeFalse();
+    });
+
+    it('su propia cuenta sí puede cambiar nombre y contraseña', function () {
+        $this->actingAs($this->webmaster);
+
+        expect($this->webmaster->can('update', $this->webmaster))->toBeTrue();
+        $this->webmaster->update(['name' => 'Webmaster WebParaguay']);
+
+        expect($this->webmaster->fresh()->name)->toBe('Webmaster WebParaguay');
+    });
+});

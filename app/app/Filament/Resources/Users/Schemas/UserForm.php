@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Models\User;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -21,7 +22,8 @@ class UserForm
     {
         return $schema->components([
             TextInput::make('name')->label('Nombre')->required(),
-            TextInput::make('email')->label('Correo')->email()->required()->unique(ignoreRecord: true),
+            TextInput::make('email')->label('Correo')->email()->required()->unique(ignoreRecord: true)
+                ->disabled(fn (?User $record) => $record?->isProtected()),
             TextInput::make('password')
                 ->label('Contraseña')
                 ->password()
@@ -37,8 +39,10 @@ class UserForm
                     fn (Role $role) => [$role->id => self::ROLE_LABELS[$role->name] ?? $role->name]
                 ))
                 ->required()
-                ->preload(),
+                ->preload()
+                ->disabled(fn (?User $record) => $record?->isProtected()),
             Toggle::make('is_active')->label('Cuenta activa')->default(true)
+                ->disabled(fn (?User $record) => $record?->isProtected())
                 ->helperText('Desactivarla en vez de borrarla si la persona deja el colegio.'),
         ]);
     }
