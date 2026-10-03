@@ -253,3 +253,33 @@ cotizan aparte.
 - [ ] **Patrón reutilizable extraído** para el próximo colegio — qué se puede empaquetar,
       dónde queda, cuánto acorta el próximo proyecto
 - [ ] Actualizar el legajo del pipeline de webparaguay con lo aprendido
+
+---
+
+## 10. Primer despliegue a producción (`dante.edu.py`) — runbook
+
+Mismo patrón que Cateura: clave SSH `dante_plesk` restringida por `command=` a un script fijo
+(`scripts/deploy-dante-forced.sh`, instalado como `/var/www/vhosts/dante.edu.py/deploy-dante.sh`,
+fuera de `httpdocs/`). Los assets de Vite siguen por `scripts/push-assets.sh` (scp).
+Suscripción `danteedu`, mismo puerto y misma IP que staging, PHP 8.3
+(`/opt/plesk/php/8.3/bin/php`), base `danteedu_db`, document root `httpdocs/public`.
+
+Una sola vez, en el servidor como `danteedu`:
+
+1. Vaciar `httpdocs/` y clonar: `git clone https://github.com/Leonshy/Dante-Web-Institucional.git .`
+   más el sparse-checkout de §4 (`app/*`, los scripts de deploy).
+2. `app/.env` desde `app/.env.production.example` (valores reales a mano, nunca al repo).
+   `DB_DATABASE=danteedu_db`, `APP_URL=https://dante.edu.py`.
+3. `composer install --no-dev --optimize-autoloader`, `key:generate --force`, `migrate --force`.
+4. Datos: **no** correr `db:seed` completo (duplicaría páginas y menús que vienen en el dump).
+   Solo `db:seed --class=PermissionSeeder --force` y el usuario protegido con
+   `DANTE_ADMIN_EMAIL=webmaster@webparaguay.com DANTE_ADMIN_PASSWORD=... php artisan db:seed --class=AdminUserSeeder --force`.
+5. Contenido: `scripts/dump-contenido.sh BASE_STAGING USUARIO > contenido.sql` (en staging) e
+   importarlo en `danteedu_db`. Reemplaza el dominio de staging por `dante.edu.py`.
+6. Medios: copiar `storage/app/public/` de staging a producción (verificar que
+   `storage/app/public/media` quede directo, sin anidar una carpeta extra — gotcha de Cateura).
+7. `rm -f public/storage && php artisan storage:link`; luego `scripts/push-assets.sh`.
+8. Cron de Plesk: `schedule:run` cada minuto. Correo: SMTP en el `.env`.
+
+Después, cada actualización es `ssh -i ~/.ssh/dante_plesk -p <puerto> danteedu@177.251.252.12`
+(dispara el deploy) + `push-assets.sh` si cambió CSS/JS.

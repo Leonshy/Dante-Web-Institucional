@@ -45,7 +45,7 @@ git pull origin main
 cd "$app_dir"
 
 app_env=$("$php_bin" artisan tinker --execute="echo config('app.env');" 2>/dev/null || true)
-if [ "$app_env" != "production" ]; then
+if [ "$app_env" != "production" ] && [ -t 0 ]; then
     echo "Aviso: APP_ENV no resolvió a 'production' (valor leído: '${app_env:-desconocido}')." >&2
     echo "Si esto es staging, es esperable — Ctrl+C para cancelar, Enter para seguir." >&2
     read -r _
