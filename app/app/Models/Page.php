@@ -121,6 +121,12 @@ class Page extends Model
      */
     public function urlPath(): string
     {
+        // Las páginas migradas guardan el slug ya como ruta completa
+        // (`institucion/historia`) además de tener padre: no se vuelve a anteponer.
+        if (str_contains($this->slug, '/')) {
+            return $this->slug;
+        }
+
         $segments = [];
         $node = $this;
 

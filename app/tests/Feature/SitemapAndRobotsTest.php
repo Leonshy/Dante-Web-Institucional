@@ -55,3 +55,18 @@ it('robots.txt bloquea todo en un entorno que no es de producción', function ()
 
     $response->assertOk()->assertSee('Disallow: /');
 });
+
+it('no duplica el segmento del padre cuando el slug ya es la ruta completa', function () {
+    $parent = Page::factory()->create(['slug' => 'institucion', 'status' => 'published']);
+    $child = Page::factory()->create([
+        'slug' => 'institucion/historia',
+        'parent_id' => $parent->id,
+        'status' => 'published',
+    ]);
+
+    expect($child->urlPath())->toBe('institucion/historia');
+
+    $this->get('/sitemap.xml')
+        ->assertSee(url('/institucion/historia'), false)
+        ->assertDontSee('institucion/institucion', false);
+});
