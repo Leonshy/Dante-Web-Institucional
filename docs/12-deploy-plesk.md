@@ -319,12 +319,21 @@ entregada por chat: **cambiarla en el primer ingreso**.
 - `/tmp/contenido.sql` y `/tmp/dante-media.tar.gz` quedaron en el servidor (dueño: usuario de
   staging): borrarlos.
 
-**Pendiente:**
+**Hecho al cierre (2026-10-05):** clave SSH `dante_plesk` restringida con `command=` al script fijo
+`/var/www/vhosts/dante.edu.py/deploy-dante.sh` (verificado: comandos arbitrarios se ignoran, solo corre
+el deploy; respaldo de la línea abierta en `~/.ssh/authorized_keys.bak-pre-command`). Los temporales
+`/tmp/contenido.sql` y `/tmp/dante-media.tar.gz` fueron borrados. Para desplegar:
+`ssh -i ~/.ssh/dante_plesk -p 53931 danteedu@177.251.252.12`; los assets van aparte por `scp` con
+usuario y contraseña (la clave restringida no transfiere archivos).
+
+**Pendiente (decidido dejar para después):**
 - **Correo (SMTP):** `.env` configurado (`smtps`, `mail.dante.edu.py:465`, `webmaster@dante.edu.py`),
   pero HostGator rechaza el login (`Failed to authenticate`). La conexión y el TLS están bien: son
-  credenciales o el buzón. Se retoma en otra sesión. Hasta entonces **los formularios no envían correo**.
-- Clave SSH `dante_plesk` sigue como **acceso abierto** (sin `command=`): restringirla instalando
-  `deploy-dante.sh` en `/var/www/vhosts/dante.edu.py/` y volviendo a la línea con `command=`.
-- Integraciones reales (GA4/GTM/Meta/Turnstile) desde el panel; Search Console; Google Business Profile.
+  credenciales o el buzón. Hasta entonces **los formularios no envían correo**.
+- **Contraseña del admin `webmaster@webparaguay.com`:** sigue siendo la generada por el seeder, que
+  quedó escrita en el chat de la sesión de deploy. Cambiarla en el primer ingreso al panel.
+- **Integraciones** (GA4/GTM/Meta/Turnstile) desde el panel, cuando el cliente entregue los IDs.
+- **Search Console** (propiedad de dominio por TXT en el DNS, sin tocar A/MX/SPF/DKIM, enviar
+  `sitemap.xml`; revisar 404 la primera semana), Bing Webmaster y Google Business Profile.
 - Verificar www/no-www, 301 de URLs viejas del WordPress, backups y 2FA en producción.
 - Recapturar el manual del cliente con datos reales; capacitación; acuerdo de mantenimiento.

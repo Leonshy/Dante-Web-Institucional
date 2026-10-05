@@ -2,8 +2,8 @@
 
 Estado global: **Fase 10 en curso — el sitio nuevo está EN PRODUCCIÓN en https://dante.edu.py
 desde 2026-10-05** (contenido y medios migrados desde staging, SSL, cron). Falta cerrar:
-correo SMTP (credenciales HostGator rechazadas, se retoma después), restringir la clave SSH de
-deploy, integraciones reales (GA4/GTM/Meta/Turnstile), Search Console y monitoreo de la
+correo SMTP (credenciales HostGator rechazadas, se retoma después), contraseña del admin,
+integraciones reales (GA4/GTM/Meta/Turnstile), Search Console y monitoreo de la
 primera semana. Detalle en `docs/12-deploy-plesk.md` §10–§11.
 (Estado previo: Fase 9 — QA y testing ✅ cerrada 2026-08-25.)
 2FA del panel rediseñado en esta sesión: pasó de TOTP obligatorio a **email, opt-in por
