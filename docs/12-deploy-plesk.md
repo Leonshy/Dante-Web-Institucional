@@ -1,6 +1,6 @@
 # 12 — Despliegue y puesta en producción (Fase 10)
 
-Estado: **en curso (arrancada 2026-08-26).** Todo lo que no requiere acceso real al Plesk/DNS
+Estado: **producción desplegada el 2026-10-05 en https://dante.edu.py (ver §11); cierre pendiente.** Historial: en curso desde 2026-08-26. Todo lo que no requiere acceso real al Plesk/DNS
 está listo: script de despliegue (`scripts/deploy-plesk.sh`), plantilla de variables de
 entorno (`app/.env.production.example`), plan de cutover y checklists de verificación
 (abajo), manual del cliente con capturas reales (`docs/manual-cliente/`). Bloqueado en lo que
@@ -283,3 +283,48 @@ Una sola vez, en el servidor como `danteedu`:
 
 Después, cada actualización es `ssh -i ~/.ssh/dante_plesk -p <puerto> danteedu@177.251.252.12`
 (dispara el deploy) + `push-assets.sh` si cambió CSS/JS.
+
+
+---
+
+## 11. Estado del primer despliegue a producción (2026-10-05)
+
+**En línea:** `https://dante.edu.py` — Laravel 13.26, PHP 8.3, SSL Let's Encrypt, 22 URLs del
+sitemap con 200. Suscripción Plesk `danteedu` (mismo servidor `177.251.252.12`, puerto SSH
+53931), repo clonado con sparse-checkout en `/var/www/vhosts/dante.edu.py/httpdocs`,
+`httpdocs/public` es un **symlink a `app/public`** (el repo tiene el Laravel en `app/`, no en la
+raíz como Cateura). Base `danteedu_db`. Cron de `schedule:run` y `queue:work` instalado.
+
+**Datos migrados desde staging** (`dantepru_db`, usuario de staging `dante.webparaguay.co_...`):
+62 páginas, 4 noticias, 131 medios (99 MB), 26 ítems de menú, 3 sedes, 37 redirecciones,
+2 documentos, 11 ajustes. Con `scripts/dump-contenido.sh` (cambia el dominio de staging por el
+de producción). Se importó con `tinker` (`DB::unprepared`) y los medios con `tar` → `storage/app`.
+No se migraron usuarios, formularios, auditoría ni `integration_settings`.
+
+**Admin:** `webmaster@webparaguay.com`, protegido por código (`User::PROTECTED_EMAILS`, policy y
+form): no se borra, desactiva ni cambia de correo. Contraseña generada en el primer seeder y
+entregada por chat: **cambiarla en el primer ingreso**.
+
+**Gotchas encontrados (no repetir):**
+- `app/.env.production.example` estaba ignorado por `.gitignore` (`.env.*`) — nunca había llegado
+  al repo. Ahora tiene excepción.
+- Un clon nuevo no trae `bootstrap/cache` ni `storage/framework/*`: crearlos antes de `composer install`.
+- `BACKUP_NOTIFICATION_EMAIL` vacío rompe `package:discover` (InvalidConfig). Hoy es `webmaster@webparaguay.com`.
+- El usuario de producción **no puede leer** la carpeta de staging (usuarios Plesk distintos):
+  el dump y el tar de medios los saca el usuario de staging a `/tmp` y los lee producción.
+- El sparse-checkout de staging excluye scripts nuevos: hay que agregarlos a `.git/info/sparse-checkout` y `git read-tree -m -u HEAD`.
+- `push-assets.sh` no acepta clave SSH: se subió `public/build` con `scp -i ~/.ssh/dante_plesk`.
+- Bug real corregido: `Page::urlPath()` duplicaba el padre porque las páginas migradas guardan
+  el slug completo (`institucion/historia`) y además tienen padre → sitemap y destacados del home daban 404.
+- `/tmp/contenido.sql` y `/tmp/dante-media.tar.gz` quedaron en el servidor (dueño: usuario de
+  staging): borrarlos.
+
+**Pendiente:**
+- **Correo (SMTP):** `.env` configurado (`smtps`, `mail.dante.edu.py:465`, `webmaster@dante.edu.py`),
+  pero HostGator rechaza el login (`Failed to authenticate`). La conexión y el TLS están bien: son
+  credenciales o el buzón. Se retoma en otra sesión. Hasta entonces **los formularios no envían correo**.
+- Clave SSH `dante_plesk` sigue como **acceso abierto** (sin `command=`): restringirla instalando
+  `deploy-dante.sh` en `/var/www/vhosts/dante.edu.py/` y volviendo a la línea con `command=`.
+- Integraciones reales (GA4/GTM/Meta/Turnstile) desde el panel; Search Console; Google Business Profile.
+- Verificar www/no-www, 301 de URLs viejas del WordPress, backups y 2FA en producción.
+- Recapturar el manual del cliente con datos reales; capacitación; acuerdo de mantenimiento.

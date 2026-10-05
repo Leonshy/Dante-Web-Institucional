@@ -1,7 +1,11 @@
 # PLAN.md — Plan de ejecución por fases
 
-Estado global: **Fase 9 — QA y testing ✅ cerrada 2026-08-25.** Arranca la Fase 10
-(Despliegue y puesta en producción) — última fase del plan.
+Estado global: **Fase 10 en curso — el sitio nuevo está EN PRODUCCIÓN en https://dante.edu.py
+desde 2026-10-05** (contenido y medios migrados desde staging, SSL, cron). Falta cerrar:
+correo SMTP (credenciales HostGator rechazadas, se retoma después), restringir la clave SSH de
+deploy, integraciones reales (GA4/GTM/Meta/Turnstile), Search Console y monitoreo de la
+primera semana. Detalle en `docs/12-deploy-plesk.md` §10–§11.
+(Estado previo: Fase 9 — QA y testing ✅ cerrada 2026-08-25.)
 2FA del panel rediseñado en esta sesión: pasó de TOTP obligatorio a **email, opt-in por
 usuario** (ADR-003), pedido explícito del cliente. De paso se cerraron los 2 hallazgos
 mayores que había dejado abiertos la Fase 9 (honeypot sin mensaje claro al rechazar un envío,
@@ -557,27 +561,26 @@ la Fase 10.
 > ejercitar sin eso. Se adelantó todo lo que sí se puede dejar listo sin tocar un servidor
 > real; el resto queda explícitamente bloqueado hasta tener las credenciales.
 
-- [ ] Staging en el Plesk, idéntico a producción, con `noindex` y protegido por contraseña —
-      **bloqueado, requiere acceso al Plesk (pregunta #13)**
+- [x] Staging en el Plesk (`dante.webparaguay.com`, desde 2026-08-26) — `noindex` y contraseña
+      no re-verificados en esta sesión
 - [x] Procedimiento de despliegue documentado y repetible — `scripts/deploy-plesk.sh` (nuevo:
       script real, no solo comandos en el doc), 9 pasos con manejo de errores (`trap` que
       levanta el sitio de mantenimiento si algo falla a mitad de camino)
 - [x] Variables de entorno de producción — `app/.env.production.example` (nuevo), corregido
       contra el estado real del código (ya no lista GTM/Meta/Turnstile como variables de
       entorno, eso se movió al panel en la Fase 6 — el doc viejo había quedado desactualizado)
-- [ ] Cron de Plesk → `php artisan schedule:run` cada minuto — comando documentado
-      (`docs/12-deploy-plesk.md` §5), **no se puede dar de alta sin el Plesk real**
-- [ ] Colas: si no hay Supervisor, `queue:work` vía cron con `--max-time` — comando
-      documentado, mismo bloqueo
-- [ ] SSL Let's Encrypt + redirección forzada a HTTPS + www/no-www unificado — **bloqueado,
-      requiere el Plesk real**
+- [x] Cron de Plesk → `schedule:run` cada minuto — instalado en producción 2026-10-05
+- [x] Colas: `queue:work --stop-when-empty --max-time=55` cada minuto vía cron — instalado
+- [~] SSL Let's Encrypt + HTTP→HTTPS — verificado en producción (cert válido hasta 2026-11-22,
+      `http://` redirige 301). www/no-www sin verificar
 - [ ] **Congelamiento de contenido**: el cliente deja de editar el WordPress. Migración final
       del delta de contenido — pendiente de coordinar fecha con el cliente
-- [ ] **Cutover**: cambiar solo el registro A/web. **No tocar los MX ni el registro de correo**
-      — el mail sigue en HostGator — **bloqueado, requiere acceso al DNS**
-- [ ] Verificación post-cutover: SSL, 301s, formularios, analytics recibiendo datos, sitemap,
-      backups corriendo — checklist ya escrito (`docs/12-deploy-plesk.md` §6), se ejecuta
-      recién en el cutover real
+- [x] **Cutover**: el registro A de `dante.edu.py` ya apuntaba a `177.251.252.12` al 2026-10-05
+      (cambiado antes de la sesión de deploy). MX/correo intactos: `mail.dante.edu.py` →
+      HostGator `192.185.52.135`
+- [~] Verificación post-cutover: hecho SSL, sitemap (22 URLs, todas 200), robots, imágenes de
+      `/storage`. **Pendiente:** formularios (dependen del SMTP), analytics, backups, 2FA,
+      las 301 reales con muestra de URLs viejas (`/wp-login.php` da 404, sin redirección)
 - [ ] Bajar el WordPress viejo, conservando una copia offline del sitio y la base — pendiente
       del cutover real
 - [x] **Manual del cliente**: cómo usar el panel, en español, con capturas — hecho,
